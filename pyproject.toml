@@ -1,0 +1,20 @@
+[tool.poetry]
+name = "mems-storage"
+version = "0.1.0"
+description = ""
+authors = ["al-ov73 <klever1987@yandex.ru>"]
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.10"
+fastapi = "^0.111.0"
+sqlalchemy = "^2.0.31"
+psycopg2 = "^2.9.9"
+pydantic-settings = "^2.3.4"
+alembic = "^1.13.2"
+asyncpg = "^0.29.0"
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
