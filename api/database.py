@@ -1,16 +1,14 @@
-from sqlalchemy.ext.asyncio import create_async_engine, async_sessionmaker, AsyncAttrs
-from sqlalchemy.orm import DeclarativeBase, declared_attr
-from api.config import get_db_url
+from sqlalchemy import create_engine
+from sqlalchemy.ext.declarative import declarative_base
+from sqlalchemy.orm import sessionmaker
+from .config import settings
 
+SQLALCHEMY_DATABASE_URL = settings.DATABASE_URL
+print("Database URL is ",SQLALCHEMY_DATABASE_URL)
 
-DATABASE_URL = get_db_url()
-engine = create_async_engine(DATABASE_URL)
-async_session_maker = async_sessionmaker(engine, expire_on_commit=False)
+engine = create_engine(
+    SQLALCHEMY_DATABASE_URL
+)
+SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 
-
-class Base(AsyncAttrs, DeclarativeBase):
-    __abstract__ = True
-
-    @declared_attr.directive
-    def __tablename__(cls) -> str:
-        return f"{cls.__name__.lower()}s"
+Base = declarative_base()

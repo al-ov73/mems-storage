@@ -1,24 +1,31 @@
-from fastapi import FastAPI
+from fastapi import Depends, HTTPException, status, APIRouter, Response, FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from .config import settings
-from .routers import memes
+from sqlalchemy.orm import Session
+from .database import SessionLocal, engine
+from . import schemas, models
+
 
 app = FastAPI()
 
-origins = [
-    'http://localhost:3000',
-]
+# Dependency
+def get_db():
+    db = SessionLocal()
+    try:
+        yield db
+    finally:
+        db.close()
 
-app.add_middleware(
-    CORSMiddleware,
-    allow_origins=origins,
-    allow_credentials=True,
-    allow_methods=["*"],
-    allow_headers=["*"],
-)
+@app.get('/', response_model=schemas.Meme)
+def get_memes(db: Session = Depends(get_db), skip: int = 0, limit: int = 100):
+    memes = db.query(models.Meme).offset(skip).limit(limit).all()
+    return {'status': 'success', 'results': len(memes), 'memes': memes}
 
-app.include_router(memes.router, tags=['Memes'], prefix='/api/meme')
 
-@app.get('/api/healthchecker')
-def root():
-    return {'message': 'Hello World'}
+@app.post('/', status_code=status.HTTP_201_CREATED, response_model=schemas.Meme)
+def create_meme(meme: schemas.CreateMeme, db: Session = Depends(get_db)):
+    new_meme = models.Meme(**meme.dict())
+    db.add(new_meme)
+    db.commit()
+    db.refresh(new_meme)
+    return new_meme
