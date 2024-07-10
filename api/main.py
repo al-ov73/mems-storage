@@ -4,6 +4,7 @@ from .config import settings
 from sqlalchemy.orm import Session
 from .database import SessionLocal, engine
 from . import schemas, models
+from typing import Optional, List
 
 
 app = FastAPI()
@@ -16,13 +17,13 @@ def get_db():
     finally:
         db.close()
 
-@app.get('/', response_model=schemas.Meme)
+@app.get('/', response_model=List[schemas.Meme])
 def get_memes(db: Session = Depends(get_db), skip: int = 0, limit: int = 100):
     memes = db.query(models.Meme).offset(skip).limit(limit).all()
-    return {'status': 'success', 'results': len(memes), 'memes': memes}
+    return memes
 
 
-@app.post('/', status_code=status.HTTP_201_CREATED, response_model=schemas.Meme)
+@app.post('/', response_model=schemas.Meme)
 def create_meme(meme: schemas.CreateMeme, db: Session = Depends(get_db)):
     new_meme = models.Meme(**meme.dict())
     db.add(new_meme)
