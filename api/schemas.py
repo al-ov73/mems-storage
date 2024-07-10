@@ -3,7 +3,7 @@ import uuid
 from pydantic import BaseModel
 
 
-class MemeBase(BaseModel):
+class Meme(BaseModel):
     id: uuid.UUID
     name: str
     url: str
@@ -11,3 +11,7 @@ class MemeBase(BaseModel):
     
     class Config:
         orm_mode = True
+
+class CreateMeme(BaseModel):
+    name: str
+    url: str
