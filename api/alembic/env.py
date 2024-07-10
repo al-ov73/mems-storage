@@ -7,9 +7,6 @@ from sqlalchemy import pool
 from alembic import context
 from models import Meme
 
-
-# Alembic Config объект предоставляет доступ
-# к переменным из файла alembic.ini
 config = context.config
 
 section = config.config_ini_section
@@ -21,17 +18,7 @@ config.set_section_option(section, "DB_ENDPOINT", os.getenv("DB_ENDPOINT"))
 
 fileConfig(config.config_file_name)
 
-# add your model's MetaData object here
-# for 'autogenerate' support
-# from myapp import mymodel
-# target_metadata = mymodel.Base.metadata
 target_metadata = Meme.metadata
-
-# other values from the config, defined by the needs of env.py,
-# can be acquired:
-# my_important_option = config.get_main_option("my_important_option")
-# ... etc.
-
 
 def run_migrations_offline() -> None:
     """Run migrations in 'offline' mode.
