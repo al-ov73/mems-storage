@@ -11,6 +11,11 @@ from fastapi import FastAPI, UploadFile, File, Form
 from starlette.responses import StreamingResponse, JSONResponse
 
 from minio_fastapi.minio_handler import MinioHandler
+from dotenv import load_dotenv
+
+
+load_dotenv()
+
 app = FastAPI()
 
 minio_handler = MinioHandler(
