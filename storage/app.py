@@ -29,10 +29,12 @@ minio_handler = MinioHandler(
 
 @app.post('/upload')
 async def upload(file: Annotated[UploadFile, Form()]):
-    minio_handler.upload_file(file.filename, file.file, file.size)
+    print('minio')
+    print('from minio', file.filename)
+    # minio_handler.upload_file(file.filename, file.file, file.size)
     return {
         "status": "uploaded",
-        "name": file.filename
+        # "name": file.filename
     }
 
 

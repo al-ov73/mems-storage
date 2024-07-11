@@ -16,7 +16,7 @@ const ImageForm = () => {
       <form onSubmit={ async (event) => {
             event.preventDefault();
             let file = new FormData();
-            file.append('file', selectedImage, selectedImage.name);
+            file.append('file', selectedImage, selectedName);
 
             // console.log(selectedName);
             // console.log(selectedImage);
@@ -25,7 +25,7 @@ const ImageForm = () => {
               headers: {
                 'Content-Type': `multipart/form-data`,
               }
-            }).then((response) => console.log(response))
+            }).then((response) => console.log('frontend response', response))
           }}>
       <div className="form-group">
         <label >Введите имя</label>
