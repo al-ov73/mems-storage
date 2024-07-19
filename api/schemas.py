@@ -4,9 +4,8 @@ from pydantic import BaseModel
 
 
 class Meme(BaseModel):
-    id: uuid.UUID
+    id: int
     name: str
-    url: str
     created_at: datetime
     
     class Config:

@@ -7,5 +7,5 @@ start-minio-api:
 start-minio:
 		./minio server ./storage/minio --address ":9000" --console-address ":9001"
 
-# alembic revision --autogenerate -m "Added required tables"
+# alembic revision --autogenerate -m "rm url field"
 # alembic upgrade head

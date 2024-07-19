@@ -3,13 +3,9 @@ import os
 
 from sqlalchemy import engine_from_config
 from sqlalchemy import pool
-
 from alembic import context
 
-from api.models import Meme
-
-# from ..models import Meme
-
+from models import Meme
 
 
 config = context.config

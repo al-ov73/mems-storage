@@ -1,30 +1,24 @@
-from httpx import request
-from fastapi import Depends, FastAPI, UploadFile, File, FastAPI, File, Form, UploadFile
-from typing import Annotated
+import sqlalchemy
+from fastapi import Depends, FastAPI, UploadFile, File
 from fastapi.middleware.cors import CORSMiddleware
 
-from api import schemas, models
-from .config import settings
 from sqlalchemy.orm import Session
-from .database import SessionLocal, engine
 
-from typing import Optional, List
+from . import models
+from .database import SessionLocal
+
 import requests
-from minio import Minio
 import os
-import json
 from dotenv import load_dotenv
-import shutil
 
 
 load_dotenv()
 
 storage_host = os.getenv('MINIO_API_URL')
 
-
 app = FastAPI()
 
-origins = ['http://localhost:3000',]
+origins = ['http://localhost:3000', ]
 
 app.add_middleware(
     CORSMiddleware,
@@ -33,6 +27,8 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
+
+
 def get_db():
     db = SessionLocal()
     try:
@@ -40,24 +36,47 @@ def get_db():
     finally:
         db.close()
 
+
 @app.get('/')
 def get_memes(db: Session = Depends(get_db), skip: int = 0, limit: int = 100):
-    response = requests.get(f'{storage_host}/list')
-    return { 'response from storage': json.loads(response.content) }
+    memes = db.query(models.Meme).all()
+    return memes
 
+@app.get('/link/{meme_id}')
+def get_meme_link(meme_id: str, db: Session = Depends(get_db)):
+    meme = db.get(models.Meme, meme_id)
+    response = requests.get(f'{storage_host}/link/{meme.name}')
+    link = response.text
+    return link[1:-1]
 
 @app.post('/')
-def upload_file_bytes(db: Session = Depends(get_db), file: UploadFile = File(...)):
-    s = requests.Session()
-    response = s.post(f'{storage_host}/upload', files={'file': (file.filename, file.file, 'multipart/form-data')})
-    return {
-        'url:': response,
-    }
+def upload_file(db: Session = Depends(get_db), file: UploadFile = File(...)):
 
-     
-    
-    # new_meme = models.Meme(**meme.dict())
-    # db.add(new_meme)
-    # db.commit()
-    # db.refresh(new_meme)
-    # return new_meme
+    # add to db
+    try:
+        new_meme = models.Meme(name=file.filename)
+        db.add(new_meme)
+        # add to s3
+        response = requests.post(f'{storage_host}/upload', files={
+            'file': (file.filename, file.file, 'multipart/form-data')})
+        db.commit()
+        db.refresh(new_meme)
+        if response.status_code == 200:
+            return f'file {file.filename} uploaded'
+    except sqlalchemy.exc.IntegrityError:
+        return f'file "{file.filename}" already exist in db'
+    except Exception:
+        return f'error "{Exception}"'
+
+@app.delete('/meme_delete/{meme_id}')
+def del_meme(meme_id: str, db: Session = Depends(get_db)):
+    # rm from db
+    try:
+        meme = db.get(models.Meme, meme_id)
+        db.delete(meme)
+        response = requests.delete(f'{storage_host}/meme_delete/{meme.name}')
+        if response.status_code == 200:
+            db.commit()
+            return f'file {meme.name} removed'
+    except Exception:
+        return f'error "{Exception}"'

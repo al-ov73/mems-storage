@@ -31,7 +31,8 @@ async def upload(request: Request):
         filename = form['file'].filename
         size = form['file'].size
         contents = form['file'].file
-        return storage_handler.upload_file(filename, contents, size)
+        result = storage_handler.upload_file(filename, contents, size)
+        return result
 
 
 @app.get('/list')
@@ -39,38 +40,12 @@ async def list_files():
     return storage_handler.list()
 
 
-# @app.get('/link/{file}')
-# async def link(file: str):
-#     obj = storage_handler.stats(file)
-#     payload = {
-#         "filename": obj.object_name,
-#         "valid_til": str(datetime.datetime.utcnow() + relativedelta(minutes=int(os.getenv('LINK_VALID_MINUTES', 10))))
-#     }
-#     encoded_jwt = jwt.encode(payload, os.getenv('JWT_SECRET'), algorithm="HS256")
+@app.get('/link/{filename}')
+async def get_link(filename: str):
+    link = storage_handler.get_link(filename)
+    return link
 
-#     return {
-#         "link": f"/download/{encoded_jwt}"
-#     }
-
-
-# @app.get('/download/{temp_link}')
-# async def download(temp_link: str):
-#     try:
-#         decoded_jwt = jwt.decode(temp_link, os.getenv('JWT_SECRET'), algorithms=["HS256"])
-#     except:
-#         return JSONResponse({
-#             "status": "failed",
-#             "reason": "Link expired or invalid"
-#         }, status_code=400)
-
-#     valid_til = datetime.datetime.strptime(decoded_jwt['valid_til'], '%Y-%m-%d %H:%M:%S.%f')
-#     if valid_til > datetime.datetime.utcnow():
-#         filename = decoded_jwt['filename']
-#         return StreamingResponse(
-#             storage_handler.download_file(filename),
-#             media_type='application/octet-stream'
-#         )
-#     return JSONResponse({
-#         "status": "failed",
-#         "reason": "Link expired or invalid"
-#     }, status_code=400)
+@app.delete('/meme_delete/{filename}')
+async def delete_meme(filename: str):
+    response = storage_handler.remove_object(filename)
+    return response
