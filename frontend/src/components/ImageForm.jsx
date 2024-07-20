@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from "react";
-import FormData, { promises } from 'form-data'
+import FormData from 'form-data'
 import axios from 'axios';
 
-const apiUrl = 'http://127.0.0.1:8000'
+const apiUrl = process.env.REACT_APP_API_URL;
 
 const ImageForm = () => {
   const [selectedImage, setSelectedImage] = useState(null);
@@ -20,7 +20,7 @@ const ImageForm = () => {
 
   useEffect(() => {
     const promises = memesList.map((meme) => {
-      return axios.get(`${apiUrl}/link/${meme.id}`).then((response) => {
+      return axios.get(`${apiUrl}/${meme.id}`).then((response) => {
         return {
           'link': response.data,
           'id': meme.id,
@@ -31,63 +31,65 @@ const ImageForm = () => {
   }, [memesList]);
 
   const handleImageDelete = async (id) => {
-    axios.delete(`${apiUrl}/meme_delete/${id}`)
+    axios.delete(`${apiUrl}/${id}`)
       .then((response) => console.log(response))
   }
 
   return (
     <>
     <div className="container h-100 p-5 my-4 overflow-hidden rounded shadow">
-    <div className="row h-100 bg-white flex-md-row">
-      <form onSubmit={ async (event) => {
-            event.preventDefault();
-            try {
-              let file = new FormData();
-              file.append('file', selectedImage, selectedName);
-              axios.post(apiUrl, file, {
-                headers: {
-                  'Content-Type': `multipart/form-data`,
-                }
-              }).then((response) => {
-                console.log('frontend response', response)
-                axios.get(apiUrl).then((response) => {
-                  if (response.data !== memesList) {
-                    setMemesList(response.data)
+      <div className="row h-100 bg-white flex-md-row">
+        <form onSubmit={ async (event) => {
+              event.preventDefault();
+              try {
+                const form = new FormData();
+                form.append('file', selectedImage);
+                form.append('filename', selectedName);
+                console.log('selectedName', selectedName)
+                axios.post(apiUrl, form, {
+                  headers: {
+                    'Content-Type': `multipart/form-data`,
                   }
+                }).then((response) => {
+                  console.log('frontend response', response)
+                  axios.get(apiUrl).then((response) => {
+                    if (response.data !== memesList) {
+                      setMemesList(response.data)
+                    }
+                  })
                 })
-              })              
-            } catch (error) {
-              console.log('error->', error)
-            }
+              } catch (error) {
+                console.log('error->', error)
+              }
 
-          }}>
-      <div className="form-group">
-        <label >Введите имя</label>
-        <input
-          className="form-control"
-          type="text"
-          name="name"
-          onChange={(event) => {
-            setSelectedName(event.target.value);
-          }}
-        />
-        </div>
+            }}>
         <div className="form-group">
-        <label >приложите картинку</label>
-        <input
-          className="form-control"
-          type="file"
-          name="file"
-          onChange={(event) => {
-            setSelectedImage(event.target.files[0]);
-          }}
-        />
-        </div>
-        <button className="btn btn-primary" type="submit">
-          Загрузить файл
-        </button>
-      </form>
-    </div>
+          <label >Введите имя</label>
+          <input
+            className="form-control"
+            type="text"
+            name="name"
+            onChange={(event) => {
+              setSelectedName(event.target.value);
+            }}
+          />
+          </div>
+          <div className="form-group">
+          <label >приложите картинку</label>
+          <input
+            className="form-control"
+            type="file"
+            name="file"
+            onChange={(event) => {
+              setSelectedImage(event.target.files[0]);
+            }}
+          />
+          </div>
+          <button className="btn btn-primary" type="submit">
+            Загрузить файл
+          </button>
+        </form>
+      </div>
     </div>
 
     {linksList && <>
