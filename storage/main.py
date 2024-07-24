@@ -49,9 +49,3 @@ async def get_link(filename: str):
 async def delete_meme(filename: str):
     response = storage_handler.remove_object(filename)
     return response
-
-@app.delete('/meme_update/{filename}')
-async def delete_meme(filename: str, request: Request):
-    print('request', request.json())
-    print('filename', filename)
-    return 'put request from minio'

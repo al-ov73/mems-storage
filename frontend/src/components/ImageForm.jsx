@@ -45,7 +45,6 @@ const ImageForm = () => {
                 const form = new FormData();
                 form.append('file', selectedImage);
                 form.append('filename', selectedName);
-                console.log('selectedName', selectedName)
                 axios.post(apiUrl, form, {
                   headers: {
                     'Content-Type': `multipart/form-data`,
