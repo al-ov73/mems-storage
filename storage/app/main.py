@@ -1,22 +1,14 @@
-# https://habr.com/ru/companies/otus/articles/801253/
-
-import datetime
 import os
-import io
-# import jwt
-from typing import Annotated
 
-# from dateutil.relativedelta import relativedelta
-
-from fastapi import FastAPI, UploadFile, File, Form, Request
-from starlette.responses import StreamingResponse, JSONResponse
-from .handler import MinioHandler
 from dotenv import load_dotenv
+from fastapi import FastAPI, Request
+
+from .handlers.minio_handler import MinioHandler
 
 load_dotenv()
 
 app = FastAPI()
- 
+
 storage_handler = MinioHandler(
     os.getenv('MINIO_URL'),
     os.getenv('MINIO_ACCESS_KEY'),
@@ -24,6 +16,7 @@ storage_handler = MinioHandler(
     os.getenv('MINIO_BUCKET'),
     False
 )
+
 
 @app.post('/upload')
 async def upload(request: Request):
@@ -44,6 +37,7 @@ async def list_files():
 async def get_link(filename: str):
     link = storage_handler.get_link(filename)
     return link
+
 
 @app.delete('/meme_delete/{filename}')
 async def delete_meme(filename: str):

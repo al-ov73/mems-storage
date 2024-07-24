@@ -7,8 +7,8 @@ from dotenv import load_dotenv
 from fastapi import Depends, UploadFile, File, Form, APIRouter
 from sqlalchemy.orm import Session
 
-from api.app.database.database import SessionLocal
-from api.app.models import models, schemas
+from ..database.database import SessionLocal
+from ..models import models, schemas
 
 load_dotenv()
 

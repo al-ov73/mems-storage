@@ -1,4 +1,4 @@
-from api.app.database.database import Base
+from ..database.database import Base
 from sqlalchemy import TIMESTAMP, Column, String, text, \
     Integer
 

@@ -1,0 +1,19 @@
+[tool.poetry]
+name = "storage"
+version = "0.1.0"
+description = ""
+authors = ["al-ov73 <klever1987@yandex.ru>"]
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.10"
+fastapi = "^0.111.0"
+sqlalchemy = "^2.0.31"
+python-dotenv = "^1.0.1"
+minio = "^7.2.7"
+gunicorn = "^22.0.0"
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"

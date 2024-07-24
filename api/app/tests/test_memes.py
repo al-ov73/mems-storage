@@ -2,7 +2,7 @@ import os
 
 from dotenv import load_dotenv
 
-from api.app.tests.conftest import test_client, add_test_meme
+from ..tests.conftest import test_client, add_test_meme
 
 load_dotenv()
 
