@@ -14,10 +14,11 @@ if TEST_ENV == 'True':
         DB_PORT: str = os.getenv("DB_PORT", 5432)
         DB_NAME: str = os.getenv("TEST_DB_NAME")
         DB_ENDPOINT: str = os.getenv("DB_ENDPOINT")
-        DATABASE_URL = f"postgresql://{DB_USER}:{DB_PASSWORD}@{DB_HOST}:{DB_PORT}/{DB_NAME}?sslmode=require"
+        DATABASE_URL = f"postgresql://{DB_USER}:{DB_PASSWORD}@{DB_HOST}:{DB_PORT}/{DB_NAME}"
 
 else:
     print('production DB!!!')
+    print('db port', os.getenv("DB_PORT"))
     class Settings:
         DB_USER : str = os.getenv("DB_USER")
         DB_PASSWORD = os.getenv("DB_PASSWORD")
@@ -25,6 +26,6 @@ else:
         DB_PORT : str = os.getenv("DB_PORT", 5432)
         DB_NAME : str = os.getenv("DB_NAME")
         DB_ENDPOINT : str = os.getenv("DB_ENDPOINT")
-        DATABASE_URL = f"postgresql://{DB_USER}:{DB_PASSWORD}@{DB_HOST}:{DB_PORT}/{DB_NAME}?sslmode=require"
+        DATABASE_URL = f"postgresql://{DB_USER}:{DB_PASSWORD}@{DB_HOST}:{DB_PORT}/{DB_NAME}"
 
 settings = Settings()

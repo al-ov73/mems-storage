@@ -10,5 +10,11 @@ start-minio:
 test:
 		pytest
 
+docker-build:
+		docker compose -f docker-compose.yml build
+
+docker:
+		docker compose -f docker-compose.yml up
+
 # alembic revision --autogenerate -m "rm url field"
 # alembic upgrade head
