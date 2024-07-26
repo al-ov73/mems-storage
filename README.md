@@ -1,30 +1,23 @@
 Memes storage
 ---
-<b>Api interface</b></br>
+<b>Service for storage your favorite memes.</b></br>
 
-GET "/"</br>
-Response:
 ```
-[
-  {
-    "id": "2fee8429-cde0-4312-b87c-e8e67359001d",
-    "name": "first meme",
-    "url": "google.com",
-    "created_at": "2024-07-10T10:11:43.827198Z"
-  },
-  {
-    "id": "8368dcef-d9f0-4737-89cf-8a9ceb9591ee",
-    "name": "second meme",
-    "url": "yandex.com",
-    "created_at": "2024-07-10T10:13:58.223369Z"
-  },
-]
+Technologies:
+* FastApi
+* React
+* S3 storage - Minio
+* Docker
+* Poetry
+* Pytest
 ```
 
-
-install-minio:
-    wget https://dl.min.io/server/minio/release/linux-amd64/archive/minio_20240704142545.0.0_amd64.deb -O minio.deb
-    sudo dpkg -i minio.deb
-
-minio default credentials:
-    minioadmin
+---
+To start localy via docker:
+```commandline
+git clone git@github.com:al-ov73/mems-storage.git && cd mems-storage
+```
+fill **.env-non-dev**
+```
+make docker
+```

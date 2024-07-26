@@ -13,8 +13,10 @@ test:
 docker-build:
 		docker compose -f docker-compose.yml build
 
-docker:
+docker-run:
 		docker compose -f docker-compose.yml up
+
+docker: docker-build docker-run
 
 # alembic revision --autogenerate -m "rm url field"
 # alembic upgrade head

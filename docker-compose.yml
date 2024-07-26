@@ -1,7 +1,12 @@
 version: "3.9"
 
+networks:
+  mems_net:
+    driver: bridge
+
 volumes:
   pgdata:
+  minio_data:
 
 services:
   db:
@@ -11,6 +16,8 @@ services:
       - .env-non-dev
     volumes:
       - pgdata:/var/lib/postgresql/data/
+    networks:
+      - mems_net
 
   api:
     build:
@@ -18,9 +25,40 @@ services:
     env_file:
       - .env-non-dev
     container_name: mems-api
+    networks:
+      - mems_net
     ports:
       - 8000:8000
     depends_on:
       - db
+      - s3_storage
     command: sh -c 'poetry run alembic upgrade head &&
                     poetry run gunicorn app.main:app --workers 4 --worker-class uvicorn.workers.UvicornWorker --bind=0.0.0.0:8000'
+
+  s3_storage:
+    build:
+      context: ./storage
+    env_file:
+      - .env-non-dev
+    container_name: s3-storage-api
+    networks:
+      - mems_net
+    ports:
+      - 1234:8888
+    depends_on:
+      - minio
+    command: sh -c 'poetry run gunicorn app.main:app --workers 4 --worker-class uvicorn.workers.UvicornWorker --bind=0.0.0.0:8888'
+
+  minio:
+    container_name: minio
+    image: minio/minio
+    env_file:
+      - .env-non-dev
+    networks:
+      - mems_net
+    command: server /data --console-address ":9001"
+    ports:
+      - "9000:9000"
+      - "9001:9001"
+    volumes:
+      - minio_data:/data

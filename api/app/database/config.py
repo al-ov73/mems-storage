@@ -18,7 +18,6 @@ if TEST_ENV == 'True':
 
 else:
     print('production DB!!!')
-    print('db port', os.getenv("DB_PORT"))
     class Settings:
         DB_USER : str = os.getenv("DB_USER")
         DB_PASSWORD = os.getenv("DB_PASSWORD")
