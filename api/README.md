@@ -1,17 +1,76 @@
-GET "/"</br>
-Response:
+***Api memes***
 
+***Install***
+```
+poetry install
+poetry shell
+uvicorn app.main:app --reload
+```
+
+***Api documentation***</br>
+
+GET "/memes"</br>
+
+```
 [
   {
-    "id": "2fee8429-cde0-4312-b87c-e8e67359001d",
+    "id": 1,
     "name": "first meme",
-    "url": "google.com",
     "created_at": "2024-07-10T10:11:43.827198Z"
   },
   {
-    "id": "8368dcef-d9f0-4737-89cf-8a9ceb9591ee",
+    "id": 2,
     "name": "second meme",
-    "url": "yandex.com",
     "created_at": "2024-07-10T10:13:58.223369Z"
   },
 ]
+```
+GET "/memes/{meme_id}"</br>
+
+```
+{
+        "meme": {
+            "id": 1,
+            "name": "first meme",
+            "created_at": "2024-07-10T10:11:43.827198Z"
+          },
+        "link": link_to_meme,
+    }
+
+```
+
+POST "/memes"</br></br>
+*Request body:</br>
+file: string($binary)</br>
+filename: string*
+```
+{
+  "id": 1,
+  "name": "first meme",
+  "created_at": "2024-07-10T10:11:43.827198Z",
+  "is_uploaded": True,
+}
+```
+
+DELETE "/memes/{meme_id}"</br>
+
+```
+{
+  "id": 1,
+  "name": "first meme",
+  "created_at": "2024-07-10T10:11:43.827198Z"
+},
+```
+
+
+PUT "/memes/{meme_id}"</br></br>
+*Request body:</br>
+file: string($binary)</br>
+filename: string*
+```
+{
+  "id": 1,
+  "name": "new name",
+  "created_at": "2024-07-10T10:11:43.827198Z",
+}
+```
