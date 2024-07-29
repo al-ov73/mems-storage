@@ -13,11 +13,10 @@ Technologies:
 ```
 
 ---
-To start localy via docker:
+To start localy:
 ```commandline
 git clone git@github.com:al-ov73/mems-storage.git && cd mems-storage
-```
-fill **.env-non-dev**
-```
+# Fill .env-non-dev
 make docker
 ```
+Services documentation:
