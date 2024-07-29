@@ -16,8 +16,6 @@ Technologies:
 To start localy via docker:
 ```commandline
 git clone git@github.com:al-ov73/mems-storage.git && cd mems-storage
-```
-fill **.env-non-dev**
-```
 make docker
 ```
+Don't forget to fill **.env-non-dev**

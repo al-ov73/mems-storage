@@ -1,14 +1,15 @@
-version: "3.9"
-
-networks:
-  mems_net:
-    driver: bridge
-
 volumes:
   pgdata:
   minio_data:
 
 services:
+  frontend:
+    build:
+      context: ./frontend
+    container_name: mems-frontend
+    ports:
+      - 3000:3000
+
   db:
     image: postgres:15
     container_name: db_app
@@ -16,8 +17,6 @@ services:
       - .env-non-dev
     volumes:
       - pgdata:/var/lib/postgresql/data/
-    networks:
-      - mems_net
 
   api:
     build:
@@ -25,8 +24,6 @@ services:
     env_file:
       - .env-non-dev
     container_name: mems-api
-    networks:
-      - mems_net
     ports:
       - 8000:8000
     depends_on:
@@ -41,8 +38,6 @@ services:
     env_file:
       - .env-non-dev
     container_name: s3-storage-api
-    networks:
-      - mems_net
     ports:
       - 1234:8888
     depends_on:
@@ -54,8 +49,6 @@ services:
     image: minio/minio
     env_file:
       - .env-non-dev
-    networks:
-      - mems_net
     command: server /data --console-address ":9001"
     ports:
       - "9000:9000"
