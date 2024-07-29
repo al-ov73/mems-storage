@@ -16,7 +16,10 @@ Technologies:
 To start localy:
 ```commandline
 git clone git@github.com:al-ov73/mems-storage.git && cd mems-storage
-# Fill .env-non-dev
+# fill .env-non-dev
 make docker
 ```
-Services documentation:
+Services documentation:</br>
+[Frontend(React](https://github.com/al-ov73/mems-storage/blob/main/frontend/README.md)</br>
+[Api](https://github.com/al-ov73/mems-storage/blob/main/api/README.md)</br>
+[Minio storage](https://github.com/al-ov73/mems-storage/blob/main/storage/README.md)</br>
