@@ -9,7 +9,7 @@ const ImageForm = () => {
   const [selectedName, setSelectedName] = useState(null);
   const [memesList, setMemesList] = useState([]);
   const [linksList, setLinksList] = useState([]);
-
+  console.log('apiUrl', apiUrl)
   useEffect(() => {
     axios.get(apiUrl).then((response) => {
       if (response.data !== memesList) {

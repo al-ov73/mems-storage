@@ -2,23 +2,21 @@ import os
 from typing import Annotated
 
 import requests
-import sqlalchemy
-from dotenv import load_dotenv
 from fastapi import Depends, UploadFile, File, Form, APIRouter
+from fastapi_users import fastapi_users
 from sqlalchemy.orm import Session
 
+from ..auth.database import User
+from ..auth.manager import current_user
+from ..congif import MINIO_API_URL
 from ..database import crud
 from ..database.database import SessionLocal
+
 from ..models import models, schemas
-
-
-
-load_dotenv()
 
 router = APIRouter(prefix='/memes')
 
-storage_host = os.getenv('MINIO_API_URL')
-
+storage_host = MINIO_API_URL
 
 def get_db():
     db = SessionLocal()
@@ -27,12 +25,15 @@ def get_db():
     finally:
         db.close()
 
+
 @router.get('', response_model=list[schemas.Meme])
 async def get_memes(skip: int = 0,
                     limit: int = 100,
-                    db: Session = Depends(get_db),):
+                    db: Session = Depends(get_db),
+                    user: User = Depends(current_user)):
     memes = crud.get_memes(skip, limit, db)
     return memes
+
 
 @router.get('/{meme_id}')
 async def get_meme_link(meme_id: str,
@@ -46,6 +47,7 @@ async def get_meme_link(meme_id: str,
         'meme': meme,
         'link': link[1:-1],
     }
+
 
 @router.post('')
 async def upload_file(file: UploadFile, filename: str = Form(),
@@ -65,6 +67,7 @@ async def upload_file(file: UploadFile, filename: str = Form(),
             return new_meme
     except Exception as e:
         return f'db error "{e}"'
+
 
 @router.delete('/{meme_id}', response_model=schemas.Meme)
 async def del_meme(meme_id: str, db: Session = Depends(get_db)):

@@ -4,13 +4,12 @@ from dotenv import load_dotenv
 from fastapi import APIRouter
 from sqlalchemy.orm import Session
 
+from ..congif import MINIO_API_URL
 from ..models import models
-
-load_dotenv()
 
 router = APIRouter(prefix='/memes')
 
-storage_host = os.getenv('MINIO_API_URL')
+storage_host = MINIO_API_URL
 
 
 def get_memes(skip: int,
