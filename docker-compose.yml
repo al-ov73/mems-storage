@@ -51,7 +51,9 @@ services:
       - .env-non-dev
     command: server /data --console-address ":9001"
     ports:
-      - "9000:9000"
-      - "9001:9001"
+      - 9000:9000
+      - 9001:9001
+    expose:
+      - 9000
     volumes:
       - minio_data:/data

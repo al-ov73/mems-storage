@@ -1,26 +1,26 @@
 import React, { useState, useEffect } from "react";
 import FormData from 'form-data'
 import axios from 'axios';
+import routes from "../routes/routes";
 
-const apiUrl = process.env.REACT_APP_API_URL;
 
-const ImageForm = () => {
+const IndexPage = () => {
   const [selectedImage, setSelectedImage] = useState(null);
   const [selectedName, setSelectedName] = useState(null);
   const [memesList, setMemesList] = useState([]);
   const [linksList, setLinksList] = useState([]);
-  console.log('apiUrl', apiUrl)
+
   useEffect(() => {
-    axios.get(apiUrl).then((response) => {
+    axios.get(routes.memesPath, { withCredentials: true }).then((response) => {
       if (response.data !== memesList) {
         setMemesList(response.data)
       }
     })
   }, []);
-
+  
   useEffect(() => {
     const promises = memesList.map((meme) => {
-      return axios.get(`${apiUrl}/${meme.id}`).then((response) => {
+      return axios.get(`${routes.memesPath}${meme.id}`, { withCredentials: true }).then((response) => {
         return {
           'link': response.data,
           'id': meme.id,
@@ -29,9 +29,10 @@ const ImageForm = () => {
     })
     Promise.all(promises).then((meme_links) => setLinksList(meme_links))
   }, [memesList]);
-
+  console.log('memesList', memesList)
+  console.log('linksList', linksList)
   const handleImageDelete = async (id) => {
-    axios.delete(`${apiUrl}/${id}`)
+    axios.delete(`${routes.memesPath}${id}`, { withCredentials: true })
       .then((response) => console.log(response))
   }
 
@@ -45,13 +46,13 @@ const ImageForm = () => {
                 const form = new FormData();
                 form.append('file', selectedImage);
                 form.append('filename', selectedName);
-                axios.post(apiUrl, form, {
+                axios.post(routes.memesPath, form, {
                   headers: {
                     'Content-Type': `multipart/form-data`,
                   }
                 }).then((response) => {
                   console.log('frontend response', response)
-                  axios.get(apiUrl).then((response) => {
+                  axios.get(routes.memesPath).then((response) => {
                     if (response.data !== memesList) {
                       setMemesList(response.data)
                     }
@@ -94,10 +95,10 @@ const ImageForm = () => {
     {linksList && <>
         {linksList.map((link) => <img key={link.id}
                                       onClick={() => handleImageDelete(link.id)}
-                                      src={link.link}/>)}
+                                      src={link.link.link.replace('minio', 'localhost')}/>)}
     </>}
   </>
   );
 }
 
-export default ImageForm;
+export default IndexPage;
