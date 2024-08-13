@@ -1,8 +1,8 @@
 import { configureStore } from '@reduxjs/toolkit';
-import usersReducer from './usersSlice.js';
+import memesReducer from './memesSlice.js';
 
 export default configureStore({
   reducer: {
-    users: usersReducer,
+    memes: memesReducer,
   },
 });

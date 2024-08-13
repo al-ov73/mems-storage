@@ -30,6 +30,10 @@ async def get_memes(skip: int = 0,
                     db: Session = Depends(get_db),
                     user: User = Depends(current_user)):
     memes = crud.get_memes(skip, limit, db)
+    for meme in memes:
+        response = requests.get(f'{MINIO_API_URL}/link/{meme.name}')
+        link = response.text
+        meme.link = link[1:-1]
     return memes
 
 

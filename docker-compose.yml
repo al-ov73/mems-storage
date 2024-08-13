@@ -10,7 +10,6 @@ services:
     ports:
       - 3000:3000
 
-
   db:
     image: postgres:15
     container_name: db_app
@@ -50,13 +49,9 @@ services:
     image: minio/minio
     env_file:
       - .env-non-dev
-    environment:
-      - MINIO_SERVER_URL=http://127.0.0.1:9000'
     command: server /data --console-address ":9001"
     ports:
       - 9000:9000
       - 9001:9001
-    expose:
-      - 9000
     volumes:
       - minio_data:/data

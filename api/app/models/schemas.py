@@ -6,6 +6,7 @@ class Meme(BaseModel):
     id: int
     name: str
     created_at: datetime
+    link: str
 
 
 class MemeWithLink(Meme):

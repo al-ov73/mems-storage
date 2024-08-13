@@ -11,7 +11,7 @@ import routes from '../routes/routes.js';
 import useAuth from '../hooks/index.js';
 import IndexNavbar from './Navbar.jsx';
 import SpinnerEl from './Spinner.jsx';
-import { setCredentials } from '../slices/usersSlice.js';
+
 
 const LoginPage = () => {
   const [isLoading, setLoading] = useState(false);
