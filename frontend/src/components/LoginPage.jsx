@@ -60,7 +60,7 @@ const LoginPage = () => {
     <div className='d-flex flex-column h-100'>
       <div className='container-fluid h-100'>
         <div className='row justify-content-center align-content-center h-100'>
-          <div className='col-3 col-md-4'>
+          <div className='col-md-6'>
             <div className='card shadow-sm'>
               <div className='card-body row p-5'>
                 <FormikProvider value={formik}>

@@ -11,16 +11,21 @@ const IndexPage = () => {
   const [linksList, setLinksList] = useState([]);
 
   useEffect(() => {
-    axios.get(routes.memesPath, { withCredentials: true }).then((response) => {
-      if (response.data !== memesList) {
-        setMemesList(response.data)
-      }
-    })
+    axios.get(routes.memesPath, { withCredentials: true })
+      .then((response) => {
+        if (response.data !== memesList) {
+          setMemesList(response.data)
+        }
+      })
+      .catch((e) => {
+        console.log('memes get error');
+        console.log(e)
+      })
   }, []);
   
   useEffect(() => {
     const promises = memesList.map((meme) => {
-      return axios.get(`${routes.memesPath}${meme.id}`, { withCredentials: true }).then((response) => {
+      return axios.get(`${routes.memesPath}/${meme.id}`, { withCredentials: true }).then((response) => {
         return {
           'link': response.data,
           'id': meme.id,
@@ -32,7 +37,7 @@ const IndexPage = () => {
   console.log('memesList', memesList)
   console.log('linksList', linksList)
   const handleImageDelete = async (id) => {
-    axios.delete(`${routes.memesPath}${id}`, { withCredentials: true })
+    axios.delete(`${routes.memesPath}/${id}`, { withCredentials: true })
       .then((response) => console.log(response))
   }
 
@@ -95,7 +100,7 @@ const IndexPage = () => {
     {linksList && <>
         {linksList.map((link) => <img key={link.id}
                                       onClick={() => handleImageDelete(link.id)}
-                                      src={link.link.link.replace('minio', 'localhost')}/>)}
+                                      src={link.link.link.replace('minio', '172.18.0.4')}/>)}
     </>}
   </>
   );
