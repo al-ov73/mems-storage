@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import FormData from 'form-data'
 import axios from 'axios';
 import routes from "../routes/routes";
+import { useSelector, useDispatch } from 'react-redux';
 
 
 const IndexPage = () => {
@@ -9,6 +10,7 @@ const IndexPage = () => {
   const [selectedName, setSelectedName] = useState(null);
   const [memesList, setMemesList] = useState([]);
   const [linksList, setLinksList] = useState([]);
+  const { access_token } = useSelector((state) => state.users);
 
   useEffect(() => {
     axios.get(routes.memesPath, { withCredentials: true })
@@ -25,7 +27,11 @@ const IndexPage = () => {
   
   useEffect(() => {
     const promises = memesList.map((meme) => {
-      return axios.get(`${routes.memesPath}/${meme.id}`, { withCredentials: true }).then((response) => {
+      return axios.get(`${routes.memesPath}/${meme.id}`, {
+        headers: {
+          Authorization: `Bearer ${access_token}`,
+        },
+      }).then((response) => {
         return {
           'link': response.data,
           'id': meme.id,

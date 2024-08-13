@@ -11,6 +11,7 @@ import routes from '../routes/routes.js';
 import useAuth from '../hooks/index.js';
 import IndexNavbar from './Navbar.jsx';
 import SpinnerEl from './Spinner.jsx';
+import { setCredentials } from '../slices/usersSlice.js';
 
 const LoginPage = () => {
   const [isLoading, setLoading] = useState(false);
@@ -33,7 +34,13 @@ const LoginPage = () => {
     params.append('password', values.password);
     try {
       const response = await axios.post(routes.loginPath, params, { withCredentials: true });
-      console.log(response)
+      const { access_token } = response.data;
+      if (access_token) {
+        localStorage.setItem('user', access_token)
+        dispatch(setCredentials({ access_token }))
+        auth.loggedIn = true;
+        return navigate('/');
+      }
       auth.loggedIn = true;
       setLoading(false)
       return navigate('/');

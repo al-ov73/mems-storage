@@ -4,8 +4,7 @@ import { createSlice } from '@reduxjs/toolkit'
 // import { RootState } from '../../app/store'
 
 const initialState = {
-  username: null,
-  token: null,
+  access_token: null,
 }
 
 const slice = createSlice({
@@ -13,14 +12,12 @@ const slice = createSlice({
   initialState,
   reducers: {
 
-    setCredentials: (state, {payload: { username, token }}) => {
-      state.username = username;
-      state.token = token;
+    setCredentials: (state, {payload: { access_token }}) => {
+      state.access_token = access_token;
     },
 
     removeCredentials: (state) => {
-      state.username = null;
-      state.token = null;
+      state.access_token = null;
     },
   },
 })
