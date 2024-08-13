@@ -10,21 +10,6 @@ load_dotenv()
 
 app = FastAPI()
 
-origins = [
-    'http://localhost:8000',
-    'http://127.0.0.1:8000',
-    'http://localhost',
-    'http://127.0.0.1',
-]
-
-app.add_middleware(
-    CORSMiddleware,
-    allow_origins=origins,
-    allow_credentials=True,
-    allow_methods=["*"],
-    allow_headers=["*"],
-)
-
 storage_handler = MinioHandler(
     os.getenv('MINIO_URL'),
     os.getenv('MINIO_ACCESS_KEY'),

@@ -16,8 +16,6 @@ from ..models import models, schemas
 
 router = APIRouter(prefix='/memes')
 
-storage_host = MINIO_API_URL
-
 def get_db():
     db = SessionLocal()
     try:
@@ -41,7 +39,7 @@ async def get_meme_link(meme_id: str,
     meme = crud.get_meme(meme_id, db)
     if not meme:
         return 'meme not exist'
-    response = requests.get(f'{storage_host}/link/{meme.name}')
+    response = requests.get(f'{MINIO_API_URL}/link/{meme.name}')
     link = response.text
     return {
         'meme': meme,
@@ -56,7 +54,7 @@ async def upload_file(file: UploadFile, filename: str = Form(),
         new_meme = models.Meme(name=filename)
         new_meme.is_uploaded = False
         if os.getenv("TEST_ENV") == 'False':
-            response = requests.post(f'{storage_host}/upload', files={
+            response = requests.post(f'{MINIO_API_URL}/upload', files={
                 'file': (filename, file.file, 'multipart/form-data')})
             if response.status_code == 200:
                 new_meme.is_uploaded = True
@@ -75,7 +73,7 @@ async def del_meme(meme_id: str, db: Session = Depends(get_db)):
         meme = crud.del_meme(meme_id, db)
         if os.getenv("TEST_ENV") == 'False':
             # del from s3
-            requests.delete(f'{storage_host}/meme_delete/{meme.name}')
+            requests.delete(f'{MINIO_API_URL}/meme_delete/{meme.name}')
         return meme.to_dict()
     except Exception:
         return f'error "{Exception}"'
@@ -91,8 +89,8 @@ async def update_meme(meme_id: str,
         if os.getenv("TEST_ENV") == 'False':
             # update in s3
             delete_response = requests.delete(
-                f'{storage_host}/meme_delete/{meme.name}')
-            upload_response = requests.post(f'{storage_host}/upload', files={
+                f'{MINIO_API_URL}/meme_delete/{meme.name}')
+            upload_response = requests.post(f'{MINIO_API_URL}/upload', files={
                 'file': (filename, file.file, 'multipart/form-data')})
         return meme.to_dict()
     except Exception:

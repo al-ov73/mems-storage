@@ -50,6 +50,8 @@ services:
     image: minio/minio
     env_file:
       - .env-non-dev
+    environment:
+      - MINIO_SERVER_URL=http://127.0.0.1:9000'
     command: server /data --console-address ":9001"
     ports:
       - 9000:9000

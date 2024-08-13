@@ -36,8 +36,8 @@ const LoginPage = () => {
       const response = await axios.post(routes.loginPath, params, { withCredentials: true });
       const { access_token } = response.data;
       if (access_token) {
+        console.log('set token to storage', access_token)
         localStorage.setItem('user', access_token)
-        dispatch(setCredentials({ access_token }))
         auth.loggedIn = true;
         return navigate('/');
       }
