@@ -98,7 +98,12 @@ const IndexPage = () => {
     </div>
 
     {memes && <>
-        {memes.map((meme) => <ImageCard meme={meme}/>)}
+        {memes.map((meme) => {
+          return <div key={meme.id}>
+                  <ImageCard meme={meme}/>
+                </div>
+          }
+        )}
     </>}
   </>
   );

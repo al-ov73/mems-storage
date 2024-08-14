@@ -21,6 +21,4 @@ RUN curl -sSL https://install.python-poetry.org | python3 - && poetry --version
 
 RUN poetry install
 
-COPY . .
-
-CMD gunicorn app.main:app --workers 4 --worker-class uvicorn.workers.UvicornWorker --bind=0.0.0.0:8000
+CMD sh -c 'alembic upgrade head && gunicorn app.main:app --workers 4 --worker-class uvicorn.workers.UvicornWorker --bind=0.0.0.0:8000 --reload'

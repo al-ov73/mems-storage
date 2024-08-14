@@ -36,10 +36,7 @@ class MinioHandler:
         return response
 
     def get_link(self, filename: str):
-        link = self.client.get_presigned_url("GET", self.bucket, filename)
-        print('old link', link)
-        print('new link', link.replace('minio', 'localhost'))
-        return link.replace('minio', 'localhost')
+        return self.client.get_presigned_url("GET", self.bucket, filename)
 
     def remove_object(self, filename: str):
         self.client.remove_object(self.bucket, filename)

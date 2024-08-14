@@ -1,6 +1,5 @@
 from fastapi import FastAPI
-# from fastapi.middleware.cors import CORSMiddleware
-from starlette.middleware.cors import CORSMiddleware
+from fastapi.middleware.cors import CORSMiddleware
 
 from .auth.auth import auth_backend
 from .auth.manager import fastapi_users

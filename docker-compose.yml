@@ -26,11 +26,11 @@ services:
     container_name: mems-api
     ports:
       - 8000:8000
+    volumes:
+      - ./api:/api
     depends_on:
       - db
       - s3_storage
-    command: sh -c 'poetry run alembic upgrade head &&
-                    poetry run gunicorn app.main:app --workers 4 --worker-class uvicorn.workers.UvicornWorker --bind=0.0.0.0:8000'
 
   s3_storage:
     build:
@@ -40,9 +40,11 @@ services:
     container_name: s3-storage-api
     ports:
       - 1234:8888
+    volumes:
+      - ./storage:/storage
     depends_on:
       - minio
-    command: sh -c 'poetry run gunicorn app.main:app --workers 4 --worker-class uvicorn.workers.UvicornWorker --bind=0.0.0.0:8888'
+    command: sh -c 'gunicorn app.main:app --workers 4 --worker-class uvicorn.workers.UvicornWorker --bind=0.0.0.0:8888 --reload'
 
   minio:
     container_name: minio
