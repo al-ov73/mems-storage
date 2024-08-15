@@ -34,6 +34,7 @@ const LoginPage = () => {
     params.append('password', values.password);
     try {
       const response = await axios.post(routes.loginPath, params, { withCredentials: true });
+      console.log('login response', response)
       const { access_token } = response.data;
       if (access_token) {
         console.log('set token to storage', access_token)

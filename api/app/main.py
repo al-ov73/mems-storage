@@ -1,10 +1,22 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
+from datetime import datetime, timedelta, timezone
+from typing import Annotated
 
-from .auth.auth import auth_backend
-from .auth.manager import fastapi_users
-from .auth.schemas import UserRead, UserCreate, UserUpdate
+import jwt
+from fastapi import Depends, FastAPI, HTTPException, status
+from fastapi.security import OAuth2PasswordBearer, OAuth2PasswordRequestForm
+from jwt.exceptions import InvalidTokenError
+from passlib.context import CryptContext
+from pydantic import BaseModel
+
+from .auth.auth_handler import authenticate_user
+from .models.schemas import Token
+# from .auth.auth import auth_backend
+# from .auth.manager import fastapi_users
+# from .auth.schemas import UserRead, UserCreate, UserUpdate
 from .routers.memes import router as router_memes
+from .routers.auth import router as router_auth
 
 app = FastAPI()
 
@@ -19,23 +31,15 @@ app.add_middleware(
     allow_credentials=True,
     allow_methods=["GET", "POST", "OPTIONS", "DELETE", "PATCH", "PUT"],
     allow_headers=["*"],
-    # allow_headers=["Content-Type", "Set-Cookie", "Access-Control-Allow-Headers", "Access-Control-Allow-Origin",
-    #                "Authorization"],
 )
 
-app.include_router(router_memes)
 app.include_router(
-    fastapi_users.get_auth_router(auth_backend),
+    router_auth,
     prefix="/auth/jwt",
     tags=["auth"],
 )
 app.include_router(
-    fastapi_users.get_register_router(UserRead, UserCreate),
-    prefix="/auth",
-    tags=["auth"],
-)
-app.include_router(
-    fastapi_users.get_users_router(UserRead, UserUpdate),
-    prefix="/users",
-    tags=["users"],
+    router_memes,
+    prefix="/memes",
+    tags=["memes"],
 )

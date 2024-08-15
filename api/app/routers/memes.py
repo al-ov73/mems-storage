@@ -3,18 +3,16 @@ from typing import Annotated
 
 import requests
 from fastapi import Depends, UploadFile, File, Form, APIRouter
-from fastapi_users import fastapi_users
 from sqlalchemy.orm import Session
 
-from ..auth.database import User
-from ..auth.manager import current_user
 from ..congif import MINIO_API_URL
 from ..database import crud
 from ..database.database import SessionLocal
 
 from ..models import models, schemas
+from ..models.models import User
 
-router = APIRouter(prefix='/memes')
+router = APIRouter()
 
 def get_db():
     db = SessionLocal()
@@ -27,8 +25,7 @@ def get_db():
 @router.get('', response_model=list[schemas.Meme])
 async def get_memes(skip: int = 0,
                     limit: int = 100,
-                    db: Session = Depends(get_db),
-                    user: User = Depends(current_user)):
+                    db: Session = Depends(get_db)):
     memes = crud.get_memes(skip, limit, db)
     for meme in memes:
         response = requests.get(f'{MINIO_API_URL}/link/{meme.name}')

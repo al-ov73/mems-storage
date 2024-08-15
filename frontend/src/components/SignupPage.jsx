@@ -19,10 +19,6 @@ const SignupPage = () => {
   const [isLoading, setLoading] = useState(false);
 
   const SignupSchema = Yup.object().shape({
-    email: Yup.string()
-    .min(3, 'от 3 о 20 символов')
-    .max(20, 'от 3 о 20 символов')
-    .required('required field'),
     username: Yup.string()
       .min(3, 'от 3 о 20 символов')
       .max(20, 'от 3 о 20 символов')
@@ -36,13 +32,11 @@ const SignupPage = () => {
   const handleSubmit = (values, actions) => async () => {
     setLoading(true)
     console.log('values', values)
-    console.log('routes.signupPath', routes.signupPath)
+    const params = new URLSearchParams();
+    params.append('username', values.username);
+    params.append('password', values.password);
     try {
-      const response = await axios.post(routes.signupPath, {
-        email: values.email,
-        username: values.username,
-        password: values.password,
-      }, { withCredentials: true });
+      const response = await axios.post(routes.signupPath, params, { withCredentials: true });
       console.log('response', response.data)
       auth.loggedIn = true;
       setLoading(false)
@@ -55,7 +49,6 @@ const SignupPage = () => {
 
   const formik = useFormik({
     initialValues: {
-      email: '',
       username: '',
       password: '',
       passwordConfirmation: '',
@@ -78,18 +71,6 @@ const SignupPage = () => {
                 <FormikProvider value={formik}>
                   <Form onSubmit={formik.handleSubmit}>
                       <h1 className="text-center mb-4">Зарегистрироваться</h1>
-
-                      <Form.Group className="mb-3">
-                      <Form.Label htmlFor="email">Ваш email</Form.Label>
-                        <Form.Control type="text"
-                          placeholder="Ваше имя"
-                          autoComplete="email"
-                          id="email"
-                          onChange={formik.handleChange}
-                          value={formik.values.email}
-                          />
-                      <ErrorMessage name="username" />
-                    </Form.Group>
 
                       <Form.Group className="mb-3">
                       <Form.Label htmlFor="username">Ваш ник</Form.Label>
