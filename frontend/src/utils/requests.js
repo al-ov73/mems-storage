@@ -1,6 +1,5 @@
 import axios from 'axios';
 import routes from './routes';
-import { validateYupSchema } from 'formik';
 
 const getMemes = async (access_token) => {
   return axios.get(routes.memesPath, {
@@ -14,14 +13,14 @@ const loginUser = async (values) => {
   const params = new URLSearchParams();
   params.append('username', values.email);
   params.append('password', values.password);
-  return axios.post(routes.loginPath, params, { withCredentials: true });  
+  return axios.post(routes.loginPath, params);  
 }
 
 const signupUser = async (values) => {
   const params = new URLSearchParams();
   params.append('username', values.username);
   params.append('password', values.password);
-  return axios.post(routes.signupPath, params, { withCredentials: true });
+  return axios.post(routes.signupPath, params);
 }
 
 const postMeme = async (form, access_token) => {
@@ -37,7 +36,7 @@ const deleteMeme = async (id, access_token) => {
     headers: {
       Authorization: `Bearer ${access_token}`,
     },
-  }, { withCredentials: true })
+  })
 }
 
 const validateToken = async (access_token) => {

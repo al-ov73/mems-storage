@@ -1,14 +1,11 @@
 //TODO
-// логика login
+// обработка сообщений ошибок Login
 // карточки рядом
-// запросы в отдельный файл в функции
 // добавить Loading
 
 
 import React, { useState, useEffect } from "react";
 import FormData from 'form-data'
-import axios from 'axios';
-import routes from "../utils/routes.js";
 import ImageCard from './ImageCard.jsx'
 import { useDispatch, useSelector } from "react-redux";
 import { setMemes } from "../slices/memesSlice";
@@ -19,9 +16,7 @@ import NavbarPage from "./Navbar.jsx";
 const IndexPage = () => {
   const [selectedImage, setSelectedImage] = useState(null);
   const [selectedName, setSelectedName] = useState(null);
-
   const dispatch = useDispatch();
-  const [loading, setLoading] = useState(true);
 
   const memes = useSelector((state) => state.memes.memes);
   const access_token = localStorage.getItem('user')

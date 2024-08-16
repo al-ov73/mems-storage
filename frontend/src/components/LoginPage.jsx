@@ -37,9 +37,6 @@ const LoginPage = () => {
         auth.loggedIn = true;
         return navigate('/');
       }
-      auth.loggedIn = true;
-      setLoading(false)
-      return navigate('/');
     } catch (e) {
       if (e.message === "Request failed with status code 401") {
         actions.setFieldError('password', 'Неверное имя пользователя или пароль')

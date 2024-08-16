@@ -5,9 +5,7 @@ import { useDispatch } from 'react-redux'
 import { useNavigate } from "react-router-dom";
 import { FormikProvider, useFormik, ErrorMessage } from "formik";
 import * as Yup from 'yup';
-import axios from 'axios';
 
-import routes from '../utils/routes.js';
 import useAuth from '../hooks/index.js';
 import IndexNavbar from './Navbar.jsx';
 import { signupUser } from '../utils/requests.js';
@@ -33,10 +31,13 @@ const SignupPage = () => {
     setLoading(true)
     try {
       const response = await signupUser(values)
-      console.log('response', response.data)
-      auth.loggedIn = true;
-      setLoading(false)
-      return navigate('/');
+      const { access_token } = response.data;
+      if (access_token) {
+        localStorage.setItem('user', access_token)
+        auth.loggedIn = true;
+        setLoading(false)
+        return navigate('/');
+      }
     } catch (e) {
       console.log('e', e);
       setLoading(false)

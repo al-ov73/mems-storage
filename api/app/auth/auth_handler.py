@@ -22,7 +22,12 @@ oauth2_scheme = OAuth2PasswordBearer(tokenUrl="token")
 
 
 def verify_password(plain_password, hashed_password):
-    return pwd_context.verify(plain_password, hashed_password)
+    try:
+        result = pwd_context.verify(plain_password, hashed_password)
+    except Exception as ex:
+        print('password Exception', ex)
+        return False
+    return result
 
 
 def get_password_hash(password):
@@ -37,6 +42,7 @@ def get_user(username: str, db: Session = Depends(get_db)):
 
 def authenticate_user(username: str, password: str, db: Session = Depends(get_db)):
     user = get_user(username, db)
+    print('user in db', user)
     if not user:
         return False
     if not verify_password(password, user.hashed_password):
