@@ -8,12 +8,10 @@ from jwt.exceptions import InvalidTokenError
 from passlib.context import CryptContext
 from sqlalchemy.orm import Session
 
-from api.app.models.models import User
-from api.app.models.schemas import TokenData
-from api.app.routers.memes import get_db
+from ..models.models import User
+from ..models.schemas import TokenData
+from ..database.database import get_db
 
-# to get a string like this run:
-# openssl rand -hex 32
 SECRET_KEY = "09d25e094faa6ca2556c818166b7a9563b93f7099f6f0f4caa6cf63b88e8d3e7"
 ALGORITHM = "HS256"
 ACCESS_TOKEN_EXPIRE_MINUTES = 30
@@ -33,7 +31,6 @@ def get_password_hash(password):
 
 def get_user(username: str, db: Session = Depends(get_db)):
     user = db.query(User).filter(User.username == username).first()
-    # dict_user=dict(user)
     if user:
         return user
 
@@ -86,6 +83,7 @@ async def get_current_user(token: Annotated[str, Depends(oauth2_scheme)], db: Se
         token_data = TokenData(username=username)
     except InvalidTokenError:
         raise credentials_exception
+    print('token_data.username', token_data)
     user = get_user(token_data.username, db)
     if user is None:
         raise credentials_exception

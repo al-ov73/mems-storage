@@ -7,10 +7,10 @@ import { FormikProvider, useFormik, ErrorMessage } from "formik";
 import * as Yup from 'yup';
 import axios from 'axios';
 
-import routes from '../routes/routes.js';
+import routes from '../utils/routes.js';
 import useAuth from '../hooks/index.js';
 import IndexNavbar from './Navbar.jsx';
-
+import { signupUser } from '../utils/requests.js';
 
 const SignupPage = () => {
   const dispatch = useDispatch()
@@ -31,12 +31,8 @@ const SignupPage = () => {
 
   const handleSubmit = (values, actions) => async () => {
     setLoading(true)
-    console.log('values', values)
-    const params = new URLSearchParams();
-    params.append('username', values.username);
-    params.append('password', values.password);
     try {
-      const response = await axios.post(routes.signupPath, params, { withCredentials: true });
+      const response = await signupUser(values)
       console.log('response', response.data)
       auth.loggedIn = true;
       setLoading(false)

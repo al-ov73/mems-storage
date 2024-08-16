@@ -22,9 +22,7 @@ class Meme(BaseModel):
     created_at: datetime
     link: str
 
-
-class MemeWithLink(Meme):
+class DeleteMeme(BaseModel):
     id: int
     name: str
-    link: str
     created_at: datetime

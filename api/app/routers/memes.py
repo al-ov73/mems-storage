@@ -7,23 +7,17 @@ from sqlalchemy.orm import Session
 
 from ..congif import MINIO_API_URL
 from ..database import crud
-from ..database.database import SessionLocal
 
 from ..models import models, schemas
 from ..models.models import User
+from ..auth.auth_handler import get_current_user
+from ..database.database import get_db
 
 router = APIRouter()
 
-def get_db():
-    db = SessionLocal()
-    try:
-        yield db
-    finally:
-        db.close()
-
-
 @router.get('', response_model=list[schemas.Meme])
-async def get_memes(skip: int = 0,
+async def get_memes(current_user: Annotated[User, Depends(get_current_user)],
+                    skip: int = 0,
                     limit: int = 100,
                     db: Session = Depends(get_db)):
     memes = crud.get_memes(skip, limit, db)
@@ -68,7 +62,7 @@ async def upload_file(file: UploadFile, filename: str = Form(),
         return f'db error "{e}"'
 
 
-@router.delete('/{meme_id}', response_model=schemas.Meme)
+@router.delete('/{meme_id}', response_model=schemas.DeleteMeme)
 async def del_meme(meme_id: str, db: Session = Depends(get_db)):
     try:
         meme = crud.del_meme(meme_id, db)

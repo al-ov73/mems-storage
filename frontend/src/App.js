@@ -5,7 +5,7 @@ import {
   Navigate,
   useLocation,
 } from 'react-router-dom';
-import React, { useState } from 'react';
+import React, { useState, useEffect } from "react";
 
 import LoginPage from './components/LoginPage.jsx';
 import IndexPage from './components/IndexPage.jsx';
@@ -13,6 +13,8 @@ import SignupPage from './components/SignupPage.jsx';
 
 import useAuth from './hooks/index.js';
 import { AuthContext } from './contexts/index.js';
+import { validateToken } from './utils/requests.js';
+import SpinnerEl from './components/Spinner.jsx';
 
 
 const AuthProvider = ({ children }) => {
@@ -32,12 +34,24 @@ const AuthProvider = ({ children }) => {
 const PrivateRoute = ({ children }) => {
   const auth = useAuth();
   const location = useLocation();
-  if (localStorage.getItem('user')) {
-    auth.loggedIn = true;
+  const [loading, setLoading] = useState(true);
+
+  const access_token = localStorage.getItem('user')
+
+  useEffect(() => {
+    const inner = async () => {
+      auth.loggedIn = await validateToken(access_token)
+      setLoading(false);
+    }
+    inner();
+  }, []);
+
+  if (!access_token) {
+    return <Navigate to="/login" state={{ from: location }} />
   }
-  return (
-    auth.loggedIn ? children : <Navigate to="/login" state={{ from: location }} />
-  );
+
+  const content = auth.loggedIn ? children : <Navigate to="/login" state={{ from: location }} />
+  return loading ? <SpinnerEl/> : content;
 };
 
 function App() {

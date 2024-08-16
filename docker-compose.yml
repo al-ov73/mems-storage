@@ -9,6 +9,9 @@ services:
     container_name: mems-frontend
     ports:
       - 3000:3000
+    volumes:
+      - ./frontend/public:/app/public
+      - ./frontend/src:/app/src
 
   db:
     image: postgres:15
