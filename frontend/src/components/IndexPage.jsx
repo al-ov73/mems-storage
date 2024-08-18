@@ -8,6 +8,10 @@ import React, { useState, useEffect } from "react";
 import FormData from 'form-data'
 import ImageCard from './ImageCard.jsx'
 import { useDispatch, useSelector } from "react-redux";
+import Container from 'react-bootstrap/Container';
+import Row from 'react-bootstrap/Row';
+import Col from 'react-bootstrap/Col';
+
 import { setMemes } from "../slices/memesSlice";
 import { getMemes, postMeme } from "../utils/requests.js";
 import NavbarPage from "./Navbar.jsx";
@@ -84,15 +88,18 @@ const IndexPage = () => {
         </form>
       </div>
     </div>
-
-    {memes && <>
-        {memes.map((meme) => {
-          return <div key={meme.id}>
-                  <ImageCard meme={meme}/>
-                </div>
-          }
-        )}
-    </>}
+    <Container>
+      <Row>
+        {memes && <>
+            {memes.map((meme) => {
+              return <Col xs={6} md={4} className="mx-4 my-1" key={meme.id}>
+                      <ImageCard meme={meme}/>
+                    </Col>
+              }
+            )}
+        </>}
+        </Row>
+    </Container>
   </>
   );
 }

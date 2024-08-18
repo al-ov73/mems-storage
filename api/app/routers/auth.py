@@ -7,7 +7,8 @@ from fastapi.security import OAuth2PasswordRequestForm
 from sqlalchemy.orm import Session
 
 from ..auth.auth_handler import authenticate_user, ACCESS_TOKEN_EXPIRE_MINUTES, create_access_token, register_user
-from ..database.database import SessionLocal
+from ..database.config import SessionLocal
+
 from ..models.schemas import Token
 from ..auth.auth_handler import get_current_user
 

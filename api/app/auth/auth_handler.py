@@ -8,9 +8,9 @@ from jwt.exceptions import InvalidTokenError
 from passlib.context import CryptContext
 from sqlalchemy.orm import Session
 
+from ..database.config import get_db
 from ..models.models import User
 from ..models.schemas import TokenData
-from ..database.database import get_db
 
 SECRET_KEY = "09d25e094faa6ca2556c818166b7a9563b93f7099f6f0f4caa6cf63b88e8d3e7"
 ALGORITHM = "HS256"
@@ -25,7 +25,6 @@ def verify_password(plain_password, hashed_password):
     try:
         result = pwd_context.verify(plain_password, hashed_password)
     except Exception as ex:
-        print('password Exception', ex)
         return False
     return result
 
@@ -42,12 +41,12 @@ def get_user(username: str, db: Session = Depends(get_db)):
 
 def authenticate_user(username: str, password: str, db: Session = Depends(get_db)):
     user = get_user(username, db)
-    print('user in db', user)
     if not user:
         return False
     if not verify_password(password, user.hashed_password):
         return False
     return user
+
 
 def register_user(username: str, password: str, db: Session = Depends(get_db)):
     hashed_password = get_password_hash(password)
@@ -56,13 +55,13 @@ def register_user(username: str, password: str, db: Session = Depends(get_db)):
         'hashed_password': hashed_password
     }
     new_user = User(**new_user_dict)
-    print('new_user', new_user)
     db.add(new_user)
     db.commit()
     db.refresh(new_user)
     if not new_user:
         return False
     return new_user
+
 
 def create_access_token(data: dict, expires_delta: timedelta | None = None):
     to_encode = data.copy()
@@ -89,7 +88,6 @@ async def get_current_user(token: Annotated[str, Depends(oauth2_scheme)], db: Se
         token_data = TokenData(username=username)
     except InvalidTokenError:
         raise credentials_exception
-    print('token_data.username', token_data)
     user = get_user(token_data.username, db)
     if user is None:
         raise credentials_exception

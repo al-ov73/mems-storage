@@ -7,11 +7,11 @@ from sqlalchemy.orm import Session
 
 from ..congif import MINIO_API_URL
 from ..database import crud
+from ..database.config import get_db
 
 from ..models import models, schemas
 from ..models.models import User
 from ..auth.auth_handler import get_current_user
-from ..database.database import get_db
 
 router = APIRouter()
 

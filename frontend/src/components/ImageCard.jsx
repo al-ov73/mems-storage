@@ -1,18 +1,33 @@
 import Button from 'react-bootstrap/Button';
 import Card from 'react-bootstrap/Card';
-import { deleteMeme } from '../utils/requests';
-
+import Image from 'react-bootstrap/Image';
+import { useDispatch } from "react-redux";
+import { getMemes, deleteMeme } from '../utils/requests';
+import { setMemes } from "../slices/memesSlice";
 
 const ImageCard = ({ meme })  => {
   const access_token = localStorage.getItem('user')
+  const dispatch = useDispatch();
+  
+  const handleDelete = async (id, token) => {
+    const deleteResponse = await deleteMeme(id, token)
+    console.log('deleteResponse', deleteResponse);
+    const getMemesResponse = await getMemes(token);
+    console.log('getMemesResponse', getMemesResponse)
+    dispatch(setMemes(getMemesResponse.data))    
+  }
 
   return (
     <Card style={{ width: '18rem' }}>
-      <Card.Img variant="top" src={meme.link} alt='Картинка не загрузилась:('/>
+      <Image 
+              height="150rem"
+              src={meme.link}
+              className="rounded mx-auto d-block"
+              alt='Картинка не загрузилась:('/>
       <Card.Body>
         <Card.Title>{meme.name}</Card.Title>
         <Button variant="primary"
-                onClick={() => deleteMeme(meme.id, access_token)}>
+                onClick={() => handleDelete(meme.id, access_token)}>
           Удалить
         </Button>
       </Card.Body>
