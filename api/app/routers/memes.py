@@ -1,4 +1,5 @@
 import os
+
 from typing import Annotated, List
 from fastapi import Depends, UploadFile, File, Form, APIRouter
 from sqlalchemy.orm import Session
@@ -9,17 +10,21 @@ from ..schemas.memes import MemeSchema
 from ..repositories.memes_repository import MemesRepository
 from ..config.app_congif import MINIO_API_URL
 from ..config.db_config import get_db
+from ..utils.auth_utils import get_current_user
 
 router = APIRouter()
 
 MEME_REPO = MemesRepository()
 
-# current_user: Annotated[User, Depends(get_current_user)]
-@router.get('', response_model=list[MemeSchema])
+@router.get(
+    '',
+    response_model=list[MemeSchema],
+    dependencies=[Depends(get_current_user)],
+)
 async def get_memes(skip: int = 0,
                     limit: int = 100,
                     db: Session = Depends(get_db)
-    ) -> List[MemeSchema]:
+    ):
     '''
     return list of memes with links to download
     '''
@@ -31,7 +36,7 @@ async def get_memes(skip: int = 0,
     return memes
 
 
-@router.get('/{meme_id}')
+@router.get('/{meme_id}', dependencies=[Depends(get_current_user)],)
 async def get_meme_link(meme_id: str,
                         db: Session = Depends(get_db)
     ) -> MemeSchema:
@@ -43,13 +48,14 @@ async def get_meme_link(meme_id: str,
         return 'meme not exist'
     response = requests.get(f'{MINIO_API_URL}/images/{meme.name}')
     meme.link = response.text
-    print('meme', meme)
     return meme
 
 
-@router.post('')
-async def upload_file(file: UploadFile, filename: str = Form(),
-                      db: Session = Depends(get_db)
+@router.post('', dependencies=[Depends(get_current_user)],)
+async def upload_file(
+        file: UploadFile,
+        filename: str = Form(),
+        db: Session = Depends(get_db)
     ) -> MemeSchema | str:
     '''
     add meme to db and to S3 storage
@@ -70,11 +76,15 @@ async def upload_file(file: UploadFile, filename: str = Form(),
         return f'db error "{e}"'
 
 
-@router.delete('/{meme_id}', response_model=MemeSchema)
+@router.delete(
+        '/{meme_id}',
+        response_model=MemeSchema,
+        dependencies=[Depends(get_current_user)],
+    )
 async def del_meme(
         meme_id: str,
         db: Session = Depends(get_db)
-    ) -> MemeSchema:
+    ):
     '''
     delete meme from db and S3 storage
     '''
@@ -88,12 +98,16 @@ async def del_meme(
         return f'error "{Exception}"'
 
 
-@router.put('/{meme_id}', response_model=MemeSchema)
+@router.put(
+        '/{meme_id}',
+        response_model=MemeSchema,
+        dependencies=[Depends(get_current_user)],
+    )
 async def update_meme(meme_id: str,
                       filename: Annotated[str, Form()],
                       file: UploadFile = File(...),
                       db: Session = Depends(get_db)
-    ) -> MemeSchema:
+    ):
     '''
     update meme in db and S3 storage
     '''
