@@ -1,6 +1,8 @@
 Memes storage
 ---
-<b>Service for storage your favorite memes.</b></br>
+Microservices based service for storage your favorite memes.</br>
+Covered by Pytest.</br>
+Please check Api documentations for services using links below.</br>
 
 ```
 Technologies:

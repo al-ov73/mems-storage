@@ -1,8 +1,7 @@
 from datetime import datetime
 
-from ..database.database import Base
-from sqlalchemy import TIMESTAMP, Column, String, text, \
-    Integer, Boolean
+from ..config.db_config import Base
+from sqlalchemy import TIMESTAMP, Column, String, text, Integer
 
 
 class User(Base):
@@ -12,6 +11,7 @@ class User(Base):
     username = Column(String, nullable=False)
     registered_at = Column(TIMESTAMP, default=datetime.utcnow)
     hashed_password = Column(String, nullable=False)
+
 
 class Meme(Base):
     __tablename__ = 'meme'

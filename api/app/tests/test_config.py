@@ -1,17 +1,12 @@
 import os
-
 import pytest
 from dotenv import load_dotenv
 from fastapi.testclient import TestClient
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 
-from ..database.database import Base, engine
+from ..config.db_config import Base, engine, get_db
 from ..main import app
-from ..routers.memes import get_db
-
-# get_db
-
 
 load_dotenv()
 
@@ -23,7 +18,6 @@ DB_NAME: str = os.getenv("TEST_DB_NAME")
 DB_ENDPOINT: str = os.getenv("DB_ENDPOINT")
 SQLALCHEMY_DATABASE_URL = f"postgresql://{DB_USER}:{DB_PASSWORD}@{DB_HOST}:{DB_PORT}/{DB_NAME}?sslmode=require"
 
-# SQLALCHEMY_DATABASE_URL = settings.DATABASE_URL
 
 engine = create_engine(SQLALCHEMY_DATABASE_URL)
 
@@ -58,6 +52,7 @@ def test_client(db_session):
     app.dependency_overrides[get_db] = override_get_db
     with TestClient(app) as test_client:
         yield test_client
+
 
 @pytest.fixture()
 def add_test_meme(test_client):
