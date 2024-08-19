@@ -25,7 +25,7 @@ async def get_memes(skip: int = 0,
     '''
     memes = await MEME_REPO.get_memes(skip, limit, db)
     for meme in memes:
-        response = requests.get(f'{MINIO_API_URL}/link/{meme.name}')
+        response = requests.get(f'{MINIO_API_URL}/images/{meme.name}')
         link = response.text
         meme.link = link[1:-1]
     return memes
@@ -41,7 +41,7 @@ async def get_meme_link(meme_id: str,
     meme = await MEME_REPO.get_meme(meme_id, db)
     if not meme:
         return 'meme not exist'
-    response = requests.get(f'{MINIO_API_URL}/link/{meme.name}')
+    response = requests.get(f'{MINIO_API_URL}/images/{meme.name}')
     meme.link = response.text
     print('meme', meme)
     return meme
@@ -57,7 +57,7 @@ async def upload_file(file: UploadFile, filename: str = Form(),
     try:
         new_meme = Meme(name=filename)
         if os.getenv("TEST_ENV") == 'False':
-            response = requests.post(f'{MINIO_API_URL}/upload', files={
+            response = requests.post(f'{MINIO_API_URL}/images', files={
                 'file': (filename, file.file, 'multipart/form-data')})
             if response.status_code != 200:
                 return 'storage error'
@@ -82,7 +82,7 @@ async def del_meme(
         meme = await MEME_REPO.del_meme(meme_id, db)
         if os.getenv("TEST_ENV") == 'False':
             # del from s3
-            requests.delete(f'{MINIO_API_URL}/meme_delete/{meme.name}')
+            requests.delete(f'{MINIO_API_URL}/images/{meme.name}')
         return meme
     except Exception:
         return f'error "{Exception}"'
@@ -101,8 +101,8 @@ async def update_meme(meme_id: str,
         meme = await MEME_REPO.update_name(meme_id, filename, db)
         if os.getenv("TEST_ENV") == 'False':
             # update in s3
-            requests.delete(f'{MINIO_API_URL}/meme_delete/{meme.name}')
-            requests.post(f'{MINIO_API_URL}/upload', files={
+            requests.delete(f'{MINIO_API_URL}/images/{meme.name}')
+            requests.post(f'{MINIO_API_URL}/images', files={
                 'file': (filename, file.file, 'multipart/form-data')
             })
         return meme

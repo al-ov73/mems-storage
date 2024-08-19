@@ -2,7 +2,6 @@ import os
 
 from dotenv import load_dotenv
 from fastapi import FastAPI, Request
-from fastapi.middleware.cors import CORSMiddleware
 
 from .handlers.minio_handler import MinioHandler
 
@@ -19,8 +18,8 @@ storage_handler = MinioHandler(
 )
 
 
-@app.post('/upload')
-async def upload(request: Request):
+@app.post('/images')
+async def upload_image(request: Request):
     async with request.form() as form:
         filename = form['file'].filename
         size = form['file'].size
@@ -29,18 +28,18 @@ async def upload(request: Request):
         return result
 
 
-@app.get('/list')
-async def list_files():
+@app.get('/images')
+async def list_images():
     return storage_handler.list()
 
 
-@app.get('/link/{filename}')
+@app.get('/images/{filename}')
 async def get_link(filename: str):
     link = storage_handler.get_link(filename)
     return link
 
 
-@app.delete('/meme_delete/{filename}')
-async def delete_meme(filename: str):
+@app.delete('/images/{filename}')
+async def delete_image(filename: str):
     response = storage_handler.remove_object(filename)
     return response
