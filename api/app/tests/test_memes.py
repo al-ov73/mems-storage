@@ -1,17 +1,22 @@
 import os
 from dotenv import load_dotenv
 
-from .test_config import test_client, add_test_meme
+from .test_config import test_client, add_test_meme, db_session, login_user
 
 load_dotenv()
 
 API_URL = os.getenv('API_URL')
 
 TEST_FILENAME = 'test_filename'
+TEST_USER = {
+    'username': 'test_username',
+    'password': 'test_password'
+}
 
-
-def test_root(test_client):
-    response = test_client.get("/memes")
+def test_root(test_client, login_user):
+    access_token = login_user(TEST_USER)
+    headers = {'Authorization': f'Bearer ${access_token}'}
+    response = test_client.get("/memes", headers=headers)
     assert response.status_code == 200
     assert len(response.json()) == 0
 

@@ -118,6 +118,9 @@ async def get_current_user(
         detail="Could not validate credentials",
         headers={"WWW-Authenticate": "Bearer"},
     )
+    print('token!!', token)
+    print('JWT_TOKEN_SECRET_KEY', JWT_TOKEN_SECRET_KEY)
+    print('ALGORITHM', ALGORITHM)
     try:
         payload = jwt.decode(token, JWT_TOKEN_SECRET_KEY, algorithms=[ALGORITHM])
         username: str = payload.get("sub")
@@ -125,6 +128,7 @@ async def get_current_user(
             raise credentials_exception
         token_data = TokenDataSchema(username=username)
     except InvalidTokenError:
+        print('InvalidTokenError!!!')
         raise credentials_exception
     user = get_user(token_data.username, db)
     if user is None:

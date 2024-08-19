@@ -1,4 +1,6 @@
 import os
+
+import httpx
 import pytest
 from dotenv import load_dotenv
 from fastapi.testclient import TestClient
@@ -54,8 +56,16 @@ def test_client(db_session):
         yield test_client
 
 
-@pytest.fixture()
-def add_test_meme(test_client):
+@pytest.fixture(scope="function")
+def login_user(test_client):
+    def _login_user(test_user: dict):
+        test_client.post("/auth/jwt/signup", data=test_user)
+        response = test_client.post("/auth/jwt/login", data=test_user)
+        return response.json()['access_token']
+    return _login_user
+
+@pytest.fixture(scope="function")
+def add_test_meme(test_client, login_user):
     def create_meme(filename: str):
         with open("api/app/tests/fixtures/test_meme.jpg", "rb") as image_file:
             response = test_client.post(
