@@ -6,7 +6,7 @@ from sqlalchemy.orm import Session
 import requests
 
 from ..models.models import Meme
-from ..schemas.memes import MemeSchema
+from ..schemas.memes import MemeDbSchema, MemeSchema
 from ..repositories.memes_repository import MemesRepository
 from ..config.app_congif import MINIO_API_URL
 from ..config.db_config import get_db
@@ -57,7 +57,7 @@ async def upload_file(
         file: UploadFile,
         filename: str = Form(),
         db: Session = Depends(get_db)
-) -> MemeSchema | str:
+) -> MemeSchema | MemeDbSchema| str:
     """
     add meme to db and to S3 storage
     """
@@ -79,13 +79,12 @@ async def upload_file(
 
 @router.delete(
     '/{meme_id}',
-    response_model=MemeSchema,
     dependencies=[Depends(get_current_user)],
 )
 async def del_meme(
         meme_id: str,
         db: Session = Depends(get_db)
-):
+) -> MemeSchema | MemeDbSchema| str:
     """
     delete meme from db and S3 storage
     """
@@ -101,14 +100,13 @@ async def del_meme(
 
 @router.put(
     '/{meme_id}',
-    response_model=MemeSchema,
     dependencies=[Depends(get_current_user)],
 )
 async def update_meme(meme_id: str,
-                      filename: Annotated[str, Form()],
-                      file: UploadFile = File(...),
-                      db: Session = Depends(get_db)
-                      ):
+        filename: Annotated[str, Form()],
+        file: UploadFile = File(...),
+        db: Session = Depends(get_db)
+    ) -> MemeSchema | MemeDbSchema| str:
     """
     update meme in db and S3 storage
     """

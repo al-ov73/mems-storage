@@ -1,6 +1,5 @@
 import os
 
-import httpx
 import pytest
 from dotenv import load_dotenv
 from fastapi.testclient import TestClient
@@ -18,7 +17,7 @@ DB_HOST: str = os.getenv("DB_HOST", "localhost")
 DB_PORT: str = os.getenv("DB_PORT", 5432)
 DB_NAME: str = os.getenv("TEST_DB_NAME")
 DB_ENDPOINT: str = os.getenv("DB_ENDPOINT")
-SQLALCHEMY_DATABASE_URL = f"postgresql://{DB_USER}:{DB_PASSWORD}@{DB_HOST}:{DB_PORT}/{DB_NAME}?sslmode=require"
+SQLALCHEMY_DATABASE_URL = f"postgresql://{DB_USER}:{DB_PASSWORD}@{DB_HOST}:{DB_PORT}/{DB_NAME}"
 
 
 engine = create_engine(SQLALCHEMY_DATABASE_URL)
@@ -58,7 +57,7 @@ def test_client(db_session):
 
 @pytest.fixture(scope="function")
 def login_user(test_client):
-    def _login_user(test_user: dict):
+    def _login_user(test_user: dict) -> str:
         test_client.post("/auth/jwt/signup", data=test_user)
         response = test_client.post("/auth/jwt/login", data=test_user)
         return response.json()['access_token']
@@ -66,12 +65,15 @@ def login_user(test_client):
 
 @pytest.fixture(scope="function")
 def add_test_meme(test_client, login_user):
-    def create_meme(filename: str):
-        with open("api/app/tests/fixtures/test_meme.jpg", "rb") as image_file:
+    def create_meme(filename: str, test_user: dict):
+        access_token = login_user(test_user)
+        headers = {'Authorization': f'Bearer {access_token}'}
+        with open("app/tests/fixtures/test_meme.jpg", "rb") as image_file:
             response = test_client.post(
                 "/memes/",
                 files={'file': ('init_filename', image_file)},
                 data={'filename': filename},
+                headers=headers,
             )
             return response.json()
     return create_meme

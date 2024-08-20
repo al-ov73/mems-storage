@@ -118,9 +118,6 @@ async def get_current_user(
         detail="Could not validate credentials",
         headers={"WWW-Authenticate": "Bearer"},
     )
-    print('token!!', token)
-    print('JWT_TOKEN_SECRET_KEY', JWT_TOKEN_SECRET_KEY)
-    print('ALGORITHM', ALGORITHM)
     try:
         payload = jwt.decode(token, JWT_TOKEN_SECRET_KEY, algorithms=[ALGORITHM])
         username: str = payload.get("sub")
