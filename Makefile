@@ -16,7 +16,8 @@ docker-build:
 docker-run:
 		docker compose -f docker-compose.yml up
 
-docker: docker-build docker-run
+docker:
+		docker compose run -P api bash
 
 # alembic revision --autogenerate -m "rm url field"
 # alembic upgrade head

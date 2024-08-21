@@ -5,8 +5,10 @@ from .app_congif import TEST_ENV, DB_USER, DB_PASSWORD, DB_HOST, DB_PORT, TEST_D
 
 
 if TEST_ENV == 'True':
+    print('TEST DATABASE!!')
     SQLALCHEMY_DATABASE_URL = f"postgresql://{DB_USER}:{DB_PASSWORD}@{DB_HOST}:{DB_PORT}/{TEST_DB_NAME}"
 else:
+    print('PRODUCTION DATABASE!!')
     SQLALCHEMY_DATABASE_URL = f"postgresql://{DB_USER}:{DB_PASSWORD}@{DB_HOST}:{DB_PORT}/{DB_NAME}"
 
 

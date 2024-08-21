@@ -14,11 +14,8 @@ WORKDIR /api
 
 COPY pyproject.toml .
 
-RUN apk add --no-cache \
-    curl
+RUN apk add --no-cache curl bash make
 
 RUN curl -sSL https://install.python-poetry.org | python3 - && poetry --version
 
 RUN poetry install
-
-CMD sh -c 'alembic upgrade head && gunicorn app.main:app --workers 4 --worker-class uvicorn.workers.UvicornWorker --bind=0.0.0.0:8000 --reload'

@@ -13,6 +13,7 @@ TEST_USER = {
     'password': 'test_password'
 }
 
+
 def test_protected_routes(test_client, login_user):
     response = test_client.get("/memes")
     assert response.status_code == 401
@@ -24,7 +25,6 @@ def test_protected_routes(test_client, login_user):
 
 def test_new_meme_post(test_client, login_user, add_test_meme):
     meme = add_test_meme(TEST_FILENAME, TEST_USER)
-    print('add meme', meme)
     init_meme_id = meme['id']
     assert meme['name'] == TEST_FILENAME
     access_token = login_user(TEST_USER)

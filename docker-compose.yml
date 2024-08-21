@@ -34,6 +34,7 @@ services:
     depends_on:
       - db
       - s3_storage
+      - frontend
 
   s3_storage:
     build:
@@ -42,12 +43,12 @@ services:
       - .env-non-dev
     container_name: s3-storage-api
     ports:
-      - 1234:8888
+      - 8888:8888
     volumes:
       - ./storage:/storage
     depends_on:
       - minio
-    command: sh -c 'gunicorn app.main:app --workers 4 --worker-class uvicorn.workers.UvicornWorker --bind=0.0.0.0:8888 --reload'
+    command: gunicorn app.main:app --workers 4 --worker-class uvicorn.workers.UvicornWorker --bind=0.0.0.0:8888
 
   minio:
     container_name: minio
