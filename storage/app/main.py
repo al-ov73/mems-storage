@@ -9,13 +9,11 @@ load_dotenv()
 
 app = FastAPI()
 
-MINIO_BUCKET = os.getenv('MINIO_BUCKET') if os.getenv('TEST_ENV') == 'False' else os.getenv('TEST_MINIO_BUCKET')
-print('MINIO_BUCKET->', MINIO_BUCKET)
 storage_handler = MinioHandler(
     os.getenv('MINIO_URL'),
     os.getenv('MINIO_ACCESS_KEY'),
     os.getenv('MINIO_SECRET_KEY'),
-    MINIO_BUCKET,
+    os.getenv('MINIO_BUCKET'),
     False
 )
 

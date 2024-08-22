@@ -18,9 +18,9 @@ class MemesRepository:
         return memes
 
     async def get_meme(
-        self,
-        meme_id: str,
-        db: Session,
+            self,
+            meme_id: str,
+            db: Session,
     ) -> MemeDbSchema:
         '''
         return meme from db
@@ -30,11 +30,10 @@ class MemesRepository:
             return 'meme not exist'
         return meme
 
-
     async def add_meme(
-        self,
-        new_meme: MemeDbSchema,
-        db: Session,
+            self,
+            new_meme: MemeDbSchema,
+            db: Session,
     ) -> MemeDbSchema:
         '''
         add meme to db
@@ -44,11 +43,10 @@ class MemesRepository:
         db.refresh(new_meme)
         return new_meme
 
-
     async def del_meme(
-        self,
-        meme_id: str,
-        db: Session,
+            self,
+            meme_id: str,
+            db: Session,
     ) -> MemeDbSchema:
         '''
         delete meme from db
@@ -61,12 +59,11 @@ class MemesRepository:
         except Exception:
             return f'error "{Exception}"'
 
-
     async def update_name(
-        self,
-        meme_id: str,
-        filename: str,
-        db: Session,
+            self,
+            meme_id: str,
+            filename: str,
+            db: Session,
     ) -> MemeDbSchema:
         '''
         update meme in db

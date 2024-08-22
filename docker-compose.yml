@@ -12,6 +12,7 @@ services:
     volumes:
       - ./frontend/public:/app/public
       - ./frontend/src:/app/src
+    command: npm -- start
 
   db:
     image: postgres:15

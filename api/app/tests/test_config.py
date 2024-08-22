@@ -6,7 +6,10 @@ from fastapi.testclient import TestClient
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 
+from .fake.fake_storage_repository import FakeStorageRepository
+from ..config.app_congif import MINIO_API_URL
 from ..config.db_config import Base, engine, get_db
+from ..config.dependencies import get_storage_repo
 from ..main import app
 
 load_dotenv()
@@ -50,7 +53,11 @@ def test_client(db_session):
         finally:
             db_session.close()
 
+    def override_get_storage_repo():
+        return FakeStorageRepository(MINIO_API_URL)
+
     app.dependency_overrides[get_db] = override_get_db
+    app.dependency_overrides[get_storage_repo] = override_get_storage_repo
     with TestClient(app) as test_client:
         yield test_client
 

@@ -1,20 +1,18 @@
 import os
-
 from typing import Annotated
+
 from fastapi import Depends, UploadFile, File, Form, APIRouter
 from sqlalchemy.orm import Session
-import requests
 
-from ..models.models import Meme
-from ..schemas.memes import MemeDbSchema, MemeSchema
-from ..repositories.memes_repository import MemesRepository
-from ..config.app_congif import MINIO_API_URL
 from ..config.db_config import get_db
+from ..config.dependencies import get_storage_repo, get_memes_repository
+from ..models.models import Meme
+from ..repositories.memes_repository import MemesRepository
+from ..repositories.storage_repository import BaseStorageRepo
+from ..schemas.memes import MemeDbSchema, MemeSchema
 from ..utils.auth_utils import get_current_user
 
 router = APIRouter()
-
-MEME_REPO = MemesRepository()
 
 
 @router.get(
@@ -23,32 +21,33 @@ MEME_REPO = MemesRepository()
 )
 async def get_memes(skip: int = 0,
                     limit: int = 100,
-                    db: Session = Depends(get_db)
-                    ) -> list[MemeSchema] | list[MemeDbSchema]:
+                    db: Session = Depends(get_db),
+                    meme_repo: MemesRepository = Depends(get_memes_repository),
+                    storage_repo: BaseStorageRepo = Depends(get_storage_repo),
+                    ) -> list[MemeSchema]:
     """
     return list of memes with links to download
     """
-    memes = await MEME_REPO.get_memes(skip, limit, db)
-    if os.getenv("TEST_ENV") == 'False':
-        for meme in memes:
-            response = requests.get(f'{MINIO_API_URL}/images/{meme.name}')
-            link = response.text
-            meme.link = link[1:-1]
+    memes = await meme_repo.get_memes(skip, limit, db)
+    for meme in memes:
+        link = await storage_repo.get_link(meme.name)
+        meme.link = link[1:-1]
     return memes
 
 
 @router.get('/{meme_id}', dependencies=[Depends(get_current_user)], )
 async def get_meme_link(meme_id: str,
-                        db: Session = Depends(get_db)
-                        ) -> MemeSchema:
+                        db: Session = Depends(get_db),
+                        meme_repo: MemesRepository = Depends(get_memes_repository),
+                        storage_repo: BaseStorageRepo = Depends(get_storage_repo),
+                        ) -> MemeSchema | str:
     """
     return meme with link to download
     """
-    meme = await MEME_REPO.get_meme(meme_id, db)
+    meme = await meme_repo.get_meme(meme_id, db)
     if not meme:
         return 'meme not exist'
-    response = requests.get(f'{MINIO_API_URL}/images/{meme.name}')
-    meme.link = response.text
+    meme.link = storage_repo.get_link(meme.name)
     return meme
 
 
@@ -56,62 +55,56 @@ async def get_meme_link(meme_id: str,
 async def upload_file(
         file: UploadFile,
         filename: str = Form(),
-        db: Session = Depends(get_db)
-) -> MemeSchema | MemeDbSchema | str:
+        db: Session = Depends(get_db),
+        meme_repo: MemesRepository = Depends(get_memes_repository),
+        storage_repo: BaseStorageRepo = Depends(get_storage_repo),
+) -> MemeDbSchema | str:
     """
     add meme to db and to S3 storage
     """
     try:
         new_meme = Meme(name=filename)
-        response = requests.post(f'{MINIO_API_URL}/images', files={
-            'file': (filename, file.file, 'multipart/form-data')})
-        if response.status_code != 200:
-            return 'storage error'
-        await MEME_REPO.add_meme(new_meme, db)
+        await storage_repo.add_image(filename, file.file)
+        await meme_repo.add_meme(new_meme, db)
         return new_meme
     except Exception as e:
         return f'db error "{e}"'
 
 
-@router.delete(
-    '/{meme_id}',
-    dependencies=[Depends(get_current_user)],
+@router.delete('/{meme_id}', dependencies=[Depends(get_current_user)],
 )
 async def del_meme(
         meme_id: str,
-        db: Session = Depends(get_db)
-) -> MemeSchema | MemeDbSchema| str:
+        db: Session = Depends(get_db),
+        meme_repo: MemesRepository = Depends(get_memes_repository),
+        storage_repo: BaseStorageRepo = Depends(get_storage_repo),
+) -> MemeSchema | MemeDbSchema | str:
     """
     delete meme from db and S3 storage
     """
     try:
-        meme = await MEME_REPO.del_meme(meme_id, db)
-        # del from s3
-        requests.delete(f'{MINIO_API_URL}/images/{meme.name}')
+        meme = await meme_repo.del_meme(meme_id, db)
+        await storage_repo.delete_image(meme.name)
         return meme
     except Exception:
         return f'error "{Exception}"'
 
 
-@router.put(
-    '/{meme_id}',
-    dependencies=[Depends(get_current_user)],
+@router.put('/{meme_id}', dependencies=[Depends(get_current_user)],
 )
 async def update_meme(meme_id: str,
-        filename: Annotated[str, Form()],
-        file: UploadFile = File(...),
-        db: Session = Depends(get_db)
-    ) -> MemeSchema | MemeDbSchema| str:
+                      filename: Annotated[str, Form()],
+                      file: UploadFile = File(...),
+                      db: Session = Depends(get_db),
+                      meme_repo: MemesRepository = Depends(get_memes_repository),
+                      storage_repo: BaseStorageRepo = Depends(get_storage_repo),
+                      ) -> MemeSchema | MemeDbSchema | str:
     """
     update meme in db and S3 storage
     """
     try:
-        meme = await MEME_REPO.update_name(meme_id, filename, db)
-        # update in s3
-        requests.delete(f'{MINIO_API_URL}/images/{meme.name}')
-        requests.post(f'{MINIO_API_URL}/images', files={
-            'file': (filename, file.file, 'multipart/form-data')
-        })
+        meme = await meme_repo.update_name(meme_id, filename, db)
+        await storage_repo.update_image(old_name=meme.name, new_name=filename, new_file=file.file)
         return meme
     except Exception:
         return f'error "{Exception}"'
