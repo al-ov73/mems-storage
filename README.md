@@ -1,27 +1,39 @@
 Memes storage
 ---
 Microservices based service for storage your favorite memes.</br>
-Covered by Pytest.</br>
-Please check Api documentations for services using links below.</br>
-
-```
-Technologies:
-* FastApi
-* React
-* S3 storage - Minio
-* Docker
-* Poetry
-* Pytest
-```
+![Untitled (1)](https://github.com/user-attachments/assets/f6e1e9f9-c463-4093-a185-fb6e969e20e6)
 
 ---
-To start localy:
+**Services**:</br>
+1. React service:</br>
+React frontend app with CRUD functionality. Used Redux/Redux Toolkit service.</br>
+[Documentation](https://github.com/al-ov73/mems-storage/blob/main/frontend/README.md)</br>
+2. Api service:</br>
+FastAPI web-service with JWT-based authorization and Bearer token-transport. Requests to Postgres database and other services cached by Redis. Covered by Pytest.</br>
+Store memes data in postgres DB.</br>
+Store image files in S3 storage (other michroservice).</br>
+[Documentation](https://github.com/al-ov73/mems-storage/blob/main/api/README.md)</br>
+3. Minio storage service:</br>
+Fast-API web service to store images. Used Minio app to connect to S3-storage.</br>
+[Documentation](https://github.com/al-ov73/mems-storage/blob/main/storage/README.md)</br>
+---
+**To start localy**:
+1. Clone repository
 ```commandline
 git clone git@github.com:al-ov73/mems-storage.git && cd mems-storage
-# fill .env-non-dev
+```
+2. fill .env-non-dev (or rename .env-non-dev_example to use default values)
+3. build and run docker containers
+```
+make docker-build
 make docker
 ```
-Services documentation:</br>
-[Frontend (React)](https://github.com/al-ov73/mems-storage/blob/main/frontend/README.md)</br>
-[Api](https://github.com/al-ov73/mems-storage/blob/main/api/README.md)</br>
-[Minio storage](https://github.com/al-ov73/mems-storage/blob/main/storage/README.md)</br>
+4. Start api application
+```
+make start
+```
+Also you can run tests:
+```
+make test
+```
+
