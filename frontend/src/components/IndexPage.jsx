@@ -1,9 +1,3 @@
-//TODO
-// обработка сообщений ошибок Login
-// карточки рядом
-// добавить Loading
-
-
 import React, { useState, useEffect } from "react";
 import FormData from 'form-data'
 import ImageCard from './ImageCard.jsx'

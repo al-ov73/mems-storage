@@ -1,4 +1,3 @@
-import os
 from typing import Annotated
 
 from fastapi import Depends, UploadFile, File, Form, APIRouter
@@ -14,10 +13,9 @@ from ..utils.auth_utils import get_current_user
 
 router = APIRouter()
 
-
 @router.get(
     '',
-    dependencies=[Depends(get_current_user)],
+    # dependencies=[Depends(get_current_user)],
 )
 async def get_memes(skip: int = 0,
                     limit: int = 100,
@@ -31,7 +29,7 @@ async def get_memes(skip: int = 0,
     memes = await meme_repo.get_memes(skip, limit, db)
     for meme in memes:
         link = await storage_repo.get_link(meme.name)
-        meme.link = link[1:-1]
+        meme.link = link
     return memes
 
 
@@ -44,6 +42,7 @@ async def get_meme_link(meme_id: str,
     """
     return meme with link to download
     """
+    
     meme = await meme_repo.get_meme(meme_id, db)
     if not meme:
         return 'meme not exist'
@@ -71,7 +70,9 @@ async def upload_file(
         return f'db error "{e}"'
 
 
-@router.delete('/{meme_id}', dependencies=[Depends(get_current_user)],
+@router.delete(
+        '/{meme_id}',
+        # dependencies=[Depends(get_current_user)],
 )
 async def del_meme(
         meme_id: str,
