@@ -3,22 +3,15 @@ from dotenv import load_dotenv
 
 from .fake.fake_storage_repository import FakeStorageRepository
 from .test_config import test_client, add_test_meme, db_session, login_user
-from ..config.app_congif import MINIO_API_URL
-from ..config.dependencies import get_storage_repo
 
 load_dotenv()
 
-API_URL = os.getenv('API_URL')
 
 TEST_FILENAME = 'test_filename'
 TEST_USER = {
     'username': 'test_username',
     'password': 'test_password'
 }
-
-
-def get_fake_storage_repo():
-    return FakeStorageRepository(MINIO_API_URL)
 
 
 def test_protected_routes(test_client, login_user):

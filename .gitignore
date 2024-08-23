@@ -5,3 +5,4 @@ __pycache__/
 .env-non-dev
 node_modules
 /.pytest_cache/
+.gitpod.yml

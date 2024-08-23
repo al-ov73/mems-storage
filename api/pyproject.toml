@@ -23,6 +23,7 @@ trio = "^0.26.0"
 gunicorn = "^22.0.0"
 pyjwt = "^2.9.0"
 passlib = {extras = ["bcrypt"], version = "^1.7.4"}
+aiohttp = "^3.10.5"
 
 
 [build-system]

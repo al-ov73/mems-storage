@@ -7,6 +7,8 @@ services:
     build:
       context: ./frontend
     container_name: mems-frontend
+    env_file:
+      - .env-non-dev
     ports:
       - 3000:3000
     volumes:

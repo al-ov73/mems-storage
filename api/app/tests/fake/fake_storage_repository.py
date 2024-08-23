@@ -4,6 +4,10 @@ from ...repositories.storage_repository import BaseStorageRepo
 
 
 class FakeStorageRepository(BaseStorageRepo):
+    '''
+    override storage repository to not send
+    requests to s3 storage
+    '''
     def __init__(self, api_url):
         self.api_url = api_url
 
