@@ -1,9 +1,12 @@
 import asyncio
 import aiohttp
 
+
 from abc import abstractmethod, ABC
 from tempfile import SpooledTemporaryFile
 from typing import BinaryIO
+
+from ..config.app_congif import get_redis
 
 
 class BaseStorageRepo(ABC):
@@ -28,12 +31,20 @@ class StorageRepository(BaseStorageRepo):
     def __init__(self, api_url):
         self.api_url = api_url
 
-    async def get_link(self, image_name: str) -> str:
+    async def get_link(
+            self,
+            image_name: str,
+    ) -> str:
+        redis = get_redis()
+        cache = await redis.get(image_name)
+        if cache is not None:
+            return cache[1:-1]
+
         await asyncio.sleep(3)
         async with aiohttp.ClientSession() as session:
             async with session.get(f'{self.api_url}/images/{image_name}') as resp:
-                print(await resp.text())
                 link = await resp.text()
+                await redis.set(image_name, link)
                 return link[1:-1]
 
     async def add_image(self, filename: str, file: SpooledTemporaryFile) -> str:

@@ -52,7 +52,6 @@ const IndexPage = () => {
               } catch (error) {
                 console.log('error->', error)
               }
-
             }}>
         <div className="form-group">
           <label >Введите имя</label>
@@ -66,7 +65,7 @@ const IndexPage = () => {
           />
           </div>
           <div className="form-group">
-          <label >приложите картинку</label>
+          <label>Приложите картинку</label>
           <input
             className="form-control"
             type="file"

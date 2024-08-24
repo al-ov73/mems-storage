@@ -34,7 +34,7 @@ app.include_router(
     tags=["memes"],
 )
 
-@app.on_event("startup")
-async def startup_event():
-    redis = aioredis.from_url("redis://localhost:5557", encoding="utf8", decode_responses=True)
-    FastAPICache.init(RedisBackend(redis), prefix="fastapi-cache")
+# @app.on_event("startup")
+# async def startup_event():
+#     redis = aioredis.from_url("redis://localhost:5557", encoding="utf8", decode_responses=True)
+#     FastAPICache.init(RedisBackend(redis), prefix="fastapi-cache")
