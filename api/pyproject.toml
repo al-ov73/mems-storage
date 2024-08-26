@@ -27,6 +27,7 @@ aiohttp = "^3.10.5"
 redis = "^5.0.8"
 fastapi-cache2 = "^0.2.2"
 aioredis = "^2.0.1"
+websockets = "^13.0"
 
 
 [build-system]

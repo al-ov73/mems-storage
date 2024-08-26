@@ -19,5 +19,8 @@ docker-run:
 docker:
 		docker compose run -P api bash
 
+connect-frontend:
+		docker exec -it mems-frontend /bin/sh
+		
 # alembic revision --autogenerate -m "rm url field"
 # alembic upgrade head

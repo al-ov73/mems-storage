@@ -56,7 +56,6 @@ const LoginPage = () => {
   });
 
   return <>
-    <IndexNavbar/>
     <div className='d-flex flex-column h-100'>
       <div className='container-fluid h-100'>
         <div className='row justify-content-center align-content-center h-100'>
