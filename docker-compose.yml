@@ -1,6 +1,7 @@
 volumes:
   pgdata:
   minio_data:
+  pgadmin:
 
 services:
   frontend:
@@ -18,7 +19,7 @@ services:
 
   db:
     image: postgres:15
-    container_name: db_app
+    container_name: db_mems
     env_file:
       - .env-non-dev
     volumes:
@@ -39,7 +40,7 @@ services:
       - s3_storage
       - frontend
       - redis
-      - flower
+      - pgadmin
 
   s3_storage:
     build:
@@ -72,10 +73,16 @@ services:
     expose:
       - 6379
 
-  flower:
-    image: mher/flower:0.9.7
-    command: ['flower', '--broker=redis://redis:6379', '--port=5555']
+  pgadmin:
+    image: elestio/pgadmin:latest
+    restart: always
+    environment:
+      PGADMIN_DEFAULT_EMAIL: admin@pgadmin.com
+      PGADMIN_DEFAULT_PASSWORD: password
+      PGADMIN_LISTEN_PORT: 8080
     ports:
-      - 5557:5555
+      - 8080:8080
+    volumes:
+      - ./servers.json:/pgadmin4/servers.json
     depends_on:
-      - redis
+      - db

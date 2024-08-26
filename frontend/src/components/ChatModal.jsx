@@ -4,6 +4,7 @@ import { useDispatch } from "react-redux";
 import { FormikProvider, useFormik } from "formik";
 import Form from 'react-bootstrap/Form';
 import { useState } from "react";
+import { jwtDecode } from "jwt-decode";
 
 const ws = new WebSocket(`ws://127.0.0.1:8000/chat/ws`);
 
@@ -11,19 +12,13 @@ const ws = new WebSocket(`ws://127.0.0.1:8000/chat/ws`);
 const ChatModal = ({ show, onHide }) => {
   const [messages, setMessages] = useState([]);
 
-  console.log('messages', typeof messages)
-  // ws.addEventListener('open', (event) => {console.log('WebSocket connection opened');});
-  // ws.addEventListener('message', (event) => {console.log('Received message:', event.data);});
-  // ws.addEventListener('error', (event) => {console.error('WebSocket error:', event);});
-  // ws.addEventListener('close', (event) => {console.log('WebSocket connection closed:', event.code, event.reason);});
+  const { tokens } = JSON.parse(localStorage.getItem('user'))
+  console.log('tokens', tokens)
+  const decoded = jwtDecode(tokens);
+  console.log('decoded', decoded)
 
   ws.onmessage = (event) => {
-    const newMessage = event.data
-    console.log('receieved message', typeof newMessage);
-    console.log('messages old', typeof messages)
-    const newListOfMessages = messages.push(newMessage);
-    console.log('newListOfMessages', typeof newListOfMessages)
-    setMessages(newListOfMessages)
+    setMessages([...messages, event.data])
   };
 
   const handleMessageSubmit = async (event) => {
@@ -59,6 +54,9 @@ const ChatModal = ({ show, onHide }) => {
       </Modal.Header>
 
       <Modal.Body>
+        {messages && messages.map((message) => {
+            return <div key={message} className="text-break mb-2">{message}</div>
+        })}
       <FormikProvider value={formik}>
                     <Form onSubmit={formik.handleSubmit} noValidate="" className="py-1 border-0"> 
                       <Form.Group className="input-group has-validation">
