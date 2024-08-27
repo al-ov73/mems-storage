@@ -1,10 +1,9 @@
 import Button from 'react-bootstrap/Button';
 import Modal from 'react-bootstrap/Modal';
-import { useDispatch } from "react-redux";
 import { FormikProvider, useFormik } from "formik";
 import Form from 'react-bootstrap/Form';
 import { useState } from "react";
-import { jwtDecode } from "jwt-decode";
+import { getUsernameFromStorage } from '../utils/utils';
 
 const ws = new WebSocket(`ws://127.0.0.1:8000/chat/ws`);
 
@@ -12,19 +11,24 @@ const ws = new WebSocket(`ws://127.0.0.1:8000/chat/ws`);
 const ChatModal = ({ show, onHide }) => {
   const [messages, setMessages] = useState([]);
 
-  const { tokens } = JSON.parse(localStorage.getItem('user'))
-  console.log('tokens', tokens)
-  const decoded = jwtDecode(tokens);
-  console.log('decoded', decoded)
+  const username = getUsernameFromStorage();
 
+  console.log('messages', messages)
   ws.onmessage = (event) => {
-    setMessages([...messages, event.data])
+    const receivedJson = JSON.parse(event.data)
+    console.log('receivedJson', receivedJson)
+    setMessages([...messages, receivedJson])
   };
 
   const handleMessageSubmit = async (event) => {
     try {
-      console.log('message send from frontend->', event)
-      ws.send(event.message)
+      
+      const message = {
+        author: username,
+        text: event.message,
+      }
+      console.log('message send from frontend->', message)
+      ws.send(JSON.stringify(message))
     } catch (e) {
       console.log(e);
     }
@@ -35,8 +39,8 @@ const ChatModal = ({ show, onHide }) => {
             message: '',
         },
         onSubmit: (messageObject, { resetForm }) => {
-        handleMessageSubmit(messageObject);
-        resetForm();
+          handleMessageSubmit(messageObject);
+          resetForm();
         },
     });
 
@@ -55,7 +59,8 @@ const ChatModal = ({ show, onHide }) => {
 
       <Modal.Body>
         {messages && messages.map((message) => {
-            return <div key={message} className="text-break mb-2">{message}</div>
+            console.log(message)
+            return <div key={message} className="text-break mb-2">{message.author}: {message.text}</div>
         })}
       <FormikProvider value={formik}>
                     <Form onSubmit={formik.handleSubmit} noValidate="" className="py-1 border-0"> 
