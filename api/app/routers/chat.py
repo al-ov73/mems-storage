@@ -21,6 +21,7 @@ class ConnectionManager:
     async def connect(self, websocket: WebSocket):
         await websocket.accept()
         self.active_connections.append(websocket)
+        print('active_connections', self.active_connections)
 
     def disconnect(self, websocket: WebSocket):
         self.active_connections.remove(websocket)
@@ -55,11 +56,9 @@ async def websocket_endpoint(
     try:
         while True:
             data = await websocket.receive_json()
-            author = data['author']
-            # добавлять id автора
-            new_message = Message(text=data['text'], author_id='1')
+            new_message = Message(text=data['text'], author=data['author'])
             await messages_repo.add_message(new_message, db)
-            await manager.broadcast(new_message)
+            await manager.broadcast(new_message.to_dict())
     except WebSocketDisconnect:
         manager.disconnect(websocket)
         await manager.broadcast(f"Client left the chat")

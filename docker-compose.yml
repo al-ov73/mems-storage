@@ -11,11 +11,10 @@ services:
     env_file:
       - .env-non-dev
     ports:
-      - 3000:3000
+      - 3000:80
     volumes:
       - ./frontend/public:/app/public
       - ./frontend/src:/app/src
-    command: npm -- start
 
   db:
     image: postgres:15
