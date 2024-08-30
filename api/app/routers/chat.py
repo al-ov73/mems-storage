@@ -10,6 +10,7 @@ from ..repositories.messages_repository import MessagesRepository
 from ..config.db_config import get_db
 from ..config.dependencies import get_messages_repository
 from ..models.models import Message
+from ..schemas.messages import MessageSchema
 
 router = APIRouter()
 
@@ -27,27 +28,38 @@ class ConnectionManager:
     async def send_personal_message(self, message: str, websocket: WebSocket):
         await websocket.send_text(message)
 
-    async def broadcast(self, message: dict):
+    async def broadcast(self, message: MessageSchema):
         for connection in self.active_connections:
+            print('message from repo', message)
             await connection.send_json(message)
 
 
 manager = ConnectionManager()
 
+@router.get("/messages")
+async def get_last_messages(
+    db: Session = Depends(get_db),
+    messages_repo: MessagesRepository = Depends(get_messages_repository),
+) -> List[MessageSchema]:
+    messages = await messages_repo.get_messages(db)
+    return messages
+
+
 @router.websocket("/ws")
 async def websocket_endpoint(
     websocket: WebSocket,
     db: Session = Depends(get_db),
-    messages_repo: MessagesRepository = Depends(get_messages_repository),    
+    messages_repo: MessagesRepository = Depends(get_messages_repository),
 ):
     await manager.connect(websocket)
     try:
         while True:
             data = await websocket.receive_json()
             author = data['author']
-            new_message = Message(text=data['text'], author_id=1)
+            # добавлять id автора
+            new_message = Message(text=data['text'], author_id='1')
             await messages_repo.add_message(new_message, db)
-            await manager.broadcast(data)
+            await manager.broadcast(new_message)
     except WebSocketDisconnect:
         manager.disconnect(websocket)
         await manager.broadcast(f"Client left the chat")

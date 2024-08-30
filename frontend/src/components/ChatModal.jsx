@@ -2,18 +2,29 @@ import Button from 'react-bootstrap/Button';
 import Modal from 'react-bootstrap/Modal';
 import { FormikProvider, useFormik } from "formik";
 import Form from 'react-bootstrap/Form';
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { getUsernameFromStorage } from '../utils/utils';
+import { getMessages } from '../utils/requests';
 
 const ws = new WebSocket(`ws://127.0.0.1:8000/chat/ws`);
 
 
 const ChatModal = ({ show, onHide }) => {
   const [messages, setMessages] = useState([]);
+  const access_token = localStorage.getItem('user')
 
   const username = getUsernameFromStorage();
 
   console.log('messages', messages)
+
+  useEffect(() => {
+    getMessages(access_token)
+      .then((messages) => {
+        console.log('messages get', messages)
+        setMessages(messages)
+      });
+  }, [])
+
   ws.onmessage = (event) => {
     const receivedJson = JSON.parse(event.data)
     console.log('receivedJson', receivedJson)
@@ -60,7 +71,7 @@ const ChatModal = ({ show, onHide }) => {
       <Modal.Body>
         {messages && messages.map((message) => {
             console.log(message)
-            return <div key={message} className="text-break mb-2">{message.author}: {message.text}</div>
+            return <div key={message} className="text-break mb-2">{message.author_id}: {message.text}</div>
         })}
       <FormikProvider value={formik}>
                     <Form onSubmit={formik.handleSubmit} noValidate="" className="py-1 border-0"> 

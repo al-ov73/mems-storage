@@ -6,4 +6,4 @@ class MessageSchema(BaseModel):
     id: int
     text: str
     created_at: datetime
-    author_id: str
+    author_id: int

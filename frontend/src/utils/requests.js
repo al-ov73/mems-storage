@@ -9,6 +9,15 @@ const getMemes = async (access_token) => {
     })
 }
 
+const getMessages = async (access_token) => {
+  const response = await axios.get(routes.messagesPath, {
+      headers: {
+        Authorization: `Bearer ${access_token}`,
+      },
+    })
+  return response.data
+}
+
 const loginUser = async (values) => {
   const params = new URLSearchParams();
   params.append('username', values.email);
@@ -52,4 +61,4 @@ const validateToken = async (access_token) => {
   }
 }
 
-export { getMemes, loginUser, postMeme, deleteMeme, signupUser, validateToken }
+export { getMemes, getMessages, loginUser, postMeme, deleteMeme, signupUser, validateToken }
