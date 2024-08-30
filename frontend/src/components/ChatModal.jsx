@@ -70,8 +70,7 @@ const ChatModal = ({ show, onHide }) => {
 
       <Modal.Body>
         {messages && messages.map((message) => {
-            console.log(message)
-            return <div key={message} className="text-break mb-2">{message.author_id}: {message.text}</div>
+            return <div key={message.id} className="text-break mb-2">{message.author}: {message.text}</div>
         })}
       <FormikProvider value={formik}>
                     <Form onSubmit={formik.handleSubmit} noValidate="" className="py-1 border-0"> 
