@@ -12,6 +12,7 @@ from ..schemas.tokens import TokenSchema
 
 router = APIRouter()
 
+
 @router.post("/login")
 async def login_for_access_token(
         form_data: Annotated[OAuth2PasswordRequestForm, Depends()],
@@ -29,7 +30,7 @@ async def login_for_access_token(
         )
     access_token_expires = timedelta(minutes=ACCESS_TOKEN_EXPIRE_MINUTES)
     access_token = create_access_token(
-        data={"sub": user.username}, expires_delta=access_token_expires
+        user=user, expires_delta=access_token_expires
     )
     return TokenSchema(access_token=access_token, token_type="bearer")
 
@@ -50,7 +51,7 @@ async def signup_for_access_token(
         )
     access_token_expires = timedelta(minutes=ACCESS_TOKEN_EXPIRE_MINUTES)
     access_token = create_access_token(
-        data={"sub": user.username}, expires_delta=access_token_expires
+        user=user, expires_delta=access_token_expires
     )
     return TokenSchema(access_token=access_token, token_type="bearer")
 

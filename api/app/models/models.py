@@ -1,7 +1,10 @@
 from datetime import datetime
 
-from ..config.db_config import Base
 from sqlalchemy import TIMESTAMP, Column, String, text, Integer, ForeignKey
+from sqlalchemy.orm import relationship
+from sqlalchemy import func
+
+from ..config.db_config import Base
 
 
 class User(Base):
@@ -12,20 +15,104 @@ class User(Base):
     registered_at = Column(TIMESTAMP, default=datetime.utcnow)
     hashed_password = Column(String, nullable=False)
 
+    memes = relationship("Meme", back_populates="author")
+    messages = relationship("Message", back_populates="author")
+
+
+class Category(Base):
+    __tablename__ = 'categories'
+
+    id = Column(Integer, primary_key=True, autoincrement=True)
+    title = Column(String, nullable=False, unique=True)
+
+    memes = relationship("Meme", back_populates="category")
+
+
+class Label(Base):
+    __tablename__ = 'labels'
+
+    id = Column(Integer, primary_key=True, autoincrement=True)
+    title = Column(String, nullable=False, unique=True)
+
+    memes = relationship("Meme", back_populates="labels")
+
+
+class LabelMeme(Base):
+    __tablename__ = "labels_meme"
+
+    id = Column(Integer, primary_key=True)
+    label_id = Column(Integer, ForeignKey('labels.id'))
+    meme_id = Column(Integer, ForeignKey('memes.id'))
+
+
+class Like(Base):
+    __tablename__ = 'likes'
+
+    id = Column(Integer, primary_key=True, autoincrement=True)
+    author_id = Column(ForeignKey("users.id"))
+    created_at = Column(TIMESTAMP, default=datetime.utcnow)
+
+    memes = relationship("Meme", back_populates="likes")
+
+
+class LikeMeme(Base):
+    __tablename__ = "likes_meme"
+
+    id = Column(Integer, primary_key=True)
+    like_id = Column(Integer, ForeignKey('likes.id'))
+    meme_id = Column(Integer, ForeignKey('memes.id'))
+
+
+class Comment(Base):
+    __tablename__ = 'comments'
+
+    id = Column(Integer, primary_key=True, autoincrement=True)
+    text = Column(String, nullable=False)
+    author_id = Column(ForeignKey("users.id"))
+    created_at = Column(TIMESTAMP, default=datetime.utcnow)
+
+    memes = relationship("Meme", back_populates="comments")
+
+
+class CommentMeme(Base):
+    __tablename__ = "comments_meme"
+
+    id = Column(Integer, primary_key=True)
+    comment_id = Column(Integer, ForeignKey('comments.id'))
+    meme_id = Column(Integer, ForeignKey('memes.id'))
+
 
 class Meme(Base):
     __tablename__ = 'memes'
 
     id = Column(Integer, primary_key=True, autoincrement=True)
     name = Column(String, unique=True, nullable=False)
-    created_at = Column(TIMESTAMP(timezone=True),
-                        nullable=False, server_default=text("now()"))
+    created_at = Column(TIMESTAMP, default=datetime.utcnow)
+
+    category_id = Column(ForeignKey("categories.id"))
+    category = relationship("Category", back_populates="memes")
+
+    author_id = Column(ForeignKey("users.id"))
+    author = relationship("User", back_populates="memes")
+
+    label_id = Column(ForeignKey("labels.id"))
+    labels = relationship("Label", back_populates="memes")
+
+    comment_id = Column(ForeignKey("comments.id"))
+    comments = relationship("Comment", back_populates="memes")
+
+    like_id = Column(ForeignKey("likes.id"))
+    likes = relationship("Like", back_populates="memes")
 
     def to_dict(self):
         return {
             "id": self.id,
             "name": self.name,
+            "category_id": self.category_id,
             "created_at": self.created_at,
+            "labels": self.labels,
+            "comments": self.comments,
+            "likes": self.likes,
         }
 
 
@@ -35,12 +122,13 @@ class Message(Base):
     id = Column(Integer, primary_key=True)
     text = Column(String)
     created_at = Column(TIMESTAMP, default=datetime.utcnow)
-    author = Column(String)
+    author_id = Column(ForeignKey("users.id"))
+    author = relationship("User", back_populates="messages")
 
     def to_dict(self):
         return {
             "id": self.id,
             "text": self.text,
             "created_at": self.created_at.isoformat(),
-            "author": self.author,
+            "author_id": self.author_id,
         }

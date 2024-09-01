@@ -88,15 +88,18 @@ def register_user(
         return None
     return new_user
 
-
+# data={"sub": user.username}
 def create_access_token(
-        data: dict,
+        user: UserDbSchema,
         expires_delta: timedelta | None = None
     ) -> str:
     '''
     return JWT token with expires time
     '''
-    to_encode = data.copy()
+    to_encode = {
+        'id': user.id,
+        'username': user.username,
+    }
     if expires_delta:
         expire = datetime.now(timezone.utc) + expires_delta
     else:

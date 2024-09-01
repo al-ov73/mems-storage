@@ -21,7 +21,6 @@ class ConnectionManager:
     async def connect(self, websocket: WebSocket):
         await websocket.accept()
         self.active_connections.append(websocket)
-        print('active_connections', self.active_connections)
 
     def disconnect(self, websocket: WebSocket):
         self.active_connections.remove(websocket)
@@ -31,7 +30,6 @@ class ConnectionManager:
 
     async def broadcast(self, message: MessageSchema):
         for connection in self.active_connections:
-            print('message from repo', message)
             await connection.send_json(message)
 
 
