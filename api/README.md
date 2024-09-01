@@ -1,6 +1,6 @@
 ***Api memes***
 
-Api для взпимодействия с мемами, сообщениями в чате, комментариями и лайками.</br>
+Api для взаимодействия с мемами, сообщениями в чате, комментариями и лайками.</br>
 
 Схема связей моделей БД ([drawSQL](https://drawsql.app/teams/myteam-1122/diagrams/mems-storage)):</br>
 ![drawSQL-image-export-2024-09-01](https://github.com/user-attachments/assets/73c4b7f8-107e-432a-96d6-4c23a6013108)
