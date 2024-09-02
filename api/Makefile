@@ -3,3 +3,10 @@ start:
 
 test:
 		pytest
+
+
+makemigrations:
+		alembic revision --autogenerate -m "initial_migration"
+
+migrate:
+		alembic upgrade head

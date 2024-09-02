@@ -7,7 +7,7 @@ from jwt.exceptions import InvalidTokenError
 from passlib.context import CryptContext
 from sqlalchemy.orm import Session
 
-from ..config.app_congif import ALGORITHM, JWT_TOKEN_SECRET_KEY
+from ..config.app_congif import ALGORITHM, JWT_TOKEN_SECRET_KEY, ACCESS_TOKEN_EXPIRE_MINUTES
 from ..config.db_config import get_db
 from ..models.models import User
 from ..schemas.users import UserDbSchema
@@ -88,7 +88,6 @@ def register_user(
         return None
     return new_user
 
-# data={"sub": user.username}
 def create_access_token(
         user: UserDbSchema,
         expires_delta: timedelta | None = None
@@ -103,7 +102,7 @@ def create_access_token(
     if expires_delta:
         expire = datetime.now(timezone.utc) + expires_delta
     else:
-        expire = datetime.now(timezone.utc) + timedelta(minutes=15)
+        expire = datetime.now(timezone.utc) + timedelta(minutes=ACCESS_TOKEN_EXPIRE_MINUTES)
     to_encode.update({"exp": expire})
     encoded_jwt = jwt.encode(to_encode, JWT_TOKEN_SECRET_KEY, algorithm=ALGORITHM)
     return encoded_jwt
@@ -123,7 +122,7 @@ async def get_current_user(
     )
     try:
         payload = jwt.decode(token, JWT_TOKEN_SECRET_KEY, algorithms=[ALGORITHM])
-        username: str = payload.get("sub")
+        username: str = payload.get("username")
         if username is None:
             raise credentials_exception
         token_data = TokenDataSchema(username=username)

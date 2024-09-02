@@ -1,6 +1,8 @@
-from ..models.models import Message
+from sqlalchemy import select
+from sqlalchemy.orm import Session, joinedload
+
+from ..models.models import Message, User
 from ..schemas.messages import MessageSchema
-from sqlalchemy.orm import Session
 
 
 class MessagesRepository:
@@ -12,8 +14,9 @@ class MessagesRepository:
         '''
         return list of messages from db
         '''
-        messages = db.query(Message).all()
-        return messages
+        query = db.query(Message)
+        query = query.options(joinedload(Message.author))
+        return query
 
     async def get_message(
             self,

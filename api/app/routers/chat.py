@@ -30,7 +30,7 @@ class ConnectionManager:
 
     async def broadcast(self, message: MessageSchema):
         for connection in self.active_connections:
-            await connection.send_json(message)
+            await connection.send_json(message.to_dict())
 
 
 manager = ConnectionManager()
@@ -54,9 +54,9 @@ async def websocket_endpoint(
     try:
         while True:
             data = await websocket.receive_json()
-            new_message = Message(text=data['text'], author=data['author'])
-            await messages_repo.add_message(new_message, db)
-            await manager.broadcast(new_message.to_dict())
+            new_message = Message(text=data['text'], author_id=data['author'])
+            new_message = await messages_repo.add_message(new_message, db)
+            await manager.broadcast(new_message)
     except WebSocketDisconnect:
         manager.disconnect(websocket)
         await manager.broadcast(f"Client left the chat")
