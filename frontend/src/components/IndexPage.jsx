@@ -14,6 +14,7 @@ import NavbarPage from "./Navbar.jsx";
 const IndexPage = () => {
   const [selectedImage, setSelectedImage] = useState(null);
   const [selectedName, setSelectedName] = useState(null);
+  const [selectedCategory, setSelectedCategory] = useState(null);
   const dispatch = useDispatch();
 
   const memes = useSelector((state) => state.memes.memes);
@@ -44,6 +45,7 @@ const IndexPage = () => {
                 const form = new FormData();
                 form.append('file', selectedImage);
                 form.append('filename', selectedName);
+                form.append('category', selectedCategory);
                 const postMemeResponse = await postMeme(form, access_token);
                 console.log('postMemeResponse', postMemeResponse);
                 const getMemesResponse = await getMemes(access_token);
@@ -63,6 +65,16 @@ const IndexPage = () => {
               setSelectedName(event.target.value);
             }}
           />
+          <select class="form-select"
+                  aria-label="Default select example"
+                  onChange={(event) => {
+                    setSelectedCategory(event.target.value);
+                  }}>
+            <option selected>Выберите категорию</option>
+            <option value="CATS">Мемы с котиками</option>
+            <option value="PEOPLE">Мемы с людьми</option>
+            <option value="OTHER">Другое</option>
+          </select>
           </div>
           <div className="form-group">
           <label>Приложите картинку</label>

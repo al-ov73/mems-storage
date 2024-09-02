@@ -3,6 +3,8 @@ from datetime import datetime
 from sqlalchemy import TIMESTAMP, Column, String, text, Integer, ForeignKey
 from sqlalchemy.orm import relationship
 from sqlalchemy import func
+from enum import Enum
+from sqlalchemy.dialects.postgresql import ENUM as PgEnum
 
 from ..config.db_config import Base
 
@@ -19,13 +21,10 @@ class User(Base):
     messages = relationship("Message", back_populates="author")
 
 
-# class Category(Base):
-#     __tablename__ = 'categories'
-
-#     id = Column(Integer, primary_key=True, autoincrement=True)
-#     title = Column(String, nullable=False, unique=True)
-
-#     memes = relationship("Meme", back_populates="category")
+class CategoryEnum(Enum):
+    OTHER = 'OTHER'
+    CATS = 'CATS'
+    PEOPLE = 'PEOPLE'
 
 
 # class Label(Base):
@@ -92,8 +91,11 @@ class Meme(Base):
     author_id = Column(ForeignKey("users.id"))
     author = relationship("User", back_populates="memes")
 
-    # category_id = Column(ForeignKey("categories.id"))
-    # category = relationship("Category", back_populates="memes")
+    category = Column(
+        PgEnum(CategoryEnum, name='category_meme_enum', create_type=False),
+        nullable=False,
+        default=CategoryEnum.OTHER
+    )
 
     # label_id = Column(ForeignKey("labels.id"))
     # labels = relationship("Label", back_populates="memes")
@@ -110,8 +112,7 @@ class Meme(Base):
             "name": self.name,
             "created_at": self.created_at,
             "author_id": self.author_id,
-
-            # "category_id": self.category_id,
+            "category_id": self.category_id,
             # "labels": self.labels,
             # "comments": self.comments,
             # "likes": self.likes,

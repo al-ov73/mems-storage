@@ -76,10 +76,8 @@ services:
   pgadmin:
     image: elestio/pgadmin:latest
     restart: always
-    environment:
-      PGADMIN_DEFAULT_EMAIL: admin@pgadmin.com
-      PGADMIN_DEFAULT_PASSWORD: password
-      PGADMIN_LISTEN_PORT: 8080
+    env_file:
+      - .env-non-dev
     ports:
       - 8080:8080
     volumes:

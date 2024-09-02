@@ -54,6 +54,7 @@ async def get_meme_link(meme_id: str,
 async def upload_file(
         file: UploadFile,
         filename: str = Form(),
+        category: str | None = Form(),
         db: Session = Depends(get_db),
         meme_repo: MemesRepository = Depends(get_memes_repository),
         storage_repo: BaseStorageRepo = Depends(get_storage_repo),
@@ -62,7 +63,7 @@ async def upload_file(
     add meme to db and to S3 storage
     """
     try:
-        new_meme = Meme(name=filename)
+        new_meme = Meme(name=filename, category=category)
         await storage_repo.add_image(filename, file.file)
         await meme_repo.add_meme(new_meme, db)
         return new_meme
