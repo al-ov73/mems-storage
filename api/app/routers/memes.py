@@ -1,6 +1,7 @@
 from typing import Annotated
 
 from fastapi import Depends, UploadFile, File, Form, APIRouter
+from sqlalchemy import text
 from sqlalchemy.orm import Session
 
 from ..config.db_config import get_db
@@ -25,9 +26,12 @@ async def get_meme_category(
     """
     return list of memes categories
     """
-    categories = db.execute("select enum_range(null::memes)")
-    print('categories', categories)
-    return 'categories'
+    categories = []
+    query = db.execute(text("select unnest(enum_range(null::categoryenum))"))
+    result = query.fetchall()
+    for category in result:
+        categories.append(category[0])
+    return categories
 
 
 @router.get(
