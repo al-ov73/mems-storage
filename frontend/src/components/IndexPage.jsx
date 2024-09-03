@@ -7,18 +7,28 @@ import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
 
 import { setMemes } from "../slices/memesSlice";
-import { getMemes, postMeme } from "../utils/requests.js";
+import { getMemes, postMeme, getCategories } from "../utils/requests.js";
 import NavbarPage from "./Navbar.jsx";
 
 
 const IndexPage = () => {
   const [selectedImage, setSelectedImage] = useState(null);
   const [selectedName, setSelectedName] = useState(null);
+  const [categories, setCategories] = useState([]);
   const [selectedCategory, setSelectedCategory] = useState(null);
   const dispatch = useDispatch();
 
   const memes = useSelector((state) => state.memes.memes);
   const access_token = localStorage.getItem('user')
+
+  useEffect(() => {
+    const inner = async () => {
+      const response = await getCategories(access_token)
+      console.log('categories response', response);
+      setCategories(response);
+    }
+    inner();
+  }, [])
 
   useEffect(() => {
     const inner = async () => {

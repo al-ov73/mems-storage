@@ -8,7 +8,7 @@ from sqlalchemy.orm import sessionmaker
 
 from ..schemas.memes import MemeSchema
 from .fake.fake_storage_repository import FakeStorageRepository
-from ..config.app_congif import MINIO_API_URL
+from ..config.app_config import MINIO_API_URL
 from ..config.db_config import Base, engine, get_db
 from ..config.dependencies import get_storage_repo
 from ..main import app

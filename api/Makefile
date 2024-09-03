@@ -6,7 +6,7 @@ test:
 
 
 makemigrations:
-		alembic revision --autogenerate -m "initial_migration"
+		alembic revision --autogenerate -m "initial_migration2"
 
 migrate:
 		alembic upgrade head

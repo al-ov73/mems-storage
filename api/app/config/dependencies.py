@@ -1,4 +1,4 @@
-from .app_congif import MINIO_API_URL, REDIS_URL
+from .app_config import MINIO_API_URL, REDIS_URL
 from ..repositories.memes_repository import MemesRepository
 from ..repositories.storage_repository import StorageRepository
 from ..repositories.messages_repository import MessagesRepository

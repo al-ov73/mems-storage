@@ -1,9 +1,8 @@
-from datetime import datetime
+import enum
 
-from sqlalchemy import TIMESTAMP, Column, String, text, Integer, ForeignKey
+from datetime import datetime
+from sqlalchemy import TIMESTAMP, Column, String, text, Integer, ForeignKey, func, Enum
 from sqlalchemy.orm import relationship
-from sqlalchemy import func
-from enum import Enum
 from sqlalchemy.dialects.postgresql import ENUM as PgEnum
 
 from ..config.db_config import Base
@@ -21,11 +20,44 @@ class User(Base):
     messages = relationship("Message", back_populates="author")
 
 
-class CategoryEnum(Enum):
-    OTHER = 'OTHER'
-    CATS = 'CATS'
-    PEOPLE = 'PEOPLE'
+class CategoryEnum(enum.Enum):
+    OTHER = 'Другое'
+    CATS = 'Мемы с котами'
+    PEOPLE = 'Мемы с людьми'
 
+
+class Meme(Base):
+    __tablename__ = 'memes'
+
+    id = Column(Integer, primary_key=True, autoincrement=True)
+    name = Column(String, unique=True, nullable=False)
+    created_at = Column(TIMESTAMP, default=datetime.utcnow)
+
+    author_id = Column(ForeignKey("users.id"))
+    author = relationship("User", back_populates="memes")
+
+    category = Column(Enum(CategoryEnum))
+
+    # label_id = Column(ForeignKey("labels.id"))
+    # labels = relationship("Label", back_populates="memes")
+
+    # comment_id = Column(ForeignKey("comments.id"))
+    # comments = relationship("Comment", back_populates="memes")
+
+    # like_id = Column(ForeignKey("likes.id"))
+    # likes = relationship("Like", back_populates="memes")
+
+    def to_dict(self):
+        return {
+            "id": self.id,
+            "name": self.name,
+            "created_at": self.created_at,
+            "author_id": self.author_id,
+            "category_id": self.category_id,
+            # "labels": self.labels,
+            # "comments": self.comments,
+            # "likes": self.likes,
+        }
 
 # class Label(Base):
 #     __tablename__ = 'labels'
@@ -81,42 +113,7 @@ class CategoryEnum(Enum):
 #     meme_id = Column(Integer, ForeignKey('memes.id'))
 
 
-class Meme(Base):
-    __tablename__ = 'memes'
 
-    id = Column(Integer, primary_key=True, autoincrement=True)
-    name = Column(String, unique=True, nullable=False)
-    created_at = Column(TIMESTAMP, default=datetime.utcnow)
-
-    author_id = Column(ForeignKey("users.id"))
-    author = relationship("User", back_populates="memes")
-
-    category = Column(
-        PgEnum(CategoryEnum, name='category_meme_enum', create_type=False),
-        nullable=False,
-        default=CategoryEnum.OTHER
-    )
-
-    # label_id = Column(ForeignKey("labels.id"))
-    # labels = relationship("Label", back_populates="memes")
-
-    # comment_id = Column(ForeignKey("comments.id"))
-    # comments = relationship("Comment", back_populates="memes")
-
-    # like_id = Column(ForeignKey("likes.id"))
-    # likes = relationship("Like", back_populates="memes")
-
-    def to_dict(self):
-        return {
-            "id": self.id,
-            "name": self.name,
-            "created_at": self.created_at,
-            "author_id": self.author_id,
-            "category_id": self.category_id,
-            # "labels": self.labels,
-            # "comments": self.comments,
-            # "likes": self.likes,
-        }
 
 
 class Message(Base):

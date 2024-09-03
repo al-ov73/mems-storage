@@ -28,6 +28,7 @@ redis = "^5.0.8"
 fastapi-cache2 = "^0.2.2"
 aioredis = "^2.0.1"
 websockets = "^13.0"
+sqlalchemy-utils = "^0.41.2"
 
 
 [build-system]

@@ -9,9 +9,26 @@ from ..models.models import Meme
 from ..repositories.memes_repository import MemesRepository
 from ..repositories.storage_repository import BaseStorageRepo
 from ..schemas.memes import MemeDbSchema, MemeSchema
+from ..schemas.users import UserDbSchema
 from ..utils.auth_utils import get_current_user
 
 router = APIRouter()
+
+@router.get(
+    '/categories',
+    # dependencies=[Depends(get_current_user)],
+)
+async def get_meme_category(
+    db: Session = Depends(get_db),
+    meme_repo: MemesRepository = Depends(get_memes_repository),
+):
+    """
+    return list of memes categories
+    """
+    categories = db.execute("select enum_range(null::memes)")
+    print('categories', categories)
+    return 'categories'
+
 
 @router.get(
     '',
@@ -33,7 +50,12 @@ async def get_memes(skip: int = 0,
     return memes
 
 
-@router.get('/{meme_id}', dependencies=[Depends(get_current_user)], )
+
+
+@router.get(
+    '/{meme_id}',
+    dependencies=[Depends(get_current_user)]
+)
 async def get_meme_link(meme_id: str,
                         db: Session = Depends(get_db),
                         meme_repo: MemesRepository = Depends(get_memes_repository),
@@ -42,7 +64,7 @@ async def get_meme_link(meme_id: str,
     """
     return meme with link to download
     """
-    
+    print('meme_id ->>', meme_id)
     meme = await meme_repo.get_meme(meme_id, db)
     if not meme:
         return 'meme not exist'
@@ -50,20 +72,26 @@ async def get_meme_link(meme_id: str,
     return meme
 
 
-@router.post('', dependencies=[Depends(get_current_user)], )
+@router.post('')
 async def upload_file(
         file: UploadFile,
         filename: str = Form(),
-        category: str | None = Form(),
+        category: str = Form(),
         db: Session = Depends(get_db),
         meme_repo: MemesRepository = Depends(get_memes_repository),
         storage_repo: BaseStorageRepo = Depends(get_storage_repo),
+        user: UserDbSchema = Depends(get_current_user),
 ) -> MemeDbSchema | str:
     """
     add meme to db and to S3 storage
     """
     try:
-        new_meme = Meme(name=filename, category=category)
+        current_user_id = user.id
+        new_meme = Meme(
+            name=filename,
+            category=category,
+            author_id=current_user_id
+        )
         await storage_repo.add_image(filename, file.file)
         await meme_repo.add_meme(new_meme, db)
         return new_meme
@@ -73,7 +101,7 @@ async def upload_file(
 
 @router.delete(
         '/{meme_id}',
-        # dependencies=[Depends(get_current_user)],
+        dependencies=[Depends(get_current_user)],
 )
 async def del_meme(
         meme_id: str,

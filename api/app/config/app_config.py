@@ -35,3 +35,11 @@ ACCESS_TOKEN_EXPIRE_MINUTES = 120
 # Redis
 def get_redis():
     return aioredis.from_url(REDIS_URL, encoding="utf8", decode_responses=True)
+
+# Memes categories
+# Create and apply ew migrations after change
+# CATEGORIES = [
+#     ('OTHER', 'Другое'),
+#     ('CATS', 'Мемы с котами'),
+#     ('PEOPLE', 'Мемы с людьми'),
+# ]
