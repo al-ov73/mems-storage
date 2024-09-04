@@ -3,12 +3,14 @@ import FormData from 'form-data'
 import ImageCard from './ImageCard.jsx'
 import { useDispatch, useSelector } from "react-redux";
 import Container from 'react-bootstrap/Container';
+import Form from 'react-bootstrap/Form';
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
 
 import { setMemes } from "../slices/memesSlice";
 import { getMemes, postMeme, getCategories } from "../utils/requests.js";
 import NavbarPage from "./Navbar.jsx";
+import config from "../config/config.js";
 
 
 const IndexPage = () => {
@@ -75,16 +77,18 @@ const IndexPage = () => {
               setSelectedName(event.target.value);
             }}
           />
-          <select class="form-select"
-                  aria-label="Default select example"
-                  onChange={(event) => {
-                    setSelectedCategory(event.target.value);
-                  }}>
-            <option selected>Выберите категорию</option>
-            <option value="CATS">Мемы с котиками</option>
-            <option value="PEOPLE">Мемы с людьми</option>
-            <option value="OTHER">Другое</option>
-          </select>
+              <Form.Select
+                aria-label="Выбор категории"
+                onChange={(event) => {
+                  setSelectedCategory(event.target.value);
+                }}>
+                <option>Выберите категорию</option>
+                {categories.map((frontendCategory) => {
+                  const calLabel = frontendCategory in config.categories ? config.categories[frontendCategory].label : frontendCategory
+                  return <option key={frontendCategory} value={frontendCategory}>{calLabel}</option>
+                })}
+              </Form.Select>
+
           </div>
           <div className="form-group">
           <label>Приложите картинку</label>

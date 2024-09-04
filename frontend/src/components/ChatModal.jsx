@@ -15,12 +15,10 @@ const ChatModal = ({ show, onHide }) => {
 
   const userId = getUserIdFromStorage();
 
-  console.log('messages', messages)
-
   useEffect(() => {
     getMessages(access_token)
       .then((messages) => {
-        console.log('messages get', messages)
+        // console.log('messages get', messages)
         setMessages(messages)
       });
   }, [])
