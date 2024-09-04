@@ -3,6 +3,8 @@ import FormData from 'form-data'
 import ImageCard from './ImageCard.jsx'
 import { useDispatch, useSelector } from "react-redux";
 import Container from 'react-bootstrap/Container';
+import Button from 'react-bootstrap/Button';
+
 import Form from 'react-bootstrap/Form';
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
@@ -11,26 +13,19 @@ import { setMemes } from "../slices/memesSlice";
 import { getMemes, postMeme, getCategories } from "../utils/requests.js";
 import NavbarPage from "./Navbar.jsx";
 import config from "../config/config.js";
+import MemeCreateForm from "./MemeCreateForm.jsx";
 
 
 const IndexPage = () => {
   const [selectedImage, setSelectedImage] = useState(null);
   const [selectedName, setSelectedName] = useState(null);
   const [categories, setCategories] = useState([]);
+  const [createFormShow, setCreateFormShow] = useState(false);
   const [selectedCategory, setSelectedCategory] = useState(null);
   const dispatch = useDispatch();
 
   const memes = useSelector((state) => state.memes.memes);
   const access_token = localStorage.getItem('user')
-
-  useEffect(() => {
-    const inner = async () => {
-      const response = await getCategories(access_token)
-      console.log('categories response', response);
-      setCategories(response);
-    }
-    inner();
-  }, [])
 
   useEffect(() => {
     const inner = async () => {
@@ -49,64 +44,11 @@ const IndexPage = () => {
   return (
     <>
     <NavbarPage/>
-    <div className="container h-100 p-5 my-4 overflow-hidden rounded shadow">
-      <div className="row h-100 bg-white flex-md-row">
-        <form onSubmit={ async (event) => {
-              event.preventDefault();
-              try {
-                const form = new FormData();
-                form.append('file', selectedImage);
-                form.append('filename', selectedName);
-                form.append('category', selectedCategory);
-                const postMemeResponse = await postMeme(form, access_token);
-                console.log('postMemeResponse', postMemeResponse);
-                const getMemesResponse = await getMemes(access_token);
-                console.log('getMemesResponse', getMemesResponse)
-                dispatch(setMemes(getMemesResponse.data))
-              } catch (error) {
-                console.log('error->', error)
-              }
-            }}>
-        <div className="form-group">
-          <label >Введите имя</label>
-          <input
-            className="form-control"
-            type="text"
-            name="name"
-            onChange={(event) => {
-              setSelectedName(event.target.value);
-            }}
-          />
-              <Form.Select
-                aria-label="Выбор категории"
-                onChange={(event) => {
-                  setSelectedCategory(event.target.value);
-                }}>
-                <option>Выберите категорию</option>
-                {categories.map((frontendCategory) => {
-                  const calLabel = frontendCategory in config.categories ? config.categories[frontendCategory].label : frontendCategory
-                  return <option key={frontendCategory} value={frontendCategory}>{calLabel}</option>
-                })}
-              </Form.Select>
-
-          </div>
-          <div className="form-group">
-          <label>Приложите картинку</label>
-          <input
-            className="form-control"
-            type="file"
-            name="file"
-            onChange={(event) => {
-              setSelectedImage(event.target.files[0]);
-            }}
-          />
-          </div>
-          <button className="btn btn-primary" type="submit">
-            Загрузить файл
-          </button>
-        </form>
-      </div>
-    </div>
+    <Button variant="outline-success" onClick={() => setCreateFormShow(true)}>Добавить мем</Button>
+    <MemeCreateForm
+        show={createFormShow}
+        onHide={() => setCreateFormShow(false)}
+      />
     <Container>
       <Row>
         {memes && <>
