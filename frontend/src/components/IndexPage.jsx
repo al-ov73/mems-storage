@@ -1,28 +1,30 @@
 import React, { useState, useEffect } from "react";
-import FormData from 'form-data'
 import ImageCard from './ImageCard.jsx'
 import { useDispatch, useSelector } from "react-redux";
 import Container from 'react-bootstrap/Container';
 import Button from 'react-bootstrap/Button';
-
-import Form from 'react-bootstrap/Form';
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
-
 import { setMemes } from "../slices/memesSlice";
 import { getMemes, postMeme, getCategories } from "../utils/requests.js";
 import NavbarPage from "./Navbar.jsx";
-import config from "../config/config.js";
 import MemeCreateForm from "./MemeCreateForm.jsx";
+import CategoryCard from "./CategoryCard.jsx";
 
 
 const IndexPage = () => {
-  const [selectedImage, setSelectedImage] = useState(null);
-  const [selectedName, setSelectedName] = useState(null);
   const [categories, setCategories] = useState([]);
   const [createFormShow, setCreateFormShow] = useState(false);
-  const [selectedCategory, setSelectedCategory] = useState(null);
   const dispatch = useDispatch();
+
+  useEffect(() => {
+    const inner = async () => {
+      const response = await getCategories(access_token)
+      console.log('categories response', response);
+      setCategories(response);
+    }
+    inner();
+  }, [])
 
   const memes = useSelector((state) => state.memes.memes);
   const access_token = localStorage.getItem('user')
@@ -40,7 +42,7 @@ const IndexPage = () => {
     }
     inner();
   }, []);
-  
+
   return (
     <>
     <NavbarPage/>
@@ -50,6 +52,16 @@ const IndexPage = () => {
         onHide={() => setCreateFormShow(false)}
       />
     <Container>
+    <Row>
+      {categories && <>
+          {categories.map((category) => {
+            return <Col md={3} className="mx-4 my-1" key={category}>
+                    <CategoryCard category={category}/>
+                  </Col>
+                }
+              )}
+          </>}
+      </Row>
       <Row>
         {memes && <>
             {memes.map((meme) => {
