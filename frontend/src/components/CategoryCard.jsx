@@ -1,12 +1,21 @@
 import Button from 'react-bootstrap/Button';
 import Card from 'react-bootstrap/Card';
 import Image from 'react-bootstrap/Image';
+import { useDispatch, useSelector } from "react-redux";
 import config from '../config/config';
+import { setCategories, setCurrentCategory } from "../slices/categoriesSlice.js";
+
 
 const CategoryCard = ({ category })  => {
+  const dispatch = useDispatch();
+
   const categoryName = category in config.categories ? config.categories[category].label : category
   const categoryLink = category in config.categories ? config.categories[category].coverLink : ''
 
+  const categoryHandler = () => {
+    dispatch(setCurrentCategory(category));
+  };
+  
   return (
     <>
       <Card style={{ width: '18rem' }}>
@@ -18,7 +27,9 @@ const CategoryCard = ({ category })  => {
         />
         <Card.Body>
           <Card.Title>{categoryName}</Card.Title>
-          <Button variant="primary">
+          <Button
+            variant="primary"
+            onClick={categoryHandler}>
             Посмотреть
           </Button>
         </Card.Body>

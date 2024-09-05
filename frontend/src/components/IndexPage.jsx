@@ -6,29 +6,29 @@ import Button from 'react-bootstrap/Button';
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
 import { setMemes } from "../slices/memesSlice";
+
 import { getMemes, postMeme, getCategories } from "../utils/requests.js";
 import NavbarPage from "./Navbar.jsx";
 import MemeCreateForm from "./MemeCreateForm.jsx";
 import CategoryCard from "./CategoryCard.jsx";
-
+import { setCategories, setCurrentCategory } from "../slices/categoriesSlice.js";
+import MemesList from "./MemesList.jsx";
 
 const IndexPage = () => {
-  const [categories, setCategories] = useState([]);
   const [createFormShow, setCreateFormShow] = useState(false);
   const dispatch = useDispatch();
 
+  // get categories
   useEffect(() => {
     const inner = async () => {
       const response = await getCategories(access_token)
       console.log('categories response', response);
-      setCategories(response);
+      dispatch(setCategories(response));
     }
     inner();
   }, [])
 
-  const memes = useSelector((state) => state.memes.memes);
-  const access_token = localStorage.getItem('user')
-
+  // get memes
   useEffect(() => {
     const inner = async () => {
       try {
@@ -43,6 +43,13 @@ const IndexPage = () => {
     inner();
   }, []);
 
+
+  const categories = useSelector((state) => state.categories.categories);
+  const memes = useSelector((state) => state.memes.memes);
+  const access_token = localStorage.getItem('user')
+
+
+
   return (
     <>
     <NavbarPage/>
@@ -54,6 +61,7 @@ const IndexPage = () => {
     <Container>
     <Row>
       {categories && <>
+          <Button variant="outline-success" onClick={() => dispatch(setCurrentCategory('ALL'))}>Все мемы</Button>
           {categories.map((category) => {
             return <Col md={3} className="mx-4 my-1" key={category}>
                     <CategoryCard category={category}/>
@@ -63,15 +71,8 @@ const IndexPage = () => {
           </>}
       </Row>
       <Row>
-        {memes && <>
-            {memes.map((meme) => {
-              return <Col xs={6} md={4} className="mx-4 my-1" key={meme.id}>
-                      <ImageCard meme={meme}/>
-                    </Col>
-              }
-            )}
-        </>}
-        </Row>
+        <MemesList/>
+      </Row>
     </Container>
   </>
   );

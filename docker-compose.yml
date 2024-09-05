@@ -66,6 +66,7 @@ services:
       - 9000:9000
       - 9001:9001
     volumes:
+      - ./storage:/storage
       - minio_data:/data
 
   redis:

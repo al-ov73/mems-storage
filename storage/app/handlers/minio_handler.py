@@ -36,7 +36,8 @@ class MinioHandler:
         return response
 
     def get_link(self, filename: str):
-        return self.client.get_presigned_url("GET", self.bucket, filename)
+        link = self.client.get_presigned_url("GET", self.bucket, filename)
+        return link
 
     def remove_object(self, filename: str):
         self.client.remove_object(self.bucket, filename)
