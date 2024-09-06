@@ -1,6 +1,7 @@
 import Button from 'react-bootstrap/Button';
 import Card from 'react-bootstrap/Card';
 import Image from 'react-bootstrap/Image';
+import Figure from 'react-bootstrap/Figure';
 import { useDispatch, useSelector } from "react-redux";
 import config from '../config/config';
 import { setCategories, setCurrentCategory } from "../slices/categoriesSlice.js";
@@ -18,22 +19,21 @@ const CategoryCard = ({ category })  => {
   
   return (
     <>
-      <Card style={{ width: '18rem' }}>
-        <Image 
-                height="150rem"
-                src={require(`../static/categoryImages/${categoryLink}`)}
-                className="rounded mx-auto d-block"
-                alt='Картинка не загрузилась:('
-        />
-        <Card.Body>
-          <Card.Title>{categoryName}</Card.Title>
+      <Figure className="text-center">
+      <img className="img-responsive"
+          src={require(`../static/categoryImages/${categoryLink}`)}
+          alt="Картинка не загрузилась :("
+          width="100"
+          height="100"/>
+
+        <Figure.Caption>
           <Button
             variant="primary"
             onClick={categoryHandler}>
-            Посмотреть
+            {categoryName}
           </Button>
-        </Card.Body>
-      </Card>
+        </Figure.Caption>
+      </Figure>
     </>
   );
 }

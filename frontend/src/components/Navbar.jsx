@@ -7,12 +7,13 @@ import { useState, } from "react";
 import ChatModal from './ChatModal.jsx'
 import useAuth from '../hooks/index.js';
 import { useNavigate } from "react-router-dom";
-
+import MemeCreateForm from "./MemeCreateForm.jsx";
 
 const NavbarPage = () => {
   const auth = useAuth();
   const navigate = useNavigate();
   const [modalChatShow, setModalChatShow] = useState(false);
+  const [createFormShow, setCreateFormShow] = useState(false);
 
   const handleLogout = () => {
     localStorage.removeItem('user');
@@ -28,6 +29,10 @@ const NavbarPage = () => {
               Memes app
             </a>
           </Nav>
+
+      <Button variant="outline-success" onClick={() => setCreateFormShow(true)}>Добавить мем</Button>
+
+
           <Nav>
             <Button variant="primary" onClick={() => setModalChatShow(true)}>
               Чатик
@@ -42,6 +47,10 @@ const NavbarPage = () => {
       <ChatModal
         show={modalChatShow}
         onHide={() => setModalChatShow(false)}
+      />
+      <MemeCreateForm
+        show={createFormShow}
+        onHide={() => setCreateFormShow(false)}
       />
     </>
 }

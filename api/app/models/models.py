@@ -21,9 +21,9 @@ class User(Base):
 
 
 class CategoryEnum(enum.Enum):
-    OTHER = 'Другое'
-    CATS = 'Мемы с котами'
-    PEOPLE = 'Мемы с людьми'
+    OTHER = 'OTHER'
+    CATS = 'CATS'
+    PEOPLE = 'PEOPLE'
 
 
 class Meme(Base):

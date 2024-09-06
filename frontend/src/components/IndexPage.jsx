@@ -9,13 +9,13 @@ import { setMemes } from "../slices/memesSlice";
 
 import { getMemes, postMeme, getCategories } from "../utils/requests.js";
 import NavbarPage from "./Navbar.jsx";
-import MemeCreateForm from "./MemeCreateForm.jsx";
+
 import CategoryCard from "./CategoryCard.jsx";
 import { setCategories, setCurrentCategory } from "../slices/categoriesSlice.js";
 import MemesList from "./MemesList.jsx";
 
 const IndexPage = () => {
-  const [createFormShow, setCreateFormShow] = useState(false);
+
   const dispatch = useDispatch();
 
   // get categories
@@ -43,32 +43,27 @@ const IndexPage = () => {
     inner();
   }, []);
 
-
+  const currentCategory = useSelector((state) => state.categories.currentCategory);
   const categories = useSelector((state) => state.categories.categories);
   const memes = useSelector((state) => state.memes.memes);
   const access_token = localStorage.getItem('user')
 
-
+  console.log('currentCategory->>', currentCategory)
 
   return (
     <>
     <NavbarPage/>
-    <Button variant="outline-success" onClick={() => setCreateFormShow(true)}>Добавить мем</Button>
-    <MemeCreateForm
-        show={createFormShow}
-        onHide={() => setCreateFormShow(false)}
-      />
+
     <Container>
-    <Row>
-      {categories && <>
-          <Button variant="outline-success" onClick={() => dispatch(setCurrentCategory('ALL'))}>Все мемы</Button>
-          {categories.map((category) => {
-            return <Col md={3} className="mx-4 my-1" key={category}>
-                    <CategoryCard category={category}/>
-                  </Col>
-                }
-              )}
-          </>}
+    <Row xs="auto" className="justify-content-md-center my-4">
+      {currentCategory ?
+          <Button variant="outline-success" onClick={() => dispatch(setCurrentCategory(''))}>Вернуться к выбору категории</Button>
+          :
+        <> 
+          <Col> <CategoryCard category={'ALL'}/></Col>
+          {categories.map((category) => <Col><CategoryCard key={category} category={category}/></Col>)}
+        </>
+      }
       </Row>
       <Row>
         <MemesList/>

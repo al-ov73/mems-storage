@@ -8,6 +8,8 @@ import { useDispatch, useSelector } from "react-redux";
 import { setMemes } from "../slices/memesSlice";
 import { getMemes, postMeme, getCategories } from "../utils/requests.js";
 import config from "../config/config.js";
+import Row from "react-bootstrap/esm/Row.js";
+import Col from "react-bootstrap/esm/Col.js";
 
 
 const MemeCreateForm = ({ show, onHide }) => {
@@ -34,35 +36,42 @@ const MemeCreateForm = ({ show, onHide }) => {
         aria-labelledby="contained-modal-title-vcenter"
         centered
     >
-    <form onSubmit={ async (event) => {
-        event.preventDefault();
-        try {
-          const form = new FormData();
-          form.append('file', selectedImage);
-          form.append('filename', selectedName);
-          form.append('category', selectedCategory);
-          const postMemeResponse = await postMeme(form, access_token);
-          console.log('postMemeResponse', postMemeResponse);
-          const getMemesResponse = await getMemes(access_token);
-          console.log('getMemesResponse', getMemesResponse)
-          dispatch(setMemes(getMemesResponse.data))
-          onHide();
-        } catch (error) {
-          console.log('error->', error)
-          onHide();
-        }
-      }}>
-  <div className="form-group">
-    <label >Введите имя</label>
-    <input
-      className="form-control"
-      type="text"
-      name="name"
-      onChange={(event) => {
-        setSelectedName(event.target.value);
-      }}
-    />
+      <Form className="m-4" onSubmit={ async (event) => {
+          event.preventDefault();
+          try {
+            const form = new FormData();
+            form.append('file', selectedImage);
+            form.append('filename', selectedName);
+            form.append('category', selectedCategory);
+            console.log('selectedCategory', selectedCategory)
+            const postMemeResponse = await postMeme(form, access_token);
+            console.log('postMemeResponse', postMemeResponse);
+            const getMemesResponse = await getMemes(access_token);
+            console.log('getMemesResponse', getMemesResponse)
+            dispatch(setMemes(getMemesResponse.data))
+            onHide();
+          } catch (error) {
+            console.log('error->', error)
+            onHide();
+          }
+        }}>
+      <Form.Group>
+        <Form.Label>
+          <p class="fs-4">
+            Загрузить новый мем
+          </p>
+        </Form.Label>
+        <Form.Control
+          className="my-3"
+          placeholder="Введите имя"
+          type="text"
+          name="name"
+          onChange={(event) => {
+            setSelectedName(event.target.value);
+          }}
+        />
         <Form.Select
+          className="my-3"
           aria-label="Выбор категории"
           onChange={(event) => {
             setSelectedCategory(event.target.value);
@@ -73,26 +82,23 @@ const MemeCreateForm = ({ show, onHide }) => {
             return <option key={frontendCategory} value={frontendCategory}>{calLabel}</option>
           })}
         </Form.Select>
+        
+        <Form.Label className="mt-1">Приложите картинку</Form.Label>
+        <Form.Control
+        className="mb-3"
+          type="file"
+          name="file"
+          onChange={(event) => {
+            setSelectedImage(event.target.files[0]);
+          }}
+        />
+      </Form.Group>
+      <Row>
+        <Col className="justify-content-md-center"><Button type="submit"> Загрузить файл </Button></Col>
+        <Col className="justify-content-md-center"><Button onClick={onHide}>Закрыть</Button></Col>
+      </Row>
+    </Form>
 
-    </div>
-    <div className="form-group">
-    <label>Приложите картинку</label>
-    <input
-      className="form-control"
-      type="file"
-      name="file"
-      onChange={(event) => {
-        setSelectedImage(event.target.files[0]);
-      }}
-    />
-    </div>
-    <button className="btn btn-primary" type="submit">
-      Загрузить файл
-    </button>
-  </form>
-  <Modal.Footer>
-        <Button onClick={onHide}>Закрыть</Button>
-</Modal.Footer>
   </Modal>
   </>
 }

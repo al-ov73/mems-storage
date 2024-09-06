@@ -14,13 +14,15 @@ import CategoryCard from "./CategoryCard.jsx";
 import { setCategories, setCurrentCategory } from "../slices/categoriesSlice.js";
 
 const MemesList = () => {
-  const currenCategory = useSelector((state) => state.categories.currentCategory);
+  const currentCategory = useSelector((state) => state.categories.currentCategory);
   let memes = useSelector((state) => state.memes.memes);
-  console.log('currenCategory', currenCategory)
-  console.log('memes', memes)
-  memes = (currenCategory === 'ALL') ? 
+  if (!currentCategory) {
+        return ''
+  }
+  
+  memes = (currentCategory === 'ALL') ? 
           memes :
-          memes.filter((meme) => meme.category === currenCategory)
+          memes.filter((meme) => meme.category === currentCategory)
 
   return memes.map((meme) => {
               return <Col xs={6} md={4} className="mx-4 my-1" key={meme.id}>
