@@ -1,7 +1,6 @@
 import os
 
 from dotenv import load_dotenv
-from redis import asyncio as aioredis
 
 load_dotenv()
 
@@ -30,16 +29,3 @@ JWT_RESET_SECRET_KEY = os.getenv("JWT_RESET_SECRET_KEY")
 JWT_TOKEN_SECRET_KEY = os.getenv("JWT_TOKEN_SECRET_KEY")
 ALGORITHM = "HS256"
 ACCESS_TOKEN_EXPIRE_MINUTES = 120
-
-
-# Redis
-def get_redis():
-    return aioredis.from_url(REDIS_URL, encoding="utf8", decode_responses=True)
-
-# Memes categories
-# Create and apply ew migrations after change
-# CATEGORIES = [
-#     ('OTHER', 'Другое'),
-#     ('CATS', 'Мемы с котами'),
-#     ('PEOPLE', 'Мемы с людьми'),
-# ]

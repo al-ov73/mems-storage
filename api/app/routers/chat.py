@@ -20,6 +20,9 @@ async def get_last_messages(
     db: Session = Depends(get_db),
     messages_repo: MessagesRepository = Depends(get_messages_repository),
 ) -> List[MessageSchema]:
+    '''
+    send all last chat messages
+    '''
     messages = await messages_repo.get_messages(db)
     return messages
 
@@ -30,6 +33,9 @@ async def websocket_endpoint(
     db: Session = Depends(get_db),
     messages_repo: MessagesRepository = Depends(get_messages_repository),
 ):
+    '''
+    wait message from Websocket and send it through all opened connections
+    '''
     await manager.connect(websocket)
     try:
         while True:

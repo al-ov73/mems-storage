@@ -6,7 +6,7 @@ from abc import abstractmethod, ABC
 from tempfile import SpooledTemporaryFile
 from typing import BinaryIO
 
-from ..config.app_config import get_redis
+from ..config.redis_config import get_redis
 
 
 class BaseStorageRepo(ABC):

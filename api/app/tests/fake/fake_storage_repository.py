@@ -1,9 +1,7 @@
 from tempfile import SpooledTemporaryFile
 
-from ...repositories.storage_repository import BaseStorageRepo
 
-
-class FakeStorageRepository(BaseStorageRepo):
+class FakeStorageRepository():
     '''
     override storage repository to not send
     requests to s3 storage

@@ -97,7 +97,7 @@ def add_test_meme(test_client, login_user) -> list[MemeSchema]:
             response = test_client.post(
                 "/memes/",
                 files={'file': ('init_filename', image_file)},
-                data={'filename': filename},
+                data={'filename': filename, 'category': 'OTHER'},
                 headers=headers,
             )
             return response.json()
