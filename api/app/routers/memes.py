@@ -1,10 +1,12 @@
-from typing import Annotated
+import httpx
 
+from typing import Annotated
 from fastapi import Depends, UploadFile, File, Form, APIRouter
 from sqlalchemy import text
 from sqlalchemy.orm import Session
 
 from ..config.db_config import get_db
+from ..config.app_config import STATIC_FILES
 from ..config.dependencies import get_storage_repo, get_memes_repository
 from ..models.models import Meme
 from ..repositories.memes_repository import MemesRepository
@@ -50,6 +52,12 @@ async def get_memes(skip: int = 0,
     memes = await meme_repo.get_memes(skip, limit, db)
     for meme in memes:
         link = await storage_repo.get_link(meme.name)
+
+        print('link', link)
+        # async with httpx.AsyncClient() as client:
+        #     response = await client.get(link)
+        #     with open(f'{STATIC_FILES}{meme.name}', 'wb') as f:
+        #         f.write(response.content)
         meme.link = link
     return memes
 
@@ -96,9 +104,9 @@ async def upload_file(
             category=category,
             author_id=current_user_id
         )
-        await storage_repo.add_image(filename, file.file)
+        storage_result = await storage_repo.add_image(filename, file.file)
         await meme_repo.add_meme(new_meme, db)
-        return new_meme
+        return storage_result
     except Exception as e:
         return f'db error "{e}"'
 

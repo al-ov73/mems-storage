@@ -21,10 +21,13 @@ storage_handler = MinioHandler(
 @app.post('/images')
 async def upload_image(request: Request):
     async with request.form() as form:
+        print('get upload request', form)
+        print('file->', form['file'])
         filename = form['file'].filename
         size = form['file'].size
         contents = form['file'].file
         result = storage_handler.upload_file(filename, contents, size)
+        print('storage response', result)
         return result
 
 

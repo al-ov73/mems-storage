@@ -9,4 +9,5 @@ export default {
   memesPath: `${apiPath}/memes`,
   chatPath: `${apiPath}/chat`,
   messagesPath: `${apiPath}/chat/messages`,
+  apiStatic: `${apiPath}/static`,
 }

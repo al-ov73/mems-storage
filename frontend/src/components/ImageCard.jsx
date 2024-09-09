@@ -6,6 +6,7 @@ import { getMemes, deleteMeme } from '../utils/requests';
 import { setMemes } from "../slices/memesSlice";
 import React, { useState } from "react";
 import ImageModal from './ImageModal';
+import routes from '../utils/routes';
 
 const ImageCard = ({ meme })  => {
   const [modalShow, setModalShow] = useState(false);
@@ -25,7 +26,7 @@ const ImageCard = ({ meme })  => {
       <Card style={{ width: '18rem' }}>
         <Image 
                 height="150rem"
-                src={meme.link}
+                src={`${routes.apiStatic}/${meme.name}`}
                 className="rounded mx-auto d-block"
                 alt='Картинка не загрузилась:('
                 onClick={() => setModalShow(true)}
