@@ -2,6 +2,7 @@ from typing import BinaryIO
 
 import minio
 from minio import Minio
+from urllib3 import HTTPResponse
 
 
 class MinioHandler:
@@ -28,11 +29,7 @@ class MinioHandler:
         return self.client.stat_object(self.bucket, name)
 
     def get_object(self, filename: str):
-        try:
-            response = self.client.get_object(self.bucket, filename)
-        finally:
-            response.close()
-            response.release_conn()
+        response = self.client.get_object(self.bucket, filename)
         return response
 
     def get_link(self, filename: str):

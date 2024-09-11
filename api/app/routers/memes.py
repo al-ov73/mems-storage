@@ -1,3 +1,4 @@
+import shutil
 import httpx
 
 from typing import Annotated
@@ -5,6 +6,7 @@ from fastapi import Depends, UploadFile, File, Form, APIRouter
 from sqlalchemy import text
 from sqlalchemy.orm import Session
 
+from ..utils.other_utils import clean_dir
 from ..config.db_config import get_db
 from ..config.app_config import STATIC_FILES
 from ..config.dependencies import get_storage_repo, get_memes_repository
@@ -45,19 +47,20 @@ async def get_memes(skip: int = 0,
                     db: Session = Depends(get_db),
                     meme_repo: MemesRepository = Depends(get_memes_repository),
                     storage_repo: BaseStorageRepo = Depends(get_storage_repo),
-                    ) -> list[MemeSchema]:
+                    ):
     """
     return list of memes with links to download
+    нарушается Single responsibility, будет refactor
     """
     memes = await meme_repo.get_memes(skip, limit, db)
+
+    clean_dir(STATIC_FILES)
+    
     for meme in memes:
         link = await storage_repo.get_link(meme.name)
-
-        print('link', link)
-        # async with httpx.AsyncClient() as client:
-        #     response = await client.get(link)
-        #     with open(f'{STATIC_FILES}{meme.name}', 'wb') as f:
-        #         f.write(response.content)
+        content = await storage_repo.get_image(meme.name)
+        with open(f'app/static/{meme.name}', 'wb') as f:
+            f.write(content)
         meme.link = link
     return memes
 

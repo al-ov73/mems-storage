@@ -1,7 +1,8 @@
 import os
 
 from dotenv import load_dotenv
-from fastapi import FastAPI, Request
+from fastapi import FastAPI, Request, Response
+from urllib3 import HTTPResponse
 
 from .handlers.minio_handler import MinioHandler
 
@@ -36,11 +37,17 @@ async def list_images():
     return storage_handler.list()
 
 
-@app.get('/images/{filename}')
+@app.get('/images/link/{filename}')
 async def get_link(filename: str):
     link = storage_handler.get_link(filename)
     return link
 
+@app.get('/images/{filename}')
+async def get_object(filename: str):
+    obj = storage_handler.get_object(filename)
+    print('obj', type(obj))
+    print('obj.data', type(obj.data))
+    return Response(content=obj.data)
 
 @app.delete('/images/{filename}')
 async def delete_image(filename: str):

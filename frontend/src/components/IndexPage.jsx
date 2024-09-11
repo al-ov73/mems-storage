@@ -48,8 +48,6 @@ const IndexPage = () => {
   const memes = useSelector((state) => state.memes.memes);
   const access_token = localStorage.getItem('user')
 
-  console.log('currentCategory->>', currentCategory)
-
   return (
     <>
     <NavbarPage/>

@@ -1,6 +1,6 @@
-import asyncio
 import aiohttp
-
+import httpx
+from aiohttp import FormData
 
 from abc import abstractmethod, ABC
 from tempfile import SpooledTemporaryFile
@@ -39,17 +39,27 @@ class StorageRepository(BaseStorageRepo):
         cache = await redis.get(image_name)
         if cache is not None:
             return cache[1:-1]
-
         async with aiohttp.ClientSession() as session:
-            async with session.get(f'{self.api_url}/images/{image_name}') as resp:
+            async with session.get(f'{self.api_url}/images/link/{image_name}') as resp:
                 link = await resp.text()
                 await redis.set(image_name, link)
                 return link[1:-1]
 
+    async def get_image(
+            self,
+            image_name: str,
+    ):
+        response = httpx.get(f'{self.api_url}/images/{image_name}')
+        return response.content
+            
     async def add_image(self, filename: str, file: SpooledTemporaryFile) -> str:
         async with aiohttp.ClientSession() as session:
-            await session.post(f'{self.api_url}/images', data={
-                'file': (filename, file, 'multipart/form-data')})
+            data = FormData()        
+            data.add_field('file',
+                        file,
+                        filename=filename,
+                        content_type='multipart/form-data')
+            response = await session.post(f'{self.api_url}/images', data=data)
             return filename
 
     async def delete_image(self, image_name: str) -> str:

@@ -35,12 +35,14 @@ services:
       - 8000:8000
     volumes:
       - ./api:/api
+    restart: always
     depends_on:
       - db
       - s3_storage
       - frontend
       - redis
-      - pgadmin
+      # - pgadmin
+    command: gunicorn app.main:app --workers 4 --worker-class uvicorn.workers.UvicornWorker --bind=0.0.0.0:8000 --reload
 
   s3_storage:
     build:
@@ -50,11 +52,12 @@ services:
     container_name: s3-storage-api
     ports:
       - 8888:8888
+    restart: always
     volumes:
-      - ./storage:/storage
+      - ./storage/app:/storage/app
     depends_on:
       - minio
-    command: gunicorn app.main:app --workers 4 --worker-class uvicorn.workers.UvicornWorker --bind=0.0.0.0:8888
+    command: gunicorn app.main:app --workers 4 --worker-class uvicorn.workers.UvicornWorker --bind=0.0.0.0:8888 --reload
 
   minio:
     container_name: minio
@@ -66,7 +69,6 @@ services:
       - 9000:9000
       - 9001:9001
     volumes:
-      - ./storage:/storage
       - minio_data:/data
 
   redis:
