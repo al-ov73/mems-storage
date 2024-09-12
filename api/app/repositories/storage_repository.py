@@ -35,14 +35,14 @@ class StorageRepository(BaseStorageRepo):
             self,
             image_name: str,
     ) -> str:
-        redis = get_redis()
-        cache = await redis.get(image_name)
-        if cache is not None:
-            return cache[1:-1]
+        # redis = get_redis()
+        # cache = await redis.get(image_name)
+        # if cache is not None:
+        #     return cache[1:-1]
         async with aiohttp.ClientSession() as session:
             async with session.get(f'{self.api_url}/images/link/{image_name}') as resp:
                 link = await resp.text()
-                await redis.set(image_name, link)
+                # await redis.set(image_name, link)
                 return link[1:-1]
 
     async def get_image(

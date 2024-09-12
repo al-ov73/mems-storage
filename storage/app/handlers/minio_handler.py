@@ -1,8 +1,8 @@
-from typing import BinaryIO
-
 import minio
+
 from minio import Minio
-from urllib3 import HTTPResponse
+from typing import BinaryIO
+from urllib.request import HTTPResponse
 
 
 class MinioHandler:
@@ -16,11 +16,12 @@ class MinioHandler:
         )
         self.bucket = bucket
 
-    def upload_file(self, name: str, file: BinaryIO, length: int):
-        return self.client.put_object(self.bucket, name, file, length=length,
+    def upload_file(self, filename: str, file: BinaryIO, length: int) -> str:
+        self.client.put_object(self.bucket, filename, file, length=length,
                                       content_type='image/jpeg')
+        return f'object {filename} uploded'
 
-    def list(self):
+    def list(self) -> list:
         objects = list(self.client.list_objects(self.bucket))
         return [{"name": i.object_name, "last_modified": i.last_modified} for i
                 in objects]
@@ -28,14 +29,13 @@ class MinioHandler:
     def stats(self, name: str) -> minio.api.Object:
         return self.client.stat_object(self.bucket, name)
 
-    def get_object(self, filename: str):
-        response = self.client.get_object(self.bucket, filename)
-        return response
+    def get_object(self, filename: str) -> HTTPResponse:
+        obj = self.client.get_object(self.bucket, filename)
+        return obj.data
 
-    def get_link(self, filename: str):
-        link = self.client.get_presigned_url("GET", self.bucket, filename)
-        return link
+    def get_link(self, filename: str) -> str:
+        return self.client.get_presigned_url("GET", self.bucket, filename)
 
-    def remove_object(self, filename: str):
+    def remove_object(self, filename: str) -> str:
         self.client.remove_object(self.bucket, filename)
         return f'object {filename} removed'
