@@ -1,5 +1,4 @@
 from typing import List
-import json
 
 from fastapi import APIRouter, WebSocket, WebSocketDisconnect, Depends
 from sqlalchemy.orm import Session
@@ -14,6 +13,7 @@ from ..utils.chat_utils import ConnectionManager
 router = APIRouter()
 
 manager = ConnectionManager()
+
 
 @router.get("/messages")
 async def get_last_messages(
@@ -45,4 +45,4 @@ async def websocket_endpoint(
             await manager.broadcast(new_message)
     except WebSocketDisconnect:
         manager.disconnect(websocket)
-        await manager.broadcast(f"Client left the chat")
+        await manager.broadcast("Client left the chat")

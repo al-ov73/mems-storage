@@ -1,19 +1,19 @@
-import { createSlice } from '@reduxjs/toolkit'
+import { createSlice } from '@reduxjs/toolkit';
 
 const initialState = {
   memes: [],
-}
+};
 
 const slice = createSlice({
   name: 'memes',
   initialState,
   reducers: {
-    setMemes: (state, {payload}) => {
+    setMemes: (state, { payload }) => {
       state.memes = payload;
     },
   },
-})
+});
 
-export const { setMemes } = slice.actions
+export const { setMemes } = slice.actions;
 
-export default slice.reducer
+export default slice.reducer;

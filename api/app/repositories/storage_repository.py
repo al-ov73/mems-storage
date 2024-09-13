@@ -23,7 +23,12 @@ class BaseStorageRepo(ABC):
         pass
 
     @abstractmethod
-    async def update_image(self, old_name: str, new_name: str, new_file: BinaryIO) -> str:
+    async def update_image(
+        self,
+        old_name: str,
+        new_name: str,
+        new_file: BinaryIO
+    ) -> str:
         pass
 
 
@@ -40,7 +45,9 @@ class StorageRepository(BaseStorageRepo):
         if cache is not None:
             return cache
         async with aiohttp.ClientSession() as session:
-            async with session.get(f'{self.api_url}/images/link/{image_name}') as resp:
+            async with session.get(
+                f'{self.api_url}/images/link/{image_name}'
+            ) as resp:
                 link = await resp.text()
                 await redis.set(image_name, link)
                 return link
@@ -51,25 +58,38 @@ class StorageRepository(BaseStorageRepo):
     ) -> StreamReader:
         response = httpx.get(f'{self.api_url}/images/{image_name}')
         return response.content
-            
-    async def add_image(self, filename: str, file: SpooledTemporaryFile) -> str:
+
+    async def add_image(
+        self,
+        filename: str,
+        file: SpooledTemporaryFile
+    ) -> str:
         async with aiohttp.ClientSession() as session:
-            data = FormData()        
-            data.add_field('file',
-                        file,
-                        filename=filename,
-                        content_type='multipart/form-data')
+            data = FormData()
+            data.add_field(
+                'file',
+                file,
+                filename=filename,
+                content_type='multipart/form-data'
+            )
             response = await session.post(f'{self.api_url}/images', data=data)
             text_response = await response.text()
             return text_response
 
     async def delete_image(self, image_name: str) -> str:
         async with aiohttp.ClientSession() as session:
-            response = await session.delete(f'{self.api_url}/images/{image_name}')
+            response = await session.delete(
+                f'{self.api_url}/images/{image_name}'
+            )
             text_response = await response.text()
             return text_response
 
-    async def update_image(self, old_name: str, new_name: str, new_file: SpooledTemporaryFile) -> str:
+    async def update_image(
+        self,
+        old_name: str,
+        new_name: str,
+        new_file: SpooledTemporaryFile
+    ) -> str:
         async with aiohttp.ClientSession() as session:
             await session.delete(f'{self.api_url}/images/{old_name}')
             await session.post(f'{self.api_url}/images', data={

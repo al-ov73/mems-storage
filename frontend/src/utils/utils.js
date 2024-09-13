@@ -1,15 +1,14 @@
-import { jwtDecode } from "jwt-decode";
-
+import { jwtDecode } from 'jwt-decode';
 
 const getUsernameFromStorage = () => {
-  const token = localStorage.getItem('user')
+  const token = localStorage.getItem('user');
   const tokenData = jwtDecode(token);
-  const username = tokenData.username;
+  const { username } = tokenData;
   return username;
 };
 
 const getUserIdFromStorage = () => {
-  const token = localStorage.getItem('user')
+  const token = localStorage.getItem('user');
   const tokenData = jwtDecode(token);
   const userId = tokenData.id;
   return userId;

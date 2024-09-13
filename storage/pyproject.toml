@@ -12,6 +12,7 @@ sqlalchemy = "^2.0.31"
 python-dotenv = "^1.0.1"
 minio = "^7.2.7"
 gunicorn = "^22.0.0"
+flake8 = "^7.1.1"
 
 
 [build-system]

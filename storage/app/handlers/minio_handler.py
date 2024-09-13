@@ -17,8 +17,13 @@ class MinioHandler:
         self.bucket = bucket
 
     def upload_file(self, filename: str, file: BinaryIO, length: int) -> str:
-        self.client.put_object(self.bucket, filename, file, length=length,
-                                      content_type='image/jpeg')
+        self.client.put_object(
+            self.bucket,
+            filename,
+            file,
+            length=length,
+            content_type='image/jpeg'
+        )
         return f'object {filename} uploded'
 
     def list(self) -> list:

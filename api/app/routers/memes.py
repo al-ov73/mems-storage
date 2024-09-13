@@ -1,14 +1,9 @@
-import shutil
-import httpx
-
 from typing import Annotated
 from fastapi import Depends, UploadFile, File, Form, APIRouter
 from sqlalchemy import text
 from sqlalchemy.orm import Session
 
-from ..utils.other_utils import clean_dir
 from ..config.db_config import get_db
-from ..config.app_config import STATIC_FILES
 from ..config.dependencies import get_storage_repo, get_memes_repository
 from ..models.models import Meme
 from ..repositories.memes_repository import MemesRepository
@@ -18,6 +13,7 @@ from ..schemas.users import UserDbSchema
 from ..utils.auth_utils import get_current_user
 
 router = APIRouter()
+
 
 @router.get(
     '/categories',
@@ -57,15 +53,17 @@ async def get_memes(skip: int = 0,
         meme.link = link
     return memes
 
+
 @router.get(
     '/{meme_id}',
     dependencies=[Depends(get_current_user)]
 )
-async def get_meme_link(meme_id: str,
-                        db: Session = Depends(get_db),
-                        meme_repo: MemesRepository = Depends(get_memes_repository),
-                        storage_repo: BaseStorageRepo = Depends(get_storage_repo),
-                        ) -> MemeSchema | str:
+async def get_meme_link(
+    meme_id: str,
+    db: Session = Depends(get_db),
+    meme_repo: MemesRepository = Depends(get_memes_repository),
+    storage_repo: BaseStorageRepo = Depends(get_storage_repo),
+) -> MemeSchema | str:
     """
     return meme with link to download
     """
@@ -96,10 +94,11 @@ async def upload_file(
         category=category,
         author_id=current_user_id
     )
-    storage_result = await storage_repo.add_image(filename, file.file)
+    await storage_repo.add_image(filename, file.file)
     db_response = await meme_repo.add_meme(new_meme, db)
     print('db_response', db_response)
     return db_response
+
 
 @router.delete(
         '/{meme_id}',
@@ -118,18 +117,23 @@ async def del_meme(
     await storage_repo.delete_image(meme.name)
     return meme
 
-@router.put('/{meme_id}', dependencies=[Depends(get_current_user)],
-)
-async def update_meme(meme_id: str,
-                      filename: Annotated[str, Form()],
-                      file: UploadFile = File(...),
-                      db: Session = Depends(get_db),
-                      meme_repo: MemesRepository = Depends(get_memes_repository),
-                      storage_repo: BaseStorageRepo = Depends(get_storage_repo),
-                      ) -> MemeSchema | MemeDbSchema | str:
+
+@router.put('/{meme_id}', dependencies=[Depends(get_current_user)])
+async def update_meme(
+    meme_id: str,
+    filename: Annotated[str, Form()],
+    file: UploadFile = File(...),
+    db: Session = Depends(get_db),
+    meme_repo: MemesRepository = Depends(get_memes_repository),
+    storage_repo: BaseStorageRepo = Depends(get_storage_repo),
+) -> MemeSchema | MemeDbSchema | str:
     """
     update meme in db and S3 storage
     """
     meme = await meme_repo.update_name(meme_id, filename, db)
-    await storage_repo.update_image(old_name=meme.name, new_name=filename, new_file=file.file)
+    await storage_repo.update_image(
+        old_name=meme.name,
+        new_name=filename,
+        new_file=file.file
+    )
     return meme

@@ -9,7 +9,7 @@ from sqlalchemy.orm import sessionmaker
 from ..schemas.memes import MemeSchema
 from .fake.fake_storage_repository import FakeStorageRepository
 from ..config.app_config import MINIO_API_URL
-from ..config.db_config import Base, engine, get_db
+from ..config.db_config import Base, get_db
 from ..config.dependencies import get_storage_repo
 from ..main import app
 
@@ -23,7 +23,9 @@ DB_PORT: str = os.getenv("DB_PORT", 5432)
 DB_NAME: str = os.getenv("TEST_DB_NAME")
 DB_ENDPOINT: str = os.getenv("DB_ENDPOINT")
 
-SQLALCHEMY_DATABASE_URL = f"postgresql://{DB_USER}:{DB_PASSWORD}@{DB_HOST}:{DB_PORT}/{DB_NAME}"
+SQLALCHEMY_DATABASE_URL = (
+    f"postgresql://{DB_USER}:{DB_PASSWORD}@{DB_HOST}:{DB_PORT}/{DB_NAME}"
+)
 
 
 engine = create_engine(SQLALCHEMY_DATABASE_URL)
@@ -74,7 +76,7 @@ def test_client(db_session):
 @pytest.fixture(scope="function")
 def signup_user(test_client):
     '''
-    signup user: dict 
+    signup user: dict
     and return JWT-token: str
     '''
     def _signup_user(test_user: dict) -> str:
@@ -83,10 +85,11 @@ def signup_user(test_client):
         return response.json()['access_token']
     return _signup_user
 
+
 @pytest.fixture(scope="function")
 def login_user(test_client):
     '''
-    login user: dict 
+    login user: dict
     and return JWT-token: str
     '''
     def _login_user(test_user: dict) -> str:
@@ -94,6 +97,7 @@ def login_user(test_client):
         print('response_login', response.json())
         return response.json()['access_token']
     return _login_user
+
 
 @pytest.fixture(scope="function")
 def add_test_meme(test_client, login_user) -> list[MemeSchema]:

@@ -4,7 +4,11 @@ from fastapi import Depends, HTTPException, status, APIRouter
 from fastapi.security import OAuth2PasswordRequestForm
 from sqlalchemy.orm import Session
 
-from ..utils.auth_utils import authenticate_user, create_access_token, register_user
+from ..utils.auth_utils import (
+    authenticate_user,
+    create_access_token,
+    register_user
+)
 from ..config.db_config import get_db
 from ..config.app_config import ACCESS_TOKEN_EXPIRE_MINUTES
 from ..utils.auth_utils import get_current_user
@@ -15,9 +19,9 @@ router = APIRouter()
 
 @router.post("/login")
 async def login_for_access_token(
-        form_data: Annotated[OAuth2PasswordRequestForm, Depends()],
-        db: Session = Depends(get_db),
-    ) -> TokenSchema:
+    form_data: Annotated[OAuth2PasswordRequestForm, Depends()],
+    db: Session = Depends(get_db),
+) -> TokenSchema:
     '''
     check user in db, create and return JWT-token
     '''
@@ -34,11 +38,12 @@ async def login_for_access_token(
     )
     return TokenSchema(access_token=access_token, token_type="bearer")
 
+
 @router.post("/signup")
 async def signup_for_access_token(
-        form_data: Annotated[OAuth2PasswordRequestForm, Depends()],
-        db: Session = Depends(get_db),
-    ) -> TokenSchema:
+    form_data: Annotated[OAuth2PasswordRequestForm, Depends()],
+    db: Session = Depends(get_db),
+) -> TokenSchema:
     '''
     add user in db, create and return JWT-token
     '''
@@ -55,11 +60,12 @@ async def signup_for_access_token(
     )
     return TokenSchema(access_token=access_token, token_type="bearer")
 
+
 @router.get("/validate_token/{token}")
 async def validate_token(
-        token: str,
-        db: Session = Depends(get_db),
-    ) -> bool:
+    token: str,
+    db: Session = Depends(get_db),
+) -> bool:
     '''
     validate token from frontend response
     '''

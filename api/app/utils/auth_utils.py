@@ -7,7 +7,11 @@ from jwt.exceptions import InvalidTokenError
 from passlib.context import CryptContext
 from sqlalchemy.orm import Session
 
-from ..config.app_config import ALGORITHM, JWT_TOKEN_SECRET_KEY, ACCESS_TOKEN_EXPIRE_MINUTES
+from ..config.app_config import (
+    ALGORITHM,
+    JWT_TOKEN_SECRET_KEY,
+    ACCESS_TOKEN_EXPIRE_MINUTES
+)
 from ..config.db_config import get_db
 from ..models.models import User
 from ..schemas.users import UserDbSchema
@@ -19,15 +23,15 @@ oauth2_scheme = OAuth2PasswordBearer(tokenUrl="token")
 
 
 def verify_password(
-        plain_password: str,
-        hashed_password: str
-    ) -> bool:
+    plain_password: str,
+    hashed_password: str
+) -> bool:
     '''
     Check if user's password match saved password in db
     '''
     try:
         result = pwd_context.verify(plain_password, hashed_password)
-    except Exception as ex:
+    except Exception:
         return False
     return result
 
@@ -40,9 +44,9 @@ def get_password_hash(password: str) -> str:
 
 
 def get_user(
-        username: str,
-        db: Session = Depends(get_db),
-    ) -> UserDbSchema:
+    username: str,
+    db: Session = Depends(get_db),
+) -> UserDbSchema:
     '''
     return user from db
     '''
@@ -52,10 +56,10 @@ def get_user(
 
 
 def authenticate_user(
-        username: str,
-        password: str,
-        db: Session = Depends(get_db)
-    ) -> UserDbSchema | None:
+    username: str,
+    password: str,
+    db: Session = Depends(get_db)
+) -> UserDbSchema | None:
     '''
     return user if login and password match data in db
     '''
@@ -68,10 +72,10 @@ def authenticate_user(
 
 
 def register_user(
-        username: str,
-        password: str,
-        db: Session = Depends(get_db)
-    ) -> UserDbSchema | None:
+    username: str,
+    password: str,
+    db: Session = Depends(get_db)
+) -> UserDbSchema | None:
     '''
     add user to db
     '''
@@ -88,10 +92,11 @@ def register_user(
         return None
     return new_user
 
+
 def create_access_token(
-        user: UserDbSchema,
-        expires_delta: timedelta | None = None
-    ) -> str:
+    user: UserDbSchema,
+    expires_delta: timedelta | None = None
+) -> str:
     '''
     return JWT token with expires time
     '''
@@ -102,16 +107,22 @@ def create_access_token(
     if expires_delta:
         expire = datetime.now(timezone.utc) + expires_delta
     else:
-        expire = datetime.now(timezone.utc) + timedelta(minutes=ACCESS_TOKEN_EXPIRE_MINUTES)
+        expire = (
+            datetime.now(timezone.utc) + timedelta(minutes=ACCESS_TOKEN_EXPIRE_MINUTES)
+        )
     to_encode.update({"exp": expire})
-    encoded_jwt = jwt.encode(to_encode, JWT_TOKEN_SECRET_KEY, algorithm=ALGORITHM)
+    encoded_jwt = jwt.encode(
+        to_encode,
+        JWT_TOKEN_SECRET_KEY,
+        algorithm=ALGORITHM
+    )
     return encoded_jwt
 
 
 async def get_current_user(
         token: Annotated[str, Depends(oauth2_scheme)],
         db: Session = Depends(get_db)
-    ) -> UserDbSchema:
+) -> UserDbSchema:
     '''
     return user from db according JWT-token data
     '''
@@ -121,7 +132,11 @@ async def get_current_user(
         headers={"WWW-Authenticate": "Bearer"},
     )
     try:
-        payload = jwt.decode(token, JWT_TOKEN_SECRET_KEY, algorithms=[ALGORITHM])
+        payload = jwt.decode(
+            token,
+            JWT_TOKEN_SECRET_KEY,
+            algorithms=[ALGORITHM]
+        )
         username: str = payload.get("username")
         if username is None:
             raise credentials_exception

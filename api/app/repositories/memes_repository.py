@@ -1,4 +1,4 @@
-from ..models.models import Meme, CategoryEnum
+from ..models.models import Meme
 from ..schemas.memes import MemeDbSchema
 from sqlalchemy.orm import Session
 
@@ -73,4 +73,3 @@ class MemesRepository:
             return meme
         except Exception:
             return f'error "{Exception}"'
-

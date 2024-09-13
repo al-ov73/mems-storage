@@ -1,6 +1,8 @@
-import os, shutil
+import os
+import shutil
 
-def clean_dir(dir_path: str)  -> None:
+
+def clean_dir(dir_path: str) -> None:
     for filename in os.listdir(dir_path):
         file_path = os.path.join(dir_path, filename)
         try:

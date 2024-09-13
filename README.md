@@ -1,3 +1,5 @@
+![eslint](https://img.shields.io/badge/eslint-3A33D1?style=for-the-badge&logo=eslint&logoColor=white)
+
 Memes storage
 ---
 Microservices based service for storage your favorite memes.</br>

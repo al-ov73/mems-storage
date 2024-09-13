@@ -1,10 +1,5 @@
-from typing import List
-import json
+from fastapi import WebSocket
 
-from fastapi import APIRouter, WebSocket, WebSocketDisconnect, Depends
-
-from ..repositories.messages_repository import MessagesRepository
-from ..models.models import Message
 from ..schemas.messages import MessageSchema
 
 

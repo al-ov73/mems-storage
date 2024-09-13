@@ -2,7 +2,6 @@ import os
 
 from dotenv import load_dotenv
 from fastapi import FastAPI, Request, Response
-from urllib3 import HTTPResponse
 
 from .handlers.minio_handler import MinioHandler
 
@@ -18,6 +17,7 @@ storage_handler = MinioHandler(
     False
 )
 
+
 @app.post('/images')
 async def upload_image(request: Request) -> Response:
     async with request.form() as form:
@@ -27,20 +27,24 @@ async def upload_image(request: Request) -> Response:
         result = storage_handler.upload_file(filename, contents, size)
         return Response(content=result)
 
+
 @app.get('/images')
 async def list_images() -> Response:
     images_list = storage_handler.list()
     return Response(content=images_list)
+
 
 @app.get('/images/link/{filename}')
 async def get_link(filename: str) -> Response:
     link = storage_handler.get_link(filename)
     return Response(content=link)
 
+
 @app.get('/images/{filename}')
 async def get_object(filename: str) -> Response:
     obj = storage_handler.get_object(filename)
     return Response(content=obj)
+
 
 @app.delete('/images/{filename}')
 async def delete_image(filename: str) -> Response:

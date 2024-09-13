@@ -1,9 +1,8 @@
 import enum
 
 from datetime import datetime
-from sqlalchemy import TIMESTAMP, Column, String, text, Integer, ForeignKey, func, Enum
+from sqlalchemy import TIMESTAMP, Column, String, Integer, ForeignKey, Enum
 from sqlalchemy.orm import relationship
-from sqlalchemy.dialects.postgresql import ENUM as PgEnum
 
 from ..config.db_config import Base
 
@@ -111,9 +110,6 @@ class Meme(Base):
 #     id = Column(Integer, primary_key=True)
 #     comment_id = Column(Integer, ForeignKey('comments.id'))
 #     meme_id = Column(Integer, ForeignKey('memes.id'))
-
-
-
 
 
 class Message(Base):

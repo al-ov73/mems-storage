@@ -5,7 +5,7 @@ import {
   Navigate,
   useLocation,
 } from 'react-router-dom';
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect } from 'react';
 
 import LoginPage from './components/LoginPage.jsx';
 import IndexPage from './components/IndexPage.jsx';
@@ -16,8 +16,7 @@ import { AuthContext } from './contexts/index.js';
 import { validateToken } from './utils/requests.js';
 import SpinnerEl from './components/Spinner.jsx';
 
-
-const AuthProvider = ({ children }) => {
+function AuthProvider({ children }) {
   const [loggedIn, setLoggedIn] = useState(false);
   const logIn = () => setLoggedIn(true);
   const logOut = () => {
@@ -29,49 +28,49 @@ const AuthProvider = ({ children }) => {
       {children}
     </AuthContext.Provider>
   );
-};
+}
 
-const PrivateRoute = ({ children }) => {
+function PrivateRoute({ children }) {
   const auth = useAuth();
   const location = useLocation();
   const [loading, setLoading] = useState(true);
 
-  const access_token = localStorage.getItem('user')
+  const access_token = localStorage.getItem('user');
 
   useEffect(() => {
     const inner = async () => {
-      auth.loggedIn = await validateToken(access_token)
+      auth.loggedIn = await validateToken(access_token);
       setLoading(false);
-    }
+    };
     inner();
   }, []);
 
   if (!access_token) {
-    return <Navigate to="/login" state={{ from: location }} />
+    return <Navigate to="/login" state={{ from: location }} />;
   }
 
-  const content = auth.loggedIn ? children : <Navigate to="/login" state={{ from: location }} />
-  return loading ? <SpinnerEl/> : content;
-};
+  const content = auth.loggedIn ? children : <Navigate to="/login" state={{ from: location }} />;
+  return loading ? <SpinnerEl /> : content;
+}
 
 function App() {
   return (
-        <AuthProvider>
-            <Router>
-              <Routes>
-                <Route path="login/" element={<LoginPage />} />
-                <Route path="signup/" element={<SignupPage />} />
-                <Route
-                  path="/"
-                  element={(
-                  <PrivateRoute>
-                    <IndexPage />
-                  </PrivateRoute>
+    <AuthProvider>
+      <Router>
+        <Routes>
+          <Route path="login/" element={<LoginPage />} />
+          <Route path="signup/" element={<SignupPage />} />
+          <Route
+            path="/"
+            element={(
+              <PrivateRoute>
+                <IndexPage />
+              </PrivateRoute>
                   )}
-                />  
-              </Routes>
-            </Router>
-        </AuthProvider>
+          />
+        </Routes>
+      </Router>
+    </AuthProvider>
   );
 }
 

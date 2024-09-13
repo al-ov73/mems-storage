@@ -1,7 +1,6 @@
-from sqlalchemy import select
 from sqlalchemy.orm import Session, joinedload
 
-from ..models.models import Message, User
+from ..models.models import Message
 from ..schemas.messages import MessageSchema
 
 
