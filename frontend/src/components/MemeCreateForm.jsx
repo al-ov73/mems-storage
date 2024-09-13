@@ -57,7 +57,7 @@ const MemeCreateForm = ({ show, onHide }) => {
         }}>
       <Form.Group>
         <Form.Label>
-          <p class="fs-4">
+          <p className="fs-4">
             Загрузить новый мем
           </p>
         </Form.Label>

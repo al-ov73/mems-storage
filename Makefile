@@ -16,6 +16,9 @@ docker-build:
 docker-run:
 		docker compose -f docker-compose.yml up
 
+docker-run-host:
+		docker compose -f docker-compose-host.yml up
+
 docker:
 		docker compose run -P api bash
 

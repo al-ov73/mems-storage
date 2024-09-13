@@ -51,13 +51,10 @@ class MemesRepository:
         '''
         delete meme from db
         '''
-        try:
-            meme = db.get(Meme, meme_id)
-            db.delete(meme)
-            db.commit()
-            return meme
-        except Exception:
-            return f'error "{Exception}"'
+        meme = db.get(Meme, meme_id)
+        db.delete(meme)
+        db.commit()
+        return meme
 
     async def update_name(
             self,

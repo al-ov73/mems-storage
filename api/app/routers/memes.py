@@ -21,7 +21,7 @@ router = APIRouter()
 
 @router.get(
     '/categories',
-    # dependencies=[Depends(get_current_user)],
+    dependencies=[Depends(get_current_user)],
 )
 async def get_meme_category(
     db: Session = Depends(get_db),
@@ -40,7 +40,7 @@ async def get_meme_category(
 
 @router.get(
     '',
-    # dependencies=[Depends(get_current_user)],
+    dependencies=[Depends(get_current_user)],
 )
 async def get_memes(skip: int = 0,
                     limit: int = 100,
@@ -50,22 +50,12 @@ async def get_memes(skip: int = 0,
                     ):
     """
     return list of memes with links to download
-    нарушается Single responsibility, будет refactor
     """
     memes = await meme_repo.get_memes(skip, limit, db)
-
-    clean_dir(STATIC_FILES)
-    
     for meme in memes:
         link = await storage_repo.get_link(meme.name)
-        content = await storage_repo.get_image(meme.name)
-        with open(f'app/static/{meme.name}', 'wb') as f:
-            f.write(content)
         meme.link = link
     return memes
-
-
-
 
 @router.get(
     '/{meme_id}',
@@ -100,19 +90,15 @@ async def upload_file(
     """
     add meme to db and to S3 storage
     """
-    try:
-        current_user_id = user.id
-        new_meme = Meme(
-            name=filename,
-            category=category,
-            author_id=current_user_id
-        )
-        storage_result = await storage_repo.add_image(filename, file.file)
-        await meme_repo.add_meme(new_meme, db)
-        return storage_result
-    except Exception as e:
-        return f'db error "{e}"'
-
+    current_user_id = user.id
+    new_meme = Meme(
+        name=filename,
+        category=category,
+        author_id=current_user_id
+    )
+    storage_result = await storage_repo.add_image(filename, file.file)
+    await meme_repo.add_meme(new_meme, db)
+    return storage_result
 
 @router.delete(
         '/{meme_id}',
@@ -127,13 +113,9 @@ async def del_meme(
     """
     delete meme from db and S3 storage
     """
-    try:
-        meme = await meme_repo.del_meme(meme_id, db)
-        await storage_repo.delete_image(meme.name)
-        return meme
-    except Exception:
-        return f'error "{Exception}"'
-
+    meme = await meme_repo.del_meme(meme_id, db)
+    await storage_repo.delete_image(meme.name)
+    return meme
 
 @router.put('/{meme_id}', dependencies=[Depends(get_current_user)],
 )
@@ -147,9 +129,6 @@ async def update_meme(meme_id: str,
     """
     update meme in db and S3 storage
     """
-    try:
-        meme = await meme_repo.update_name(meme_id, filename, db)
-        await storage_repo.update_image(old_name=meme.name, new_name=filename, new_file=file.file)
-        return meme
-    except Exception:
-        return f'error "{Exception}"'
+    meme = await meme_repo.update_name(meme_id, filename, db)
+    await storage_repo.update_image(old_name=meme.name, new_name=filename, new_file=file.file)
+    return meme

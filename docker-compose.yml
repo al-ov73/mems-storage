@@ -15,7 +15,8 @@ services:
     volumes:
       - ./frontend/public:/app/public
       - ./frontend/src:/app/src
-
+    network_mode: "host"
+      
   db:
     image: postgres:15
     container_name: db_mems
@@ -23,7 +24,8 @@ services:
       - .env-non-dev
     volumes:
       - pgdata:/var/lib/postgresql/data/
-
+    network_mode: "host"
+      
   api:
     build:
       context: ./api
@@ -42,7 +44,8 @@ services:
       - redis
       - pgadmin
     command: gunicorn app.main:app --workers 4 --worker-class uvicorn.workers.UvicornWorker --bind=0.0.0.0:8000 --reload
-
+    network_mode: "host"
+      
   s3_storage:
     build:
       context: ./storage
@@ -57,7 +60,8 @@ services:
     depends_on:
       - minio
     command: gunicorn app.main:app --workers 4 --worker-class uvicorn.workers.UvicornWorker --bind=0.0.0.0:8888 --reload
-
+    network_mode: "host"
+      
   minio:
     container_name: minio
     image: minio/minio
@@ -69,11 +73,13 @@ services:
       - 9001:9001
     volumes:
       - minio_data:/data
+    network_mode: "host"
 
   redis:
     image: redis
     expose:
       - 6379
+    network_mode: "host"
 
   pgadmin:
     image: elestio/pgadmin:latest
@@ -86,3 +92,4 @@ services:
       - ./servers.json:/pgadmin4/servers.json
     depends_on:
       - db
+    network_mode: "host"

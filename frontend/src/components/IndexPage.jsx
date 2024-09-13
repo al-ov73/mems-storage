@@ -59,7 +59,7 @@ const IndexPage = () => {
           :
         <> 
           <Col> <CategoryCard category={'ALL'}/></Col>
-          {categories.map((category) => <Col><CategoryCard key={category} category={category}/></Col>)}
+          {categories.map((category) => <Col key={category}><CategoryCard key={category} category={category}/></Col>)}
         </>
       }
       </Row>

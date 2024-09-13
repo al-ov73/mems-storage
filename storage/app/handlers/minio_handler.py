@@ -2,7 +2,7 @@ import minio
 
 from minio import Minio
 from typing import BinaryIO
-from urllib.request import HTTPResponse
+from urllib3.response import HTTPResponse
 
 
 class MinioHandler:

@@ -1,6 +1,6 @@
 import aiohttp
 import httpx
-from aiohttp import FormData
+from aiohttp import FormData, StreamReader
 
 from abc import abstractmethod, ABC
 from tempfile import SpooledTemporaryFile
@@ -35,20 +35,20 @@ class StorageRepository(BaseStorageRepo):
             self,
             image_name: str,
     ) -> str:
-        # redis = get_redis()
-        # cache = await redis.get(image_name)
-        # if cache is not None:
-        #     return cache[1:-1]
+        redis = get_redis()
+        cache = await redis.get(image_name)
+        if cache is not None:
+            return cache
         async with aiohttp.ClientSession() as session:
             async with session.get(f'{self.api_url}/images/link/{image_name}') as resp:
                 link = await resp.text()
-                # await redis.set(image_name, link)
-                return link[1:-1]
+                await redis.set(image_name, link)
+                return link
 
     async def get_image(
             self,
             image_name: str,
-    ):
+    ) -> StreamReader:
         response = httpx.get(f'{self.api_url}/images/{image_name}')
         return response.content
             
@@ -60,12 +60,14 @@ class StorageRepository(BaseStorageRepo):
                         filename=filename,
                         content_type='multipart/form-data')
             response = await session.post(f'{self.api_url}/images', data=data)
-            return filename
+            text_response = await response.text()
+            return text_response
 
     async def delete_image(self, image_name: str) -> str:
         async with aiohttp.ClientSession() as session:
-            await session.delete(f'{self.api_url}/images/{image_name}')
-            return image_name
+            response = await session.delete(f'{self.api_url}/images/{image_name}')
+            text_response = await response.text()
+            return text_response
 
     async def update_image(self, old_name: str, new_name: str, new_file: SpooledTemporaryFile) -> str:
         async with aiohttp.ClientSession() as session:

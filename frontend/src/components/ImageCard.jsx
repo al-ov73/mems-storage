@@ -26,7 +26,7 @@ const ImageCard = ({ meme })  => {
       <Card style={{ width: '18rem' }}>
         <Image 
                 height="150rem"
-                src={`${routes.apiStatic}/${meme.name}`}
+                src={meme.link}
                 className="rounded mx-auto d-block"
                 alt='Картинка не загрузилась:('
                 onClick={() => setModalShow(true)}
