@@ -97,8 +97,9 @@ async def upload_file(
         author_id=current_user_id
     )
     storage_result = await storage_repo.add_image(filename, file.file)
-    await meme_repo.add_meme(new_meme, db)
-    return storage_result
+    db_response = await meme_repo.add_meme(new_meme, db)
+    print('db_response', db_response)
+    return db_response
 
 @router.delete(
         '/{meme_id}',

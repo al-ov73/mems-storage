@@ -72,14 +72,26 @@ def test_client(db_session):
 
 
 @pytest.fixture(scope="function")
+def signup_user(test_client):
+    '''
+    signup user: dict 
+    and return JWT-token: str
+    '''
+    def _signup_user(test_user: dict) -> str:
+        response = test_client.post("/auth/jwt/signup", data=test_user)
+        print('response_signup', response.json())
+        return response.json()['access_token']
+    return _signup_user
+
+@pytest.fixture(scope="function")
 def login_user(test_client):
     '''
     login user: dict 
     and return JWT-token: str
     '''
     def _login_user(test_user: dict) -> str:
-        test_client.post("/auth/jwt/signup", data=test_user)
         response = test_client.post("/auth/jwt/login", data=test_user)
+        print('response_login', response.json())
         return response.json()['access_token']
     return _login_user
 
@@ -90,15 +102,15 @@ def add_test_meme(test_client, login_user) -> list[MemeSchema]:
     - add file to storage: str
     - return list of memes: list[MemeSchema]
     '''
-    def create_meme(filename: str, test_user: dict):
-        access_token = login_user(test_user)
+    def create_meme(file: dict, access_token: str):
         headers = {'Authorization': f'Bearer {access_token}'}
         with open("app/tests/fixtures/test_meme.jpg", "rb") as image_file:
             response = test_client.post(
                 "/memes/",
                 files={'file': ('init_filename', image_file)},
-                data={'filename': filename, 'category': 'OTHER'},
+                data={'filename': file['name'], 'category': file['category']},
                 headers=headers,
             )
+            print('response.json()', response.json())
             return response.json()
     return create_meme
