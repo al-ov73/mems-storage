@@ -19,4 +19,5 @@ class ConnectionManager:
 
     async def broadcast(self, message: MessageSchema):
         for connection in self.active_connections:
+            print('message', message)
             await connection.send_json(message.to_dict())

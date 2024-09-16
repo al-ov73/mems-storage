@@ -42,8 +42,8 @@ class StorageRepository(BaseStorageRepo):
     ) -> str:
         redis = get_redis()
         cache = await redis.get(image_name)
-        print('cache', cache)
         if cache is not None:
+            print('link from cache')
             return cache
         async with aiohttp.ClientSession() as session:
             async with session.get(

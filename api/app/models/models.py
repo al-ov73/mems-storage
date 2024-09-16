@@ -52,7 +52,7 @@ class Meme(Base):
             "created_at": self.created_at,
             "author_id": self.author_id,
             "category_id": self.category_id,
-            # "labels": self.labels,
+            "labels": self.labels,
             # "comments": self.comments,
             # "likes": self.likes,
         }

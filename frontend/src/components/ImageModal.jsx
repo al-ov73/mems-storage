@@ -41,38 +41,37 @@ const ImageModal = ({ meme, show, onHide }) => {
                 alt='Картинка не загрузилась:('/>
       </Modal.Body>
       <Modal.Footer>
-
-///
-<Form className="m-4" onSubmit={ async (event) => {
-          event.preventDefault();
-          try {
-            const form = new FormData();
-            form.append('label', selectedLabel);
-            const postLabelResponse = await postLabel(form, access_token);
-          } catch (error) {
-            console.log('error->', error)
-          }
-        }}>
-      <Form.Group>
-        <Form.Label>
-          <p className="fs-4">
-            Добавить тег
-          </p>
-        </Form.Label>
-        <Form.Control
-          className="my-3"
-          placeholder="Введите тег"
-          type="text"
-          name="label"
-          onChange={(event) => {
-            setSelectedLabel(event.target.value);
-          }}
-        />
-      
-        
-      </Form.Group>
-    </Form>
-///
+        <Form className="m-4" onSubmit={ async (event) => {
+                  event.preventDefault();
+                  try {
+                    const form = new FormData();
+                    form.append('title', selectedLabel);
+                    form.append('meme_id', meme.id);
+                    const postLabelResponse = await postLabel(form, access_token);
+                    console.log('postLabelResponse', postLabelResponse)
+                  } catch (error) {
+                    console.log('error->', error)
+                  }
+                }}>
+              <Form.Group>
+                <Form.Label>
+                  <p className="fs-4">
+                    Добавить тег
+                  </p>
+                </Form.Label>
+                <Form.Control
+                  className="my-3"
+                  placeholder="Введите тег"
+                  type="text"
+                  name="label"
+                  onChange={(event) => {
+                    setSelectedLabel(event.target.value);
+                  }}
+                />
+              
+                
+              </Form.Group>
+            </Form>
 
         <Button variant="primary"
                 onClick={() => handleDelete(meme.id, access_token)}>
