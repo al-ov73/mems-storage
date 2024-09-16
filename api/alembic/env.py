@@ -16,7 +16,6 @@ config.set_section_option(section, "DB_PASSWORD", os.getenv("DB_PASSWORD"))
 config.set_section_option(section, "DB_NAME", os.getenv("DB_NAME"))
 config.set_section_option(section, "DB_HOST", os.getenv("DB_HOST"))
 config.set_section_option(section, "DB_PORT", os.getenv("DB_PORT"))
-# config.set_section_option(section, "DB_ENDPOINT", os.getenv("DB_ENDPOINT"))
 
 fileConfig(config.config_file_name)
 

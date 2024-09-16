@@ -64,6 +64,22 @@ const validateToken = async (accessToken) => {
   }
 };
 
+const postLabel = async (form, accessToken) => {
+  return axios.post(routes.labelsPath, form, {
+    headers: {
+      Authorization: `Bearer ${accessToken}`,
+    },
+  })
+};
+
 export {
-  getMemes, getMessages, getCategories, loginUser, postMeme, deleteMeme, signupUser, validateToken,
+  getMemes,
+  getMessages,
+  getCategories,
+  loginUser,
+  postMeme,
+  deleteMeme,
+  signupUser,
+  validateToken,
+  postLabel,
 };

@@ -5,6 +5,7 @@ from fastapi.staticfiles import StaticFiles
 from .routers.memes import router as router_memes
 from .routers.auth import router as router_auth
 from .routers.chat import router as router_chat
+from .routers.labels import router as router_labels
 
 app = FastAPI()
 
@@ -29,13 +30,21 @@ app.include_router(
     prefix="/auth/jwt",
     tags=["auth"],
 )
+
 app.include_router(
     router_memes,
     prefix="/memes",
     tags=["memes"],
 )
+
 app.include_router(
     router_chat,
     prefix="/chat",
     tags=["chat"],
+)
+
+app.include_router(
+    router_labels,
+    prefix="/labels",
+    tags=["labels"],
 )

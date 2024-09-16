@@ -6,6 +6,7 @@ export default {
   validateTokenPath: `${apiPath}/auth/jwt/validate_token`,
   usersPath: `${apiPath}/users`,
   memesPath: `${apiPath}/memes`,
+  labelsPath: `${apiPath}/labels`,
   chatPath: `${apiPath}/chat`,
   messagesPath: `${apiPath}/chat/messages`,
   apiStatic: `${apiPath}/static`,

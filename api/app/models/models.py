@@ -37,8 +37,7 @@ class Meme(Base):
 
     category = Column(Enum(CategoryEnum))
 
-    # label_id = Column(ForeignKey("labels.id"))
-    # labels = relationship("Label", back_populates="memes")
+    labels = relationship("LabelMeme", back_populates="meme")
 
     # comment_id = Column(ForeignKey("comments.id"))
     # comments = relationship("Comment", back_populates="memes")
@@ -58,22 +57,29 @@ class Meme(Base):
             # "likes": self.likes,
         }
 
-# class Label(Base):
-#     __tablename__ = 'labels'
+class Label(Base):
+    __tablename__ = 'labels'
 
-#     id = Column(Integer, primary_key=True, autoincrement=True)
-#     title = Column(String, nullable=False, unique=True)
+    id = Column(Integer, primary_key=True, autoincrement=True)
+    title = Column(String, nullable=False, unique=True)
 
-#     memes = relationship("Meme", back_populates="labels")
+    memes = relationship("LabelMeme", back_populates="label")
 
 
-# class LabelMeme(Base):
-#     __tablename__ = "labels_meme"
+class LabelMeme(Base):
+    __tablename__ = "labels_meme"
 
-#     id = Column(Integer, primary_key=True)
-#     label_id = Column(Integer, ForeignKey('labels.id'))
-#     meme_id = Column(Integer, ForeignKey('memes.id'))
-
+    id = Column(Integer, primary_key=True)
+    label_id = Column(Integer, ForeignKey('labels.id'))
+    meme_id = Column(Integer, ForeignKey('memes.id'))
+    meme = relationship(
+        "Meme",
+        back_populates="labels",
+    )
+    label = relationship(
+        "Label",
+        back_populates="memes",
+    )
 
 # class Like(Base):
 #     __tablename__ = 'likes'
