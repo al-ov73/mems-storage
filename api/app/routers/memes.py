@@ -36,7 +36,7 @@ async def get_meme_category(
 
 @router.get(
     '',
-    dependencies=[Depends(get_current_user)],
+    # dependencies=[Depends(get_current_user)],
 )
 async def get_memes(skip: int = 0,
                     limit: int = 100,

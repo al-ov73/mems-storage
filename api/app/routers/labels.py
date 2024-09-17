@@ -40,7 +40,7 @@ async def post_label(
         labels_repo: LabelsRepository = Depends(get_labels_repository),
         meme_repo: MemesRepository = Depends(get_memes_repository),
         # user: UserDbSchema = Depends(get_current_user),
-) -> LabelSchema:
+) -> MemeDbSchema:
     """
     add label to db
     """
@@ -48,7 +48,6 @@ async def post_label(
     current_meme = await meme_repo.get_meme(meme_id, db)
     print('new_label', new_label)
     print('current_meme', current_meme)
-    current_meme.labels.append(current_meme)
-    db.add_all([new_label, current_meme])
+    current_meme.meme_labels.append(new_label)
     db.commit()
     return current_meme

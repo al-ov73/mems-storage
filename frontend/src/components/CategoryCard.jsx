@@ -11,7 +11,7 @@ const CategoryCard = ({ category })  => {
   const dispatch = useDispatch();
 
   const categoryName = category in config.categories ? config.categories[category].label : category
-  const categoryLink = category in config.categories ? config.categories[category].coverLink : ''
+  const categoryLink = category in config.categories ? config.categories[category].coverLink : 'category-other.jpg'
 
   const categoryHandler = () => {
     dispatch(setCurrentCategory(category));

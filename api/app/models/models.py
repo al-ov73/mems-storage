@@ -2,7 +2,7 @@ import enum
 
 from datetime import datetime
 from sqlalchemy import TIMESTAMP, Column, String, Integer, ForeignKey, Enum
-from sqlalchemy.orm import relationship
+from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from ..config.db_config import Base
 
@@ -23,6 +23,7 @@ class CategoryEnum(enum.Enum):
     OTHER = 'OTHER'
     CATS = 'CATS'
     PEOPLE = 'PEOPLE'
+    IT = 'IT'
 
 
 class Meme(Base):
@@ -37,7 +38,7 @@ class Meme(Base):
 
     category = Column(Enum(CategoryEnum))
 
-    labels = relationship("LabelMeme", back_populates="meme")
+    meme_labels: Mapped[list["Label"]] = relationship(secondary="labels_meme", back_populates="label_memes")
 
     # comment_id = Column(ForeignKey("comments.id"))
     # comments = relationship("Comment", back_populates="memes")
@@ -63,7 +64,7 @@ class Label(Base):
     id = Column(Integer, primary_key=True, autoincrement=True)
     title = Column(String, nullable=False, unique=True)
 
-    memes = relationship("LabelMeme", back_populates="label")
+    label_memes: Mapped[list["Meme"]] = relationship(secondary="labels_meme", back_populates="meme_labels")
 
 
 class LabelMeme(Base):
@@ -72,14 +73,14 @@ class LabelMeme(Base):
     id = Column(Integer, primary_key=True)
     label_id = Column(Integer, ForeignKey('labels.id'))
     meme_id = Column(Integer, ForeignKey('memes.id'))
-    meme = relationship(
-        "Meme",
-        back_populates="labels",
-    )
-    label = relationship(
-        "Label",
-        back_populates="memes",
-    )
+    # meme = relationship(
+    #     "Meme",
+    #     back_populates="labels",
+    # )
+    # label = relationship(
+    #     "Label",
+    #     back_populates="memes",
+    # )
 
 # class Like(Base):
 #     __tablename__ = 'likes'

@@ -1,6 +1,6 @@
 from ..models.models import Meme
 from ..schemas.memes import MemeDbSchema
-from sqlalchemy.orm import Session
+from sqlalchemy.orm import Session, joinedload, selectinload
 
 
 class MemesRepository:
@@ -14,7 +14,15 @@ class MemesRepository:
         '''
         return list of memes from db
         '''
-        memes = db.query(Meme).offset(skip).limit(limit).all()
+
+        memes = (
+            db.query(Meme)
+                .options(joinedload(Meme.meme_labels))
+                .offset(skip)
+                .limit(limit)
+                .all()
+        )
+
         return memes
 
     async def get_meme(

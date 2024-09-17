@@ -7,7 +7,7 @@ test:
 
 
 makemigrations:
-		alembic revision --autogenerate -m "add labels m2m back populates"
+		alembic revision --autogenerate -m "initial migration3"
 
 migrate:
 		alembic upgrade head

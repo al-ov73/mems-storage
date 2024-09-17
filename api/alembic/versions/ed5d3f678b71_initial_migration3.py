@@ -1,8 +1,8 @@
-"""add labels m2m back populates2
+"""initial migration3
 
-Revision ID: 87e07c894be8
-Revises: 608cc08d8e4c
-Create Date: 2024-09-16 09:44:18.614250+04:00
+Revision ID: ed5d3f678b71
+Revises: cd5df3133802
+Create Date: 2024-09-17 09:32:12.793814+04:00
 
 """
 from typing import Sequence, Union
@@ -12,8 +12,8 @@ import sqlalchemy as sa
 
 
 # revision identifiers, used by Alembic.
-revision: str = '87e07c894be8'
-down_revision: Union[str, None] = '608cc08d8e4c'
+revision: str = 'ed5d3f678b71'
+down_revision: Union[str, None] = 'cd5df3133802'
 branch_labels: Union[str, Sequence[str], None] = None
 depends_on: Union[str, Sequence[str], None] = None
 

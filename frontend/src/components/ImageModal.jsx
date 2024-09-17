@@ -4,6 +4,9 @@ import Form from 'react-bootstrap/Form';
 import Button from 'react-bootstrap/Button';
 import Modal from 'react-bootstrap/Modal';
 import Image from 'react-bootstrap/Image';
+import Container from 'react-bootstrap/Container';
+import Row from 'react-bootstrap/Row';
+import Col from 'react-bootstrap/Col';
 import { useDispatch } from "react-redux";
 import { getMemes, deleteMeme, postLabel } from '../utils/requests';
 import { setMemes } from "../slices/memesSlice";
@@ -41,7 +44,15 @@ const ImageModal = ({ meme, show, onHide }) => {
                 alt='Картинка не загрузилась:('/>
       </Modal.Body>
       <Modal.Footer>
-        <Form className="m-4" onSubmit={ async (event) => {
+      <Container>
+        <Row xs="auto" className="my-3">
+          {meme.meme_labels && meme.meme_labels.map((label) => {
+                    return <>
+                      <Col key={label.id}>{label.title}</Col>
+                    </>
+                  })}
+                  <Col>
+        <Form onSubmit={ async (event) => {
                   event.preventDefault();
                   try {
                     const form = new FormData();
@@ -54,13 +65,7 @@ const ImageModal = ({ meme, show, onHide }) => {
                   }
                 }}>
               <Form.Group>
-                <Form.Label>
-                  <p className="fs-4">
-                    Добавить тег
-                  </p>
-                </Form.Label>
                 <Form.Control
-                  className="my-3"
                   placeholder="Введите тег"
                   type="text"
                   name="label"
@@ -71,13 +76,17 @@ const ImageModal = ({ meme, show, onHide }) => {
               
                 
               </Form.Group>
-            </Form>
-
+            </Form>        
+            </Col>  
+        </Row>
+        <Row xs="auto">
         <Button variant="primary"
                 onClick={() => handleDelete(meme.id, access_token)}>
             Удалить
         </Button>
-        <Button onClick={onHide}>Close</Button>
+        <Button onClick={onHide}>Закрыть</Button>          
+        </Row>
+        </Container>
       </Modal.Footer>
     </Modal>
   );
