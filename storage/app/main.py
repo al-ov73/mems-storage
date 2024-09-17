@@ -29,9 +29,9 @@ async def upload_image(request: Request) -> Response:
 
 
 @app.get('/images')
-async def list_images() -> Response:
+async def list_images() -> list:
     images_list = storage_handler.list()
-    return Response(content=images_list)
+    return images_list
 
 
 @app.get('/images/link/{filename}')

@@ -12,7 +12,7 @@ import { getMemes, deleteMeme, postLabel } from '../utils/requests';
 import { setMemes } from "../slices/memesSlice";
 
 const ImageModal = ({ meme, show, onHide }) => {
-  const [selectedLabel, setSelectedLabel] = useState(null);
+  const [selectedLabel, setSelectedLabel] = useState('');
   const access_token = localStorage.getItem('user')
   const dispatch = useDispatch();
 
@@ -47,9 +47,10 @@ const ImageModal = ({ meme, show, onHide }) => {
       <Container>
         <Row xs="auto" className="my-3">
           {meme.meme_labels && meme.meme_labels.map((label) => {
-                    return <>
-                      <Col key={label.id}>{label.title}</Col>
-                    </>
+                    return <Col key={label.id} className="rounded-pill">
+                              <Button variant="outline-secondary" onClick={onHide}>{label.title}</Button>  
+                              
+                            </Col>
                   })}
                   <Col>
         <Form onSubmit={ async (event) => {
@@ -58,23 +59,23 @@ const ImageModal = ({ meme, show, onHide }) => {
                     const form = new FormData();
                     form.append('title', selectedLabel);
                     form.append('meme_id', meme.id);
-                    const postLabelResponse = await postLabel(form, access_token);
-                    console.log('postLabelResponse', postLabelResponse)
+                    setSelectedLabel('')
+                    await postLabel(form, access_token);
+                    const getMemesResponse = await getMemes(access_token);
+                    dispatch(setMemes(getMemesResponse.data))
                   } catch (error) {
                     console.log('error->', error)
                   }
                 }}>
               <Form.Group>
                 <Form.Control
-                  placeholder="Введите тег"
+                  placeholder="Добавьте тег ..."
                   type="text"
                   name="label"
                   onChange={(event) => {
                     setSelectedLabel(event.target.value);
                   }}
                 />
-              
-                
               </Form.Group>
             </Form>        
             </Col>  
