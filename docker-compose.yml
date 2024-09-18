@@ -93,3 +93,4 @@ services:
     depends_on:
       - db
     network_mode: "host"
+    

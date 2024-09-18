@@ -1,0 +1,52 @@
+from typing import Annotated
+from fastapi import Depends, UploadFile, File, Form, APIRouter
+from sqlalchemy import text
+from sqlalchemy.orm import Session
+
+from ..config.db_config import get_db
+from ..config.dependencies import get_comments_repository, get_memes_repository
+from ..repositories.comments_repository import CommentsRepository
+from ..repositories.memes_repository import MemesRepository
+from ..schemas.memes import MemeDbSchema
+from ..schemas.users import UserDbSchema
+from ..utils.auth_utils import get_current_user
+
+router = APIRouter()
+
+
+@router.get(
+    '',
+    # dependencies=[Depends(get_current_user)],
+)
+async def get_comments(skip: int = 0,
+                    limit: int = 100,
+                    db: Session = Depends(get_db),
+                    comments_repo: CommentsRepository = Depends(get_comments_repository),
+                    ):
+    """
+    return list of comments
+    """
+    comments = await comments_repo.get_comments(skip, limit, db)
+    return comments
+
+@router.post('')
+async def post_comment(
+        text: str = Form(),
+        meme_id: str = Form(),
+        author_id: str = Form(),
+        db: Session = Depends(get_db),
+        comments_repo: CommentsRepository = Depends(get_comments_repository),
+        meme_repo: MemesRepository = Depends(get_memes_repository),
+        # user: UserDbSchema = Depends(get_current_user),
+) -> MemeDbSchema:
+    """
+    add comment to db
+    """
+    # author_id = user.id
+    new_comment = await comments_repo.add_comment(text, author_id, meme_id, db)
+    current_meme = await meme_repo.get_meme(meme_id, db)
+    print('new_comment', new_comment)
+    print('current_meme', current_meme)
+    current_meme.comments.append(new_comment)
+    db.commit()
+    return current_meme

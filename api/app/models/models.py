@@ -40,8 +40,7 @@ class Meme(Base):
 
     meme_labels: Mapped[list["Label"]] = relationship(secondary="labels_meme", back_populates="label_memes")
 
-    # comment_id = Column(ForeignKey("comments.id"))
-    # comments = relationship("Comment", back_populates="memes")
+    comments: Mapped[list["Comment"]] = relationship(back_populates="meme")
 
     # like_id = Column(ForeignKey("likes.id"))
     # likes = relationship("Like", back_populates="memes")
@@ -54,7 +53,7 @@ class Meme(Base):
             "author_id": self.author_id,
             "category_id": self.category_id,
             "labels": self.labels,
-            # "comments": self.comments,
+            "comments": self.comments,
             # "likes": self.likes,
         }
 
@@ -73,14 +72,6 @@ class LabelMeme(Base):
     id = Column(Integer, primary_key=True)
     label_id = Column(Integer, ForeignKey('labels.id'))
     meme_id = Column(Integer, ForeignKey('memes.id'))
-    # meme = relationship(
-    #     "Meme",
-    #     back_populates="labels",
-    # )
-    # label = relationship(
-    #     "Label",
-    #     back_populates="memes",
-    # )
 
 # class Like(Base):
 #     __tablename__ = 'likes'
@@ -100,23 +91,15 @@ class LabelMeme(Base):
 #     meme_id = Column(Integer, ForeignKey('memes.id'))
 
 
-# class Comment(Base):
-#     __tablename__ = 'comments'
+class Comment(Base):
+    __tablename__ = 'comments'
 
-#     id = Column(Integer, primary_key=True, autoincrement=True)
-#     text = Column(String, nullable=False)
-#     author_id = Column(ForeignKey("users.id"))
-#     created_at = Column(TIMESTAMP, default=datetime.utcnow)
-
-#     memes = relationship("Meme", back_populates="comments")
-
-
-# class CommentMeme(Base):
-#     __tablename__ = "comments_meme"
-
-#     id = Column(Integer, primary_key=True)
-#     comment_id = Column(Integer, ForeignKey('comments.id'))
-#     meme_id = Column(Integer, ForeignKey('memes.id'))
+    id = Column(Integer, primary_key=True, autoincrement=True)
+    text = Column(String, nullable=False)
+    author_id = Column(ForeignKey("users.id"))
+    created_at = Column(TIMESTAMP, default=datetime.utcnow)
+    meme_id: Mapped[Integer]= Column(ForeignKey('memes.id'))
+    meme: Mapped["Meme"] = relationship(back_populates="comments")
 
 
 class Message(Base):

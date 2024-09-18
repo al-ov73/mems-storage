@@ -22,6 +22,9 @@ docker-run-host:
 docker:
 		docker compose run -P api bash
 
+docker-stop:
+		docker stop $(docker ps -a -q)
+
 connect-frontend:
 		docker exec -it mems-frontend /bin/sh
 		

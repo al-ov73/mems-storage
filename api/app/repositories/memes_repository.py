@@ -17,7 +17,9 @@ class MemesRepository:
 
         memes = (
             db.query(Meme)
-                .options(joinedload(Meme.meme_labels))
+                .options(selectinload(Meme.meme_labels))
+                .options(joinedload(Meme.comments))
+                .options(joinedload(Meme.author))
                 .offset(skip)
                 .limit(limit)
                 .all()

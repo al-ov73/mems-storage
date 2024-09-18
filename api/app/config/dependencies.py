@@ -1,4 +1,5 @@
 from .app_config import MINIO_API_URL
+from ..repositories.comments_repository import CommentsRepository
 from ..repositories.memes_repository import MemesRepository
 from ..repositories.storage_repository import StorageRepository
 from ..repositories.messages_repository import MessagesRepository
@@ -18,3 +19,6 @@ def get_messages_repository():
 
 def get_labels_repository():
     return LabelsRepository()
+
+def get_comments_repository():
+    return CommentsRepository()

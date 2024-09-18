@@ -49,7 +49,7 @@ async def get_memes(skip: int = 0,
     """
     memes = await meme_repo.get_memes(skip, limit, db)
     for meme in memes:
-        link = await storage_repo.get_link(meme.name)
+        link = await storage_repo.get_link(meme.id)
         meme.link = link
     return memes
 
@@ -94,10 +94,9 @@ async def upload_file(
         category=category,
         author_id=current_user_id
     )
-    await storage_repo.add_image(filename, file.file)
-    db_response = await meme_repo.add_meme(new_meme, db)
-    print('db_response', db_response)
-    return db_response
+    meme_in_db = await meme_repo.add_meme(new_meme, db)
+    await storage_repo.add_image(meme_in_db.id, file.file)
+    return meme_in_db
 
 
 @router.delete(

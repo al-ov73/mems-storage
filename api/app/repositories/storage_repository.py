@@ -38,35 +38,38 @@ class StorageRepository(BaseStorageRepo):
 
     async def get_link(
             self,
-            image_name: str,
+            file_id: int,
     ) -> str:
+        filename = str(file_id)
         redis = get_redis()
-        cache = await redis.get(image_name)
+        cache = await redis.get(filename)
         if cache is not None:
-            print(f'link for {image_name} from cache')
+            print(f'link for {filename} from cache')
             return cache
         async with aiohttp.ClientSession() as session:
             async with session.get(
-                f'{self.api_url}/images/link/{image_name}'
+                f'{self.api_url}/images/link/{filename}'
             ) as resp:
                 link = await resp.text()
-                await redis.set(image_name, link)
+                await redis.set(filename, link)
                 return link
 
     async def get_image(
             self,
-            image_name: str,
+            file_id: int,
     ) -> StreamReader:
-        response = httpx.get(f'{self.api_url}/images/{image_name}')
+        filename = str(file_id)
+        response = httpx.get(f'{self.api_url}/images/{filename}')
         return response.content
 
     async def add_image(
         self,
-        filename: str,
+        file_id: int,
         file: SpooledTemporaryFile
     ) -> str:
         async with aiohttp.ClientSession() as session:
             data = FormData()
+            filename = str(file_id)
             data.add_field(
                 'file',
                 file,
@@ -77,10 +80,11 @@ class StorageRepository(BaseStorageRepo):
             text_response = await response.text()
             return text_response
 
-    async def delete_image(self, image_name: str) -> str:
+    async def delete_image(self, file_id: int) -> str:
         async with aiohttp.ClientSession() as session:
+            filename = str(file_id)
             response = await session.delete(
-                f'{self.api_url}/images/{image_name}'
+                f'{self.api_url}/images/{filename}'
             )
             text_response = await response.text()
             return text_response
