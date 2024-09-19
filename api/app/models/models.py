@@ -42,8 +42,7 @@ class Meme(Base):
 
     comments: Mapped[list["Comment"]] = relationship(back_populates="meme")
 
-    # like_id = Column(ForeignKey("likes.id"))
-    # likes = relationship("Like", back_populates="memes")
+    likes: Mapped[list["Like"]] = relationship("Like", back_populates="meme")
 
     def to_dict(self):
         return {
@@ -73,22 +72,14 @@ class LabelMeme(Base):
     label_id = Column(Integer, ForeignKey('labels.id'))
     meme_id = Column(Integer, ForeignKey('memes.id'))
 
-# class Like(Base):
-#     __tablename__ = 'likes'
 
-#     id = Column(Integer, primary_key=True, autoincrement=True)
-#     author_id = Column(ForeignKey("users.id"))
-#     created_at = Column(TIMESTAMP, default=datetime.utcnow)
+class Like(Base):
+    __tablename__ = 'likes'
 
-#     memes = relationship("Meme", back_populates="likes")
-
-
-# class LikeMeme(Base):
-#     __tablename__ = "likes_meme"
-
-#     id = Column(Integer, primary_key=True)
-#     like_id = Column(Integer, ForeignKey('likes.id'))
-#     meme_id = Column(Integer, ForeignKey('memes.id'))
+    id = Column(Integer, primary_key=True, autoincrement=True)
+    author_id = Column(ForeignKey("users.id"), primary_key=True)
+    meme_id = Column(ForeignKey("memes.id"), primary_key=True)
+    meme: Mapped["Meme"] = relationship(back_populates="likes")
 
 
 class Comment(Base):
@@ -96,6 +87,7 @@ class Comment(Base):
 
     id = Column(Integer, primary_key=True, autoincrement=True)
     text = Column(String, nullable=False)
+    author_name = Column(ForeignKey("users.username"))
     author_id = Column(ForeignKey("users.id"))
     created_at = Column(TIMESTAMP, default=datetime.utcnow)
     meme_id: Mapped[Integer]= Column(ForeignKey('memes.id'))

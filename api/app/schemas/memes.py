@@ -3,6 +3,7 @@ from datetime import datetime
 
 from .comments import CommentSchema
 from .labels import LabelSchema
+from .likes import LikeSchema
 from .users import UserSchema
 
 
@@ -12,6 +13,7 @@ class MemeDbSchema(BaseModel):
     author: UserSchema
     created_at: datetime
     category: str
+    meme_labels: list[LikeSchema]
     meme_labels: list[LabelSchema]
     comments: list[CommentSchema]
 

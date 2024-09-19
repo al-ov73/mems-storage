@@ -20,6 +20,7 @@ class CommentsRepository:
             self,
             text:str,
             author_id: int,
+            author_name: str,
             meme_id: int,
             db: Session,
     ) -> CommentSchema:
@@ -29,6 +30,7 @@ class CommentsRepository:
         new_comment = Comment(
             text=text,
             author_id=author_id,
+            author_name=author_name,
             meme_id=meme_id
         )
         db.add(new_comment)

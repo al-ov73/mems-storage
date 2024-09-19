@@ -72,6 +72,31 @@ const postLabel = async (form, accessToken) => {
   })
 };
 
+const postComment = async (form, accessToken) => {
+  return axios.post(routes.commentsPath, form, {
+    headers: {
+      Authorization: `Bearer ${accessToken}`,
+    },
+  })
+};
+
+const postLike = async (form, accessToken) => {
+  return axios.post(routes.likesPath, form, {
+    headers: {
+      Authorization: `Bearer ${accessToken}`,
+    },
+  })
+};
+
+const delLike = async (likeId, accessToken) => {
+  return axios.delete(`${routes.likesPath}/${likeId}`, {
+    headers: {
+      Authorization: `Bearer ${accessToken}`,
+    },
+  })
+};
+
+
 export {
   getMemes,
   getMessages,
@@ -82,4 +107,7 @@ export {
   signupUser,
   validateToken,
   postLabel,
+  postComment,
+  postLike,
+  delLike
 };

@@ -10,8 +10,8 @@ services:
     container_name: mems-frontend
     env_file:
       - .env-non-dev
-    ports:
-      - 3000:3000
+    # ports:
+    #   - 3000:3000
     volumes:
       - ./frontend/public:/app/public
       - ./frontend/src:/app/src
@@ -32,8 +32,8 @@ services:
     env_file:
       - .env-non-dev
     container_name: mems-api
-    ports:
-      - 8000:8000
+    # ports:
+    #   - 8000:8000
     volumes:
       - ./api:/api
     restart: always
@@ -52,8 +52,8 @@ services:
     env_file:
       - .env-non-dev
     container_name: s3-storage-api
-    ports:
-      - 8888:8888
+    # ports:
+    #   - 8888:8888
     restart: always
     volumes:
       - ./storage/app:/storage/app
@@ -68,9 +68,9 @@ services:
     env_file:
       - .env-non-dev
     command: server /data --console-address ":9001"
-    ports:
-      - 9000:9000
-      - 9001:9001
+    # ports:
+    #   - 9000:9000
+    #   - 9001:9001
     volumes:
       - minio_data:/data
     network_mode: "host"
@@ -86,8 +86,8 @@ services:
     restart: always
     env_file:
       - .env-non-dev
-    ports:
-      - 8080:8080
+    # ports:
+    #   - 8080:8080
     volumes:
       - ./servers.json:/pgadmin4/servers.json
     depends_on:

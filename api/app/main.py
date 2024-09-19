@@ -7,6 +7,7 @@ from .routers.auth import router as router_auth
 from .routers.chat import router as router_chat
 from .routers.labels import router as router_labels
 from .routers.comments import router as router_comments
+from .routers.likes import router as router_likes
 
 app = FastAPI()
 
@@ -54,4 +55,10 @@ app.include_router(
     router_comments,
     prefix="/comments",
     tags=["comments"],
+)
+
+app.include_router(
+    router_likes,
+    prefix="/likes",
+    tags=["likes"],
 )

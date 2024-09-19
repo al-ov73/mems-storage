@@ -7,6 +7,8 @@ export default {
   usersPath: `${apiPath}/users`,
   memesPath: `${apiPath}/memes`,
   labelsPath: `${apiPath}/labels`,
+  commentsPath: `${apiPath}/comments`,
+  likesPath: `${apiPath}/likes`,
   chatPath: `${apiPath}/chat`,
   messagesPath: `${apiPath}/chat/messages`,
   apiStatic: `${apiPath}/static`,

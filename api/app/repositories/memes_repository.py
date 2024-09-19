@@ -1,6 +1,6 @@
-from ..models.models import Meme
+from ..models.models import Meme, Comment
 from ..schemas.memes import MemeDbSchema
-from sqlalchemy.orm import Session, joinedload, selectinload
+from sqlalchemy.orm import Session, joinedload, selectinload, contains_eager
 
 
 class MemesRepository:
@@ -18,8 +18,10 @@ class MemesRepository:
         memes = (
             db.query(Meme)
                 .options(selectinload(Meme.meme_labels))
-                .options(joinedload(Meme.comments))
+                .options(contains_eager(Meme.comments))
                 .options(joinedload(Meme.author))
+                .options(selectinload(Meme.likes))
+                .order_by(Comment.id.desc())
                 .offset(skip)
                 .limit(limit)
                 .all()

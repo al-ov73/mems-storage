@@ -10,6 +10,9 @@ import Col from 'react-bootstrap/Col';
 import { useDispatch } from "react-redux";
 import { getMemes, deleteMeme, postLabel } from '../utils/requests';
 import { setMemes } from "../slices/memesSlice";
+import CommentPostForm from "./forms/CommetPostForm";
+import CommentsList from "./lists/CommentsList";
+import LikeButton from "./LikeButton";
 
 const ImageModal = ({ meme, show, onHide }) => {
   const [selectedLabel, setSelectedLabel] = useState('');
@@ -45,10 +48,11 @@ const ImageModal = ({ meme, show, onHide }) => {
       </Modal.Body>
       <Modal.Footer>
       <Container>
+        <LikeButton meme={meme}/>
         <Row xs="auto" className="my-3">
           {meme.meme_labels && meme.meme_labels.map((label) => {
-                    return <Col key={label.id} className="rounded-pill">
-                              <Button variant="outline-secondary" onClick={onHide}>{label.title}</Button>  
+                    return <Col key={label.id} >
+                              <Button className="rounded-pill" variant="warning" size="sm" onClick={onHide}>{label.title}</Button>  
                               
                             </Col>
                   })}
@@ -75,11 +79,14 @@ const ImageModal = ({ meme, show, onHide }) => {
                   onChange={(event) => {
                     setSelectedLabel(event.target.value);
                   }}
+                  value={selectedLabel}
                 />
               </Form.Group>
             </Form>        
             </Col>  
         </Row>
+        <CommentPostForm meme={meme}/>
+        <CommentsList comments={meme.comments}/>
         <Row xs="auto">
         <Button variant="primary"
                 onClick={() => handleDelete(meme.id, access_token)}>

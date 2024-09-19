@@ -33,20 +33,18 @@ async def get_comments(skip: int = 0,
 async def post_comment(
         text: str = Form(),
         meme_id: str = Form(),
-        author_id: str = Form(),
         db: Session = Depends(get_db),
         comments_repo: CommentsRepository = Depends(get_comments_repository),
         meme_repo: MemesRepository = Depends(get_memes_repository),
-        # user: UserDbSchema = Depends(get_current_user),
+        user: UserDbSchema = Depends(get_current_user),
 ) -> MemeDbSchema:
     """
     add comment to db
     """
-    # author_id = user.id
-    new_comment = await comments_repo.add_comment(text, author_id, meme_id, db)
+    author_id = user.id
+    author_username = user.username
+    new_comment = await comments_repo.add_comment(text, author_id, author_username, meme_id, db)
     current_meme = await meme_repo.get_meme(meme_id, db)
-    print('new_comment', new_comment)
-    print('current_meme', current_meme)
     current_meme.comments.append(new_comment)
     db.commit()
     return current_meme

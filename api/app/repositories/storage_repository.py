@@ -42,7 +42,8 @@ class StorageRepository(BaseStorageRepo):
     ) -> str:
         filename = str(file_id)
         redis = get_redis()
-        cache = await redis.get(filename)
+        # cache = await redis.get(filename)
+        cache = None
         if cache is not None:
             print(f'link for {filename} from cache')
             return cache

@@ -4,6 +4,7 @@ from ..repositories.memes_repository import MemesRepository
 from ..repositories.storage_repository import StorageRepository
 from ..repositories.messages_repository import MessagesRepository
 from ..repositories.labels_repository import LabelsRepository
+from ..repositories.likes_repository import LikesRepository
 
 
 def get_memes_repository():
@@ -22,3 +23,6 @@ def get_labels_repository():
 
 def get_comments_repository():
     return CommentsRepository()
+
+def get_likes_repository():
+    return LikesRepository()
