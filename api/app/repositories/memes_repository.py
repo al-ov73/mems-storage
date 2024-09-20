@@ -1,4 +1,5 @@
-from ..models.models import Meme, Comment
+from ..models.meme import Meme
+from ..models.comment import Comment
 from ..schemas.memes import MemeDbSchema
 from sqlalchemy.orm import Session, joinedload, selectinload, contains_eager
 
@@ -17,8 +18,11 @@ class MemesRepository:
 
         memes = (
             db.query(Meme)
+                .outerjoin(Comment)
+                .options(selectinload(Meme.meme_labels))
                 .options(selectinload(Meme.meme_labels))
                 .options(contains_eager(Meme.comments))
+                # .options(selectinload(Meme.comments))
                 .options(joinedload(Meme.author))
                 .options(selectinload(Meme.likes))
                 .order_by(Comment.id.desc())
@@ -26,7 +30,7 @@ class MemesRepository:
                 .limit(limit)
                 .all()
         )
-
+        print('memes in repo', memes)
         return memes
 
     async def get_meme(

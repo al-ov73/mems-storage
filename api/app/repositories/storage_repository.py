@@ -65,12 +65,11 @@ class StorageRepository(BaseStorageRepo):
 
     async def add_image(
         self,
-        file_id: int,
+        filename: str,
         file: SpooledTemporaryFile
     ) -> str:
         async with aiohttp.ClientSession() as session:
             data = FormData()
-            filename = str(file_id)
             data.add_field(
                 'file',
                 file,

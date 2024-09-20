@@ -1,6 +1,6 @@
 from sqlalchemy.orm import Session
 
-from ..models.models import Comment
+from ..models.comment import Comment
 from ..schemas.comments import CommentSchema
 
 

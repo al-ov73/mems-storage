@@ -6,7 +6,7 @@ from sqlalchemy.orm import Session
 from ..repositories.messages_repository import MessagesRepository
 from ..config.db_config import get_db
 from ..config.dependencies import get_messages_repository
-from ..models.models import Message
+from ..models.message import Message
 from ..schemas.messages import MessageSchema
 from ..utils.chat_utils import ConnectionManager
 

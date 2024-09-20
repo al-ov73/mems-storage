@@ -1,6 +1,6 @@
 from sqlalchemy.orm import Session
 
-from ..models.models import Like
+from ..models.like import Like
 from ..schemas.likes import LikeSchema
 
 

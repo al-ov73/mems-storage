@@ -5,7 +5,7 @@ from sqlalchemy.orm import Session
 
 from ..config.db_config import get_db
 from ..config.dependencies import get_storage_repo, get_memes_repository
-from ..models.models import Meme
+from ..models.meme import Meme
 from ..repositories.memes_repository import MemesRepository
 from ..repositories.storage_repository import BaseStorageRepo
 from ..schemas.memes import MemeDbSchema, MemeSchema
@@ -21,7 +21,6 @@ router = APIRouter()
 )
 async def get_meme_category(
     db: Session = Depends(get_db),
-    meme_repo: MemesRepository = Depends(get_memes_repository),
 ):
     """
     return list of memes categories
@@ -95,7 +94,8 @@ async def upload_file(
         author_id=current_user_id
     )
     meme_in_db = await meme_repo.add_meme(new_meme, db)
-    await storage_repo.add_image(meme_in_db.id, file.file)
+    meme_name_in_storage = str(meme_in_db.id)
+    await storage_repo.add_image(meme_name_in_storage, file.file)
     return meme_in_db
 
 

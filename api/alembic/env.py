@@ -5,7 +5,13 @@ from sqlalchemy import engine_from_config
 from sqlalchemy import pool
 from alembic import context
 
-from app.models.models import Meme
+from app.config.db_config import Base
+from app.models.user import User
+from app.models.meme import Meme
+from app.models.comment import Comment
+from app.models.label import Label, LabelMeme
+from app.models.like import Like
+from app.models.message import Message
 
 
 config = context.config
@@ -19,7 +25,7 @@ config.set_section_option(section, "DB_PORT", os.getenv("DB_PORT"))
 
 fileConfig(config.config_file_name)
 
-target_metadata = Meme.metadata
+target_metadata = Base.metadata,
 
 def run_migrations_offline() -> None:
     """Run migrations in 'offline' mode.

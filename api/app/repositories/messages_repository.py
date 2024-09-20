@@ -1,6 +1,6 @@
 from sqlalchemy.orm import Session, joinedload
 
-from ..models.models import Message
+from ..models.message import Message
 from ..schemas.messages import MessageSchema
 
 

@@ -32,11 +32,14 @@ const loginUser = async (values) => {
   return axios.post(routes.loginPath, params);
 };
 
-const signupUser = async (values) => {
-  const params = new URLSearchParams();
-  params.append('username', values.username);
-  params.append('password', values.password);
-  return axios.post(routes.signupPath, params);
+const signupUser = async (values, photo) => {
+  const form = new FormData();
+  form.append('username', values.username);
+  form.append('password', values.password);
+  form.append('first_name', values.first_name);
+  form.append('last_name', values.last_name);
+  form.append('file', photo || '');
+  return axios.post(routes.signupPath, form);
 };
 
 const postMeme = async (form, accessToken) => axios.post(routes.memesPath, form, {

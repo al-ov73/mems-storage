@@ -1,4 +1,4 @@
-from ..models.models import Label
+from ..models.label import Label
 from ..schemas.labels import LabelSchema
 from sqlalchemy.orm import Session
 

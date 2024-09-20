@@ -5,7 +5,7 @@ from sqlalchemy.orm import Session
 
 from ..config.db_config import get_db
 from ..config.dependencies import get_storage_repo, get_labels_repository, get_memes_repository
-from ..models.models import Meme
+from ..models.meme import Meme
 from ..repositories.memes_repository import MemesRepository
 from ..repositories.storage_repository import BaseStorageRepo
 from ..repositories.labels_repository import LabelsRepository

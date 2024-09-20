@@ -6,8 +6,8 @@ test:
 		pytest
 
 
-makemigrations:
-		alembic revision --autogenerate -m "initial migration7"
+migration:
+		alembic revision --autogenerate -m "$(n)"
 
 migrate:
 		alembic upgrade head
