@@ -2,7 +2,7 @@ import { createSlice } from '@reduxjs/toolkit';
 
 const initialState = {
   categories: [],
-  currentCategory: '',
+  currentCategory: 'ALL',
 };
 
 const slice = createSlice({

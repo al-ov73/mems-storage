@@ -15,7 +15,7 @@ const MemesList = () => {
           memes.filter((meme) => meme.category === currentCategory)
 
   return memes.map((meme) => {
-              return <Col xs={6} md={4} className="mx-4 my-1" key={meme.id}>
+              return <Col className="mx-1 my-1" key={meme.id}>
                       <ImageCard meme={meme}/>
                     </Col>
               }

@@ -44,10 +44,10 @@ async def post_label(
     """
     add label to db
     """
-    new_label = await labels_repo.add_label(title, db)
+    label = await labels_repo.get_label_by_title(title, db)
+    if not label:
+        label = await labels_repo.add_label(title, db)
     current_meme = await meme_repo.get_meme(meme_id, db)
-    print('new_label', new_label)
-    print('current_meme', current_meme)
-    current_meme.meme_labels.append(new_label)
+    current_meme.meme_labels.append(label)
     db.commit()
     return current_meme

@@ -17,6 +17,17 @@ class LabelsRepository:
         labels = db.query(Label).offset(skip).limit(limit).all()
         return labels
 
+    async def get_label_by_title(
+            self,
+            label_title: str,
+            db: Session,
+    ) -> list[LabelSchema]:
+        '''
+        return label by title from db
+        '''
+        label = db.query(Label).filter(Label.title == label_title).first()
+        return label
+
     async def add_label(
             self,
             label_title: str,

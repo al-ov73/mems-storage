@@ -17,9 +17,7 @@ const CommentsList = ({comments}) => {
         <h5>{comment.author_name} </h5>
         <h6 className="fst-italic fw-light">{dateFormat} : </h6>
         <p className="overflow-hidden">{comment.text}</p>
-        
       </Col>
-      
     </Row>
   })
 }

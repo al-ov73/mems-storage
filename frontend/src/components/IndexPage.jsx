@@ -54,14 +54,10 @@ const IndexPage = () => {
 
     <Container>
     <Row xs="auto" className="justify-content-md-center my-4">
-      {currentCategory ?
-          <Button variant="outline-success" onClick={() => dispatch(setCurrentCategory(''))}>Вернуться к выбору категории</Button>
-          :
-        <> 
+
           <Col> <CategoryCard category={'ALL'}/></Col>
           {categories.map((category) => <Col key={category}><CategoryCard key={category} category={category}/></Col>)}
-        </>
-      }
+
       </Row>
       <Row>
         <MemesList/>

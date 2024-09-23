@@ -1,12 +1,12 @@
 import Button from 'react-bootstrap/Button';
 import Card from 'react-bootstrap/Card';
+import Carousel from 'react-bootstrap/Carousel';
 import Image from 'react-bootstrap/Image';
 import { useDispatch } from "react-redux";
 import { getMemes, deleteMeme } from '../utils/requests';
 import { setMemes } from "../slices/memesSlice";
 import React, { useState } from "react";
 import ImageModal from './ImageModal';
-import routes from '../utils/routes';
 
 const ImageCard = ({ meme })  => {
   const [modalShow, setModalShow] = useState(false);
@@ -23,26 +23,16 @@ const ImageCard = ({ meme })  => {
 
   return (
     <>
-      <Card style={{ width: '18rem' }}>
+      <Card style={{ width: '12rem' }}>
         <Image 
                 height="150rem"
                 src={meme.link}
-                className="rounded mx-auto d-block"
+                className="rounded mx-auto mt-3 d-block "
                 alt='Картинка не загрузилась:('
                 onClick={() => setModalShow(true)}
         />
-        <Card.Body>
-          <Card.Title>{meme.name}</Card.Title>
-          <Button variant="primary" onClick={() => setModalShow(true)}>
-            Посмотреть
-          </Button>
-          <Button variant="primary"
-                  onClick={() => handleDelete(meme.id, access_token)}>
-            Удалить
-          </Button>
-        </Card.Body>
+        <b align="center">{meme.name}</b>
       </Card>
-
       <ImageModal
         meme={meme}
         show={modalShow}

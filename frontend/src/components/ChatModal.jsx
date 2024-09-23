@@ -1,5 +1,6 @@
 import Button from 'react-bootstrap/Button';
 import Modal from 'react-bootstrap/Modal';
+import { Col, Row } from "react-bootstrap"
 import { FormikProvider, useFormik } from "formik";
 import Form from 'react-bootstrap/Form';
 import { useEffect, useState } from "react";
@@ -55,6 +56,7 @@ const ChatModal = ({ show, onHide }) => {
   return (
     <Modal
       show={show}
+      onHide={onHide}
       size="lg"
       aria-labelledby="contained-modal-title-vcenter"
       centered
@@ -67,7 +69,17 @@ const ChatModal = ({ show, onHide }) => {
 
       <Modal.Body>
         {messages && messages.map((message) => {
-            return <div key={message.id} className="text-break mb-2">{message.author.username}: {message.text}</div>
+            const createdAt = message.created_at
+            const formatedDate= new Date(Date.parse(createdAt));
+        
+            const messageTime = `${formatedDate.getHours()}:${formatedDate.getMinutes()}`
+            const messageDate = `${formatedDate.toLocaleDateString("ru-RU")}`
+            const dateFormat = `${messageDate}: ${messageTime}`;
+            return <div key={message.id} className="text-break mb-2">
+                    <strong className="fs-6">{message.author.username} </strong>
+                    <em>{dateFormat}: </em>
+                    <span>{message.text}</span>
+                  </div>
         })}
       <FormikProvider value={formik}>
                     <Form onSubmit={formik.handleSubmit} noValidate="" className="py-1 border-0">
