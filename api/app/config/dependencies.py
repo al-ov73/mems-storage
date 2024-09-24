@@ -1,3 +1,4 @@
+from ..repositories.users_repository import UsersRepository
 from .app_config import MINIO_API_URL
 from ..repositories.comments_repository import CommentsRepository
 from ..repositories.memes_repository import MemesRepository
@@ -26,3 +27,6 @@ def get_comments_repository():
 
 def get_likes_repository():
     return LikesRepository()
+
+def get_users_repository():
+    return UsersRepository()

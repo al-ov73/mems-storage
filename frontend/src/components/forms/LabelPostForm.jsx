@@ -44,18 +44,13 @@ const LabelPostForm = ({ meme }) => {
     }
   }
 
-  return <>
-      
-        <CreatableSelect 
+  return <CreatableSelect 
           isClearable 
           options={labelNames}
           placeholder="Напишите смешной тег"
           onChange={handleSelect}
           isSearchable={true}
         />
-      
-
-  </>
 }
 
 export default LabelPostForm;

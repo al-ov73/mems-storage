@@ -119,6 +119,14 @@ const getLabelsNames = async (accessToken) => {
   return labels.map((label) => label.title);
 };
 
+const getUser = async (userId, accessToken) => {
+  const response = await axios.get(`${routes.usersPath}/${userId}`, {
+    headers: {
+      Authorization: `Bearer ${accessToken}`,
+    },
+  })
+  return response.data;
+};
 
 export {
   getMemes,
@@ -134,5 +142,6 @@ export {
   postLike,
   delLike,
   getComments,
-  getLabelsNames
+  getLabelsNames,
+  getUser,
 };

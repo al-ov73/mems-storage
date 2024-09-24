@@ -9,10 +9,12 @@ import useAuth from '../hooks/index.js';
 import { useNavigate } from "react-router-dom";
 import MemeCreateForm from "./forms/MemeCreateForm.jsx";
 import { getUsernameFromStorage } from '../utils/utils.js';
+import AccountModal from './modals/AccountModal.jsx';
 
 const NavbarPage = () => {
   const auth = useAuth();
   const navigate = useNavigate();
+  const [modalAccount, setModalAccount] = useState(false);
   const [modalChatShow, setModalChatShow] = useState(false);
   const [createFormShow, setCreateFormShow] = useState(false);
   const username = getUsernameFromStorage()
@@ -44,6 +46,9 @@ const NavbarPage = () => {
             <Button className="mx-4" type="submit" onClick={handleLogout}>
               Выйти
             </Button>
+            <Button className="mx-4" type="submit" onClick={() => setModalAccount(true)}>
+              Аккаунт
+            </Button>
           </Nav>
         </Container>
       </Navbar>
@@ -56,6 +61,11 @@ const NavbarPage = () => {
       <MemeCreateForm
         show={createFormShow}
         onHide={() => setCreateFormShow(false)}
+      />
+
+      <AccountModal
+        show={modalAccount}
+        onHide={() => setModalAccount(false)}
       />
     </>
 }
