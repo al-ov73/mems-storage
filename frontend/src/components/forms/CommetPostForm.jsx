@@ -1,19 +1,15 @@
 import { useState } from "react";
 import FormData from 'form-data'
 import Form from 'react-bootstrap/Form';
-import Button from 'react-bootstrap/Button';
-import Modal from 'react-bootstrap/Modal';
-import Image from 'react-bootstrap/Image';
-import Container from 'react-bootstrap/Container';
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
 import { useDispatch } from "react-redux";
 
-import { getMemes, postComment, postLabel } from '../../utils/requests';
+import { getMemes, postComment } from '../../utils/requests';
 import { setMemes } from "../../slices/memesSlice";
 
 
-const CommentPostForm = ({meme}) => {
+const CommentPostForm = ({ memeId }) => {
   const [comment, setComment] = useState('');
   const access_token = localStorage.getItem('user')
   const dispatch = useDispatch();
@@ -26,7 +22,7 @@ const CommentPostForm = ({meme}) => {
                 try {
                   const form = new FormData();
                   form.append('text', comment);
-                  form.append('meme_id', meme.id);
+                  form.append('meme_id', memeId);
                   setComment('')
                   await postComment(form, access_token);
                   const getMemesResponse = await getMemes(access_token);

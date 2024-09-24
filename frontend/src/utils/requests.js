@@ -99,6 +99,26 @@ const delLike = async (likeId, accessToken) => {
   })
 };
 
+const getComments = async (memeId, accessToken) => {
+  const response = await axios.get(`${routes.commentsPath}/meme/${memeId}`, {
+    headers: {
+      Authorization: `Bearer ${accessToken}`,
+    },
+  })
+  return response.data;
+};
+
+const getLabelsNames = async (accessToken) => {
+  const response = await axios.get(routes.labelsPath, {
+    headers: {
+      Authorization: `Bearer ${accessToken}`,
+    },
+  })
+  console.log('response.data', response.data)
+  const labels = response.data
+  return labels.map((label) => label.title);
+};
+
 
 export {
   getMemes,
@@ -112,5 +132,7 @@ export {
   postLabel,
   postComment,
   postLike,
-  delLike
+  delLike,
+  getComments,
+  getLabelsNames
 };

@@ -4,16 +4,18 @@ import Container from 'react-bootstrap/Container';
 import Button from 'react-bootstrap/Button';
 import { useState, } from "react";
 
-import ChatModal from './ChatModal.jsx'
+import ChatModal from './modals/ChatModal.jsx'
 import useAuth from '../hooks/index.js';
 import { useNavigate } from "react-router-dom";
-import MemeCreateForm from "./MemeCreateForm.jsx";
+import MemeCreateForm from "./forms/MemeCreateForm.jsx";
+import { getUsernameFromStorage } from '../utils/utils.js';
 
 const NavbarPage = () => {
   const auth = useAuth();
   const navigate = useNavigate();
   const [modalChatShow, setModalChatShow] = useState(false);
   const [createFormShow, setCreateFormShow] = useState(false);
+  const username = getUsernameFromStorage()
 
   const handleLogout = () => {
     localStorage.removeItem('user');
@@ -26,19 +28,21 @@ const NavbarPage = () => {
         <Container>
           <Nav>
             <a className="navbar-brand" href="/">
-              Memes app
+              Хранилище супер мемов
             </a>
           </Nav>
-
-      <Button variant="outline-success" onClick={() => setCreateFormShow(true)}>Добавить мем</Button>
-
-
-          <Nav>
-            <Button variant="primary" onClick={() => setModalChatShow(true)}>
+          <Button variant="outline-success"
+                  onClick={() => setCreateFormShow(true)}>
+                    Добавить мем
+          </Button>
+          
+            <Button variant="outline-success" onClick={() => setModalChatShow(true)}>
               Чатик
             </Button>
-            <Button type="submit" onClick={handleLogout}>
-              Logout
+            <Nav>
+            <Navbar.Brand>Здравствуйте, {username}</Navbar.Brand>
+            <Button className="mx-4" type="submit" onClick={handleLogout}>
+              Выйти
             </Button>
           </Nav>
         </Container>
@@ -48,6 +52,7 @@ const NavbarPage = () => {
         show={modalChatShow}
         onHide={() => setModalChatShow(false)}
       />
+
       <MemeCreateForm
         show={createFormShow}
         onHide={() => setCreateFormShow(false)}

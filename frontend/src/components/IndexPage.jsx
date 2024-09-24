@@ -1,21 +1,16 @@
-import React, { useState, useEffect } from "react";
-import ImageCard from './ImageCard.jsx'
+import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import Container from 'react-bootstrap/Container';
-import Button from 'react-bootstrap/Button';
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
 import { setMemes } from "../slices/memesSlice";
-
-import { getMemes, postMeme, getCategories } from "../utils/requests.js";
+import { getMemes, getCategories } from "../utils/requests.js";
 import NavbarPage from "./Navbar.jsx";
-
-import CategoryCard from "./CategoryCard.jsx";
-import { setCategories, setCurrentCategory } from "../slices/categoriesSlice.js";
+import { setCategories } from "../slices/categoriesSlice.js";
 import MemesList from "./MemesList.jsx";
+import CategoryCard from "./cards/CategoryCard.jsx";
 
 const IndexPage = () => {
-
   const dispatch = useDispatch();
 
   // get categories
@@ -43,9 +38,7 @@ const IndexPage = () => {
     inner();
   }, []);
 
-  const currentCategory = useSelector((state) => state.categories.currentCategory);
   const categories = useSelector((state) => state.categories.categories);
-  const memes = useSelector((state) => state.memes.memes);
   const access_token = localStorage.getItem('user')
 
   return (

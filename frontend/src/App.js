@@ -14,7 +14,9 @@ import SignupPage from './components/SignupPage.jsx';
 import useAuth from './hooks/index.js';
 import { AuthContext } from './contexts/index.js';
 import { validateToken } from './utils/requests.js';
-import SpinnerEl from './components/Spinner.jsx';
+import SpinnerEl from './components/spinners/SimpleSpinner.jsx';
+import IndexPageSpinner from './components/spinners/IndexPageSpinner.jsx';
+
 
 function AuthProvider({ children }) {
   const [loggedIn, setLoggedIn] = useState(false);
@@ -50,7 +52,7 @@ function PrivateRoute({ children }) {
   }
 
   const content = auth.loggedIn ? children : <Navigate to="/login" state={{ from: location }} />;
-  return loading ? <SpinnerEl /> : content;
+  return loading ? <IndexPageSpinner/> : content;
 }
 
 function App() {

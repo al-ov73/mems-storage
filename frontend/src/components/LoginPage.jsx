@@ -5,11 +5,9 @@ import { useDispatch } from 'react-redux'
 import { useNavigate } from "react-router-dom";
 import { FormikProvider, useFormik, ErrorMessage } from "formik";
 import * as Yup from 'yup';
-
 import useAuth from '../hooks/index.js';
-import IndexNavbar from './Navbar.jsx';
-import SpinnerEl from './Spinner.jsx';
 import { loginUser } from '../utils/requests.js';
+import SpinnerEl from './spinners/SimpleSpinner.jsx';
 
 
 const LoginPage = () => {

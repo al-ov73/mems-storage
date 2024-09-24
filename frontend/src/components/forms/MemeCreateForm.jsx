@@ -3,11 +3,11 @@ import FormData from 'form-data'
 import Form from 'react-bootstrap/Form';
 import Button from 'react-bootstrap/Button';
 import Modal from 'react-bootstrap/Modal';
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 
-import { setMemes } from "../slices/memesSlice";
-import { getMemes, postMeme, getCategories } from "../utils/requests.js";
-import config from "../config/config.js";
+import { setMemes } from "../../slices/memesSlice.js";
+import { getMemes, postMeme, getCategories } from "../../utils/requests.js";
+import config from "../../config/config.js";
 import Row from "react-bootstrap/esm/Row.js";
 import Col from "react-bootstrap/esm/Col.js";
 

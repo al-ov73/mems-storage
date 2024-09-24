@@ -13,8 +13,8 @@ class MemeDbSchema(BaseModel):
     author: UserSchema
     created_at: datetime
     category: str
-    meme_labels: list[LikeSchema]
     meme_labels: list[LabelSchema]
+    likes: list[LikeSchema]
     comments: list[CommentSchema]
 
 

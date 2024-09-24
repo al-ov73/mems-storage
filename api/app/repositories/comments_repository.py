@@ -11,9 +11,20 @@ class CommentsRepository:
             db: Session,
     ) -> list[CommentSchema]:
         '''
-        return list of comments from db
+        return list of all comments from db
         '''
         comments = db.query(Comment).all()
+        return comments
+
+    async def get_comments_by_meme(
+            self,
+            meme_id: str,
+            db: Session,
+    ) -> list[CommentSchema]:
+        '''
+        return list of comments from db bu meme_id:str
+        '''
+        comments = db.query(Comment).filter(Comment.meme_id == meme_id).all()
         return comments
 
     async def add_comment(

@@ -55,9 +55,9 @@ async def get_memes(skip: int = 0,
 
 @router.get(
     '/{meme_id}',
-    dependencies=[Depends(get_current_user)]
+    # dependencies=[Depends(get_current_user)]
 )
-async def get_meme_link(
+async def get_mem(
     meme_id: str,
     db: Session = Depends(get_db),
     meme_repo: MemesRepository = Depends(get_memes_repository),
@@ -66,11 +66,10 @@ async def get_meme_link(
     """
     return meme with link to download
     """
-    print('meme_id ->>', meme_id)
     meme = await meme_repo.get_meme(meme_id, db)
     if not meme:
         return 'meme not exist'
-    meme.link = storage_repo.get_link(meme.name)
+    meme.link = await storage_repo.get_link(meme.name)
     return meme
 
 

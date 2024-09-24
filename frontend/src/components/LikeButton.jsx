@@ -32,7 +32,7 @@ const LikeButton = ({meme}) => {
     <Button 
           variant={buttonVariant}
           onClick={likeHandler}>
-    <HeartComponent/> Нравится
+    {meme.likes.length > 0 && meme.likes.length} <HeartComponent/> Нравится
     </Button>
   </>
 }

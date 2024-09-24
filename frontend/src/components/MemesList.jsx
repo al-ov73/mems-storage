@@ -1,4 +1,4 @@
-import ImageCard from './ImageCard.jsx'
+import ImageCard from './cards/ImageCard.jsx'
 import { useSelector } from "react-redux";
 import Col from 'react-bootstrap/Col';
 
@@ -6,10 +6,7 @@ import Col from 'react-bootstrap/Col';
 const MemesList = () => {
   const currentCategory = useSelector((state) => state.categories.currentCategory);
   let memes = useSelector((state) => state.memes.memes);
-  if (!currentCategory) {
-        return ''
-  }
-  
+
   memes = (currentCategory === 'ALL') ? 
           memes :
           memes.filter((meme) => meme.category === currentCategory)

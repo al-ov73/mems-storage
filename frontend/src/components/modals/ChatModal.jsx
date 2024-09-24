@@ -4,8 +4,8 @@ import { Col, Row } from "react-bootstrap"
 import { FormikProvider, useFormik } from "formik";
 import Form from 'react-bootstrap/Form';
 import { useEffect, useState } from "react";
-import { getUserIdFromStorage } from '../utils/utils';
-import { getMessages } from '../utils/requests';
+import { getUserIdFromStorage } from '../../utils/utils';
+import { getMessages } from '../../utils/requests';
 
 const ws = new WebSocket(`ws://127.0.0.1:8000/chat/ws`);
 

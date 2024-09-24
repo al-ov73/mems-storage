@@ -26,7 +26,6 @@ class Meme(Base):
     author: Mapped['User'] = relationship(back_populates='memes')
 
     category: Mapped['CategoryEnum'] = mapped_column(Enum(CategoryEnum))
-    # category: Mapped[Enum(CategoryEnum)]
     meme_labels: Mapped[list['Label']] = relationship(secondary='labels_meme', back_populates='label_memes')
     comments: Mapped[list['Comment']] = relationship(back_populates='meme')
     likes: Mapped[list['Like']] = relationship(back_populates='meme')

@@ -1,8 +1,9 @@
+from ..models.like import Like
 from ..models.meme import Meme
 from ..models.comment import Comment
 from ..schemas.memes import MemeDbSchema
 from sqlalchemy.orm import Session, joinedload, selectinload, contains_eager
-
+from sqlalchemy import func
 
 class MemesRepository:
 
@@ -20,17 +21,15 @@ class MemesRepository:
             db.query(Meme)
                 .outerjoin(Comment)
                 .options(selectinload(Meme.meme_labels))
-                .options(selectinload(Meme.meme_labels))
-                .options(contains_eager(Meme.comments))
-                # .options(selectinload(Meme.comments))
+                # .options(contains_eager(Meme.comments))
                 .options(joinedload(Meme.author))
                 .options(selectinload(Meme.likes))
-                .order_by(Comment.id.desc())
+                .order_by(Meme.id.desc())
+                # .order_by(Comment.id.desc())
                 .offset(skip)
                 .limit(limit)
                 .all()
         )
-        print('memes in repo', memes)
         return memes
 
     async def get_meme(
@@ -41,7 +40,16 @@ class MemesRepository:
         '''
         return meme from db
         '''
-        meme = db.get(Meme, meme_id)
+        meme = (
+            db.query(Meme)
+                .options(selectinload(Meme.meme_labels))
+                .options(contains_eager(Meme.comments))
+                .options(joinedload(Meme.author))
+                .options(selectinload(Meme.likes))
+                .group_by()
+                .filter(Meme.id == meme_id)
+                .first()                
+        )
         if not meme:
             return 'meme not exist'
         return meme

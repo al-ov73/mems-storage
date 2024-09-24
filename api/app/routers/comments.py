@@ -24,9 +24,24 @@ async def get_comments(skip: int = 0,
                     comments_repo: CommentsRepository = Depends(get_comments_repository),
                     ):
     """
-    return list of comments
+    return list of all db comments
     """
     comments = await comments_repo.get_comments(skip, limit, db)
+    return comments
+
+@router.get(
+    '/meme/{meme_id}',
+    # dependencies=[Depends(get_current_user)],
+)
+async def get_comments_by_meme_id(
+    meme_id: str,
+    db: Session = Depends(get_db),
+    comments_repo: CommentsRepository = Depends(get_comments_repository),                
+):
+    """
+    return list of meme comments
+    """
+    comments = await comments_repo.get_comments_by_meme(meme_id, db)
     return comments
 
 @router.post('')
