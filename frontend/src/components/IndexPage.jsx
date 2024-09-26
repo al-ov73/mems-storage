@@ -17,7 +17,6 @@ const IndexPage = () => {
   useEffect(() => {
     const inner = async () => {
       const response = await getCategories(access_token)
-      console.log('categories response', response);
       dispatch(setCategories(response));
     }
     inner();
@@ -28,7 +27,6 @@ const IndexPage = () => {
     const inner = async () => {
       try {
         const response = await getMemes(access_token)
-        console.log('getMemes response', response)
         dispatch(setMemes(response.data))
       } catch (e) {
         console.log('memes get error');

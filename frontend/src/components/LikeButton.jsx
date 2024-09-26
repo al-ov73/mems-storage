@@ -17,12 +17,10 @@ const LikeButton = ({meme}) => {
   const likeHandler = async () => {
     if (userLike) {
       const response = await delLike(userLike.id, access_token);
-      console.log('del like response', response)
     } else {
       const form = new FormData();
       form.append('meme_id', meme.id);
       const response = await postLike(form, access_token);
-      console.log('like response', response)      
     }
     const getMemesResponse = await getMemes(access_token);
     dispatch(setMemes(getMemesResponse.data))

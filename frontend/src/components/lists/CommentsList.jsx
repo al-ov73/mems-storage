@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { Col, Row } from "react-bootstrap"
 import { getComments } from "../../utils/requests";
 import SpinnerEl from "../spinners/SimpleSpinner";
+import { convertDateTime } from "../../utils/utils";
 
 
 const CommentsList = ({ memeId }) => {
@@ -20,17 +21,11 @@ const CommentsList = ({ memeId }) => {
 
   return loading ? <SpinnerEl /> 
     : memeComments.map((comment) => {
-    const createdAt = comment.created_at
-    const formatedDate= new Date(Date.parse(createdAt));
-
-    const commentTime = `${formatedDate.getHours()}:${formatedDate.getMinutes()}`
-    const commentDate = `${formatedDate.toLocaleDateString("ru-RU")}`
-    const dateFormat = `${commentDate}: ${commentTime}`;
+    const dateFormat = convertDateTime(comment.created_at)
     
     return <Row key={comment.id} className="mb-3">
       <Col>
-        <h5>{comment.author_name} </h5>
-        <h6 className="fst-italic fw-light">{dateFormat} : </h6>
+        <h5>{comment.author_name} <small className="fs-6 fst-italic fw-light">{dateFormat}</small></h5>
         <p className="overflow-hidden">{comment.text}</p>
       </Col>
     </Row>

@@ -28,7 +28,6 @@ const LoginPage = () => {
     setLoading(true)
     try {
       const response = await loginUser(values);
-      console.log('login response', response)
       const { access_token } = response.data;
       if (access_token) {
         localStorage.setItem('user', access_token)

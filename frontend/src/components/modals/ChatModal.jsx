@@ -19,14 +19,12 @@ const ChatModal = ({ show, onHide }) => {
   useEffect(() => {
     getMessages(access_token)
       .then((messages) => {
-        // console.log('messages get', messages)
         setMessages(messages)
       });
   }, [])
 
   ws.onmessage = (event) => {
     const receivedJson = JSON.parse(event.data)
-    console.log('receivedJson', receivedJson)
     setMessages([...messages, receivedJson])
   };
 
@@ -36,7 +34,6 @@ const ChatModal = ({ show, onHide }) => {
         author: userId,
         text: event.message,
       }
-      console.log('message send from frontend->', message)
       ws.send(JSON.stringify(message))
     } catch (e) {
       console.log(e);

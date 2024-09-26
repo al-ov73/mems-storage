@@ -114,7 +114,6 @@ const getLabelsNames = async (accessToken) => {
       Authorization: `Bearer ${accessToken}`,
     },
   })
-  console.log('response.data', response.data)
   const labels = response.data
   return labels.map((label) => label.title);
 };

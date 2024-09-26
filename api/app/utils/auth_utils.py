@@ -84,7 +84,7 @@ async def register_user(
     add user to db
     '''
     username = user_data['username']
-    storage_username = f'user{username}'
+    storage_username = f'user_{username}'
     if file:
         await storage_repo.add_image(storage_username, file.file)
     hashed_password = get_password_hash(user_data['password'])

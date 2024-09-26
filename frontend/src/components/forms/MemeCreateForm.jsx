@@ -23,7 +23,6 @@ const MemeCreateForm = ({ show, onHide }) => {
     useEffect(() => {
         const inner = async () => {
           const response = await getCategories(access_token)
-          console.log('categories response', response);
           setCategories(response);
         }
         inner();
@@ -43,11 +42,8 @@ const MemeCreateForm = ({ show, onHide }) => {
             form.append('file', selectedImage);
             form.append('filename', selectedName);
             form.append('category', selectedCategory);
-            console.log('selectedCategory', selectedCategory)
             const postMemeResponse = await postMeme(form, access_token);
-            console.log('postMemeResponse', postMemeResponse);
             const getMemesResponse = await getMemes(access_token);
-            console.log('getMemesResponse', getMemesResponse)
             dispatch(setMemes(getMemesResponse.data))
             onHide();
           } catch (error) {

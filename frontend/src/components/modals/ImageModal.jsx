@@ -14,9 +14,9 @@ import CommentPostForm from "../forms/CommetPostForm";
 import CommentsList from "../lists/CommentsList";
 import LikeButton from "../LikeButton";
 import LabelPostForm from "../forms/LabelPostForm";
+import { convertDateTime } from "../../utils/utils";
 
 const ImageModal = ({ meme, show, onHide }) => {
-  const [selectedLabel, setSelectedLabel] = useState('');
   const access_token = localStorage.getItem('user')
   const dispatch = useDispatch();
 
@@ -27,6 +27,8 @@ const ImageModal = ({ meme, show, onHide }) => {
     console.log('getMemesResponse', getMemesResponse)
     dispatch(setMemes(getMemesResponse.data))    
   }
+
+  const dateFormat = convertDateTime(meme.created_at)
 
   return (
     <Modal
@@ -49,8 +51,22 @@ const ImageModal = ({ meme, show, onHide }) => {
                 alt='Картинка не загрузилась:('/>
       </Modal.Body>
       <Modal.Footer>
+      <footer className="blockquote-footer">
+           Загрузил {meme.author.username} {dateFormat}
+          </footer>
       <Container>
-        <LikeButton meme={meme}/>
+      <Row className="my-3">
+        <Col className="my-1" sm={6}><LikeButton meme={meme}/></Col>
+        <Col className="my-1">
+          <Button variant="outline-danger"
+                  onClick={() => handleDelete(meme.id, access_token)}>
+              Удалить
+          </Button>
+        </Col>
+        <Col className="my-1">
+        <Button onClick={onHide}>Закрыть</Button> 
+        </Col>
+        </Row>
         <Row xs="auto" className="my-3">
           {meme.meme_labels && meme.meme_labels.map((label) => {
                     return <Col key={label.id} className="my-1">
@@ -67,13 +83,6 @@ const ImageModal = ({ meme, show, onHide }) => {
         </Row>
         <CommentPostForm memeId={meme.id}/>
         <CommentsList memeId={meme.id}/>
-        <Row xs="auto">
-        <Button variant="primary"
-                onClick={() => handleDelete(meme.id, access_token)}>
-            Удалить
-        </Button>
-        <Button onClick={onHide}>Закрыть</Button>          
-        </Row>
         </Container>
       </Modal.Footer>
     </Modal>
