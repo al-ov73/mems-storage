@@ -1,13 +1,14 @@
 import aiohttp
 import httpx
 from aiohttp import FormData, StreamReader
-
 from abc import abstractmethod, ABC
 from tempfile import SpooledTemporaryFile
 from typing import BinaryIO
 
+from ..config.logger_config import get_logger
 from ..config.redis_config import get_redis
 
+logger = get_logger(__name__)
 
 class BaseStorageRepo(ABC):
     @abstractmethod
@@ -42,16 +43,16 @@ class StorageRepository(BaseStorageRepo):
     ) -> str:
         filename = str(file_id)
         redis = get_redis()
-        # cache = await redis.get(filename)
-        cache = None
+        cache = await redis.get(filename)
         if cache is not None:
-            print(f'link for {filename} from cache')
+            logger.info(f'Link for image {filename} from cache')
             return cache
         async with aiohttp.ClientSession() as session:
             async with session.get(
                 f'{self.api_url}/images/link/{filename}'
             ) as resp:
                 link = await resp.text()
+                logger.info(f'Link for image {filename} from S3 service')
                 await redis.set(filename, link)
                 return link
 
@@ -76,8 +77,10 @@ class StorageRepository(BaseStorageRepo):
                 filename=filename,
                 content_type='multipart/form-data'
             )
+            logger.info(f'Send post request to S3 service')
             response = await session.post(f'{self.api_url}/images', data=data)
             text_response = await response.text()
+            logger.info(f'Response from S3 service: {text_response}')
             return text_response
 
     async def delete_image(self, file_id: int) -> str:

@@ -3,6 +3,7 @@ from fastapi import Depends, UploadFile, File, Form, APIRouter
 from sqlalchemy import text
 from sqlalchemy.orm import Session
 
+from ..config.logger_config import get_logger
 from ..config.db_config import get_db
 from ..config.dependencies import get_storage_repo, get_memes_repository
 from ..models.meme import Meme
@@ -14,6 +15,7 @@ from ..utils.auth_utils import get_current_user
 
 router = APIRouter()
 
+logger = get_logger(__name__)
 
 @router.get(
     '/categories',
@@ -46,7 +48,9 @@ async def get_memes(skip: int = 0,
     """
     return list of memes with links to download
     """
+    logger.info('Got request for all memes')
     memes = await meme_repo.get_memes(skip, limit, db)
+    logger.debug(f'Got {len(memes)} memes from db')
     for meme in memes:
         link = await storage_repo.get_link(meme.id)
         meme.link = link
@@ -57,7 +61,7 @@ async def get_memes(skip: int = 0,
     '/{meme_id}',
     # dependencies=[Depends(get_current_user)]
 )
-async def get_mem(
+async def get_meme(
     meme_id: str,
     db: Session = Depends(get_db),
     meme_repo: MemesRepository = Depends(get_memes_repository),
@@ -66,6 +70,7 @@ async def get_mem(
     """
     return meme with link to download
     """
+    logger.info(f'Got request for meme {meme_id}')
     meme = await meme_repo.get_meme(meme_id, db)
     if not meme:
         return 'meme not exist'
@@ -86,6 +91,8 @@ async def upload_file(
     """
     add meme to db and to S3 storage
     """
+    logger.info(f'Got request for upload meme from user {user.id}:{user.username}')
+    logger.info(f'File: {type(file)}, filename: {filename}, category: {category}')
     current_user_id = user.id
     new_meme = Meme(
         name=filename,
@@ -93,8 +100,10 @@ async def upload_file(
         author_id=current_user_id
     )
     meme_in_db = await meme_repo.add_meme(new_meme, db)
+    logger.info(f'loaded meme to db {meme_in_db.id}')
     meme_name_in_storage = str(meme_in_db.id)
-    await storage_repo.add_image(meme_name_in_storage, file.file)
+    storage_response = await storage_repo.add_image(meme_name_in_storage, file.file)
+    logger.info(f'upload response from storage: {storage_response.data}')
     return meme_in_db
 
 
