@@ -109,17 +109,21 @@ async def upload_file(
 
 @router.delete(
         '/{meme_id}',
-        dependencies=[Depends(get_current_user)],
 )
 async def del_meme(
         meme_id: str,
         db: Session = Depends(get_db),
         meme_repo: MemesRepository = Depends(get_memes_repository),
         storage_repo: BaseStorageRepo = Depends(get_storage_repo),
-) -> MemeSchema | MemeDbSchema | str:
+        user: UserDbSchema = Depends(get_current_user),
+) -> MemeDbSchema | str:
     """
     delete meme from db and S3 storage
     """
+    meme = await meme_repo.get_meme(meme_id, db)
+    author_id = meme.author_id
+    if user.id != author_id:
+        return "You don't have permissions to delete this meme"
     meme = await meme_repo.del_meme(meme_id, db)
     await storage_repo.delete_image(meme.name)
     return meme

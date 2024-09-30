@@ -14,11 +14,12 @@ import CommentPostForm from "../forms/CommetPostForm";
 import CommentsList from "../lists/CommentsList";
 import LikeButton from "../LikeButton";
 import LabelPostForm from "../forms/LabelPostForm";
-import { convertDateTime } from "../../utils/utils";
+import { convertDateTime, getUserIdFromStorage } from "../../utils/utils";
 
 const ImageModal = ({ meme, show, onHide }) => {
   const access_token = localStorage.getItem('user')
   const dispatch = useDispatch();
+  const userId = getUserIdFromStorage();
 
   const handleDelete = async (id, token) => {
     const deleteResponse = await deleteMeme(id, token)
@@ -58,10 +59,14 @@ const ImageModal = ({ meme, show, onHide }) => {
       <Row className="my-3">
         <Col className="my-1" sm={6}><LikeButton meme={meme}/></Col>
         <Col className="my-1">
-          <Button variant="outline-danger"
-                  onClick={() => handleDelete(meme.id, access_token)}>
-              Удалить
-          </Button>
+          {
+            userId === meme.author_id &&
+              <Button variant="outline-danger"
+                      onClick={() => handleDelete(meme.id, access_token)}>
+                  Удалить
+              </Button>            
+          }
+
         </Col>
         <Col className="my-1">
         <Button onClick={onHide}>Закрыть</Button> 

@@ -12,10 +12,13 @@ const ImageCard = ({ meme })  => {
   const [modalShow, setModalShow] = useState(false);
   const userId = getUserIdFromStorage()
   let userLike = meme.likes.find((like) => like.author_id === userId)
+  const borderStyle = userId === meme.author_id ?
+        'warning' :
+        'secondary'
 
   return (
     <>
-      <Card style={{ width: '12rem' }}>
+      <Card bg={borderStyle} style={{ width: '12rem' }}>
         
         <Image 
                 height="150rem"
