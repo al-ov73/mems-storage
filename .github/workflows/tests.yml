@@ -22,4 +22,5 @@ jobs:
         run: |
           cd api
           poetry install
+          poetry shell
           make test
