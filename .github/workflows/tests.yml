@@ -37,7 +37,5 @@ jobs:
       #----------------------------------------------
       - name: Run tests
         run: |
-          cd api
           source .venv/bin/activate
-          pytest tests/
-          coverage report
+          pytest
