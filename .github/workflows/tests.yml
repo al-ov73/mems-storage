@@ -3,7 +3,7 @@ name: Code checks
 on: [push]
 
 env:
-  DB_HOST: postgres
+  DB_HOST: localhost
   DB_PORT: 5432
   TEST_DB_NAME: mems_test
   DB_USER: postgres
