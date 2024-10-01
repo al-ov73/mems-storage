@@ -15,9 +15,16 @@ jobs:
         with:
           python-version: '3.12'
 
+      - name: rename env file
+      - run: rm .env-non-dev .env
+
       - name: Install Poetry
         uses: snok/install-poetry@v1
 
-      - run: cd api && poetry install --no-interaction --no-root
+      - name: Run Pytest
+      - run: |
+        ls
+        cd api
+        poetry install --no-interaction --no-root
+        poetry run pytest .
 
-      - run: cd api && poetry run pytest .
