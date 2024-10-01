@@ -3,15 +3,28 @@ name: Code checks
 on: [push]
 
 env:
-  DB_HOST: localhost
+  DB_HOST: postgres
   DB_PORT: 5432
   TEST_DB_NAME: mems_test
   DB_USER: postgres
   DB_PASSWORD: postgres
 
+
+
 jobs:
   test:
     runs-on: ubuntu-latest
+
+    services:
+      db:
+        image: postgres
+        env:
+          POSTGRES_DB: postgres
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: postgres
+        ports:
+          - 5432:5432
+
     steps:
 
       - name: Check out repository
