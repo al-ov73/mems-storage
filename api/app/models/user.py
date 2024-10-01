@@ -1,5 +1,5 @@
 from sqlalchemy.orm import Mapped, mapped_column, relationship
-from sqlalchemy import text
+from sqlalchemy import func
 from typing import Annotated, Optional
 
 import datetime
@@ -7,7 +7,7 @@ from ..config.db_config import Base
 
 
 intpk = Annotated[int, mapped_column(primary_key=True, autoincrement=True)]
-created_at = Annotated[datetime.datetime, mapped_column(server_default=text('TIMEZONE("utc", now())'))]
+created_at = Annotated[datetime.datetime, mapped_column(server_default=func.now())]
 
 
 class User(Base):
