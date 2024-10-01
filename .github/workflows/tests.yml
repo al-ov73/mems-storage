@@ -16,7 +16,7 @@ jobs:
           python-version: '3.12'
 
       - name: rename env file
-        run: rm .env-non-dev .env
+        run: ls && rm .env-non-dev_example .env
 
       - name: Install Poetry
         uses: snok/install-poetry@v1
