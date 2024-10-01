@@ -5,6 +5,7 @@ from dotenv import load_dotenv
 from fastapi.testclient import TestClient
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
+from sqlalchemy_utils import database_exists, create_database
 
 from ..schemas.memes import MemeSchema
 from .fake.fake_storage_repository import FakeStorageRepository
@@ -29,6 +30,9 @@ SQLALCHEMY_DATABASE_URL = (
 
 
 engine = create_engine(SQLALCHEMY_DATABASE_URL)
+
+if not database_exists(SQLALCHEMY_DATABASE_URL):
+    create_database(SQLALCHEMY_DATABASE_URL)
 
 TestingSessionLocal = sessionmaker(autocommit=False, autoflush=False,
                                    bind=engine)
