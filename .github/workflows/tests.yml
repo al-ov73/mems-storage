@@ -8,7 +8,7 @@ env:
   TEST_DB_NAME: mems_test
   DB_USER: postgres
   DB_PASSWORD: postgres
-
+  JWT_TOKEN_SECRET_KEY: SECRET
 
 
 jobs:
