@@ -37,7 +37,7 @@ async def get_meme_category(
 
 @router.get(
     '',
-    # dependencies=[Depends(get_current_user)],
+    dependencies=[Depends(get_current_user)],
 )
 async def get_memes(skip: int = 0,
                     limit: int = 100,
@@ -59,7 +59,7 @@ async def get_memes(skip: int = 0,
 
 @router.get(
     '/{meme_id}',
-    # dependencies=[Depends(get_current_user)]
+    dependencies=[Depends(get_current_user)]
 )
 async def get_meme(
     meme_id: str,
@@ -103,7 +103,7 @@ async def upload_file(
     logger.info(f'loaded meme to db {meme_in_db.id}')
     meme_name_in_storage = str(meme_in_db.id)
     storage_response = await storage_repo.add_image(meme_name_in_storage, file.file)
-    logger.info(f'upload response from storage: {storage_response.data}')
+    # logger.info(f'upload response from storage: {storage_response.data}')
     return meme_in_db
 
 
@@ -121,6 +121,8 @@ async def del_meme(
     delete meme from db and S3 storage
     """
     meme = await meme_repo.get_meme(meme_id, db)
+    print('meme', meme)
+    print('meme.id', meme.id)
     author_id = meme.author_id
     if user.id != author_id:
         return "You don't have permissions to delete this meme"

@@ -42,11 +42,12 @@ class MemesRepository:
         '''
         meme = (
             db.query(Meme)
+                .outerjoin(Comment)
                 .options(selectinload(Meme.meme_labels))
                 .options(contains_eager(Meme.comments))
                 .options(joinedload(Meme.author))
                 .options(selectinload(Meme.likes))
-                .group_by()
+                .order_by(Comment.id.desc())
                 .filter(Meme.id == meme_id)
                 .first()                
         )
