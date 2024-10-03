@@ -1,4 +1,5 @@
 [![Code checks](https://github.com/al-ov73/mems-storage/actions/workflows/tests.yml/badge.svg)](https://github.com/al-ov73/mems-storage/actions/workflows/tests.yml)
+[![Api Linter](https://github.com/al-ov73/mems-storage/actions/workflows/python_linter.yml/badge.svg)](https://github.com/al-ov73/mems-storage/actions/workflows/python_linter.yml)
 <br/>
 ![eslint](https://img.shields.io/badge/eslint-3A33D1?style=for-the-badge&logo=eslint&logoColor=white)
 
