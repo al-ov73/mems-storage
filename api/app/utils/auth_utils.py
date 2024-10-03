@@ -11,9 +11,8 @@ from sqlalchemy.orm import Session
 from ..config.app_config import (
     ALGORITHM,
     JWT_TOKEN_SECRET_KEY,
-    ACCESS_TOKEN_EXPIRE_MINUTES
+    ACCESS_TOKEN_EXPIRE_MINUTES,
 )
-from ..config.dependencies import get_storage_repo
 from ..repositories.storage_repository import BaseStorageRepo
 from ..config.db_config import get_db
 from ..models.user import User
@@ -25,13 +24,10 @@ pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="token")
 
 
-def verify_password(
-    plain_password: str,
-    hashed_password: str
-) -> bool:
-    '''
+def verify_password(plain_password: str, hashed_password: str) -> bool:
+    """
     Check if user's password match saved password in db
-    '''
+    """
     try:
         result = pwd_context.verify(plain_password, hashed_password)
     except Exception:
@@ -40,9 +36,9 @@ def verify_password(
 
 
 def get_password_hash(password: str) -> str:
-    '''
+    """
     hash password to save in db
-    '''
+    """
     return pwd_context.hash(password)
 
 
@@ -50,22 +46,22 @@ def get_user(
     username: str,
     db: Session = Depends(get_db),
 ) -> UserDbSchema:
-    '''
+    """
     return user from db
-    '''
+    """
     user = db.query(User).filter(User.username == username).first()
     if user:
         return user
 
 
 def authenticate_user(
-    username: str,
-    password: str,
-    db: Session = Depends(get_db)
+        username: str,
+        password: str,
+        db: Session = Depends(get_db)
 ) -> UserDbSchema | None:
-    '''
+    """
     return user if login and password match data in db
-    '''
+    """
     user = get_user(username, db)
     if not user:
         return None
@@ -75,24 +71,24 @@ def authenticate_user(
 
 
 async def register_user(
-    storage_repo: BaseStorageRepo, 
+    storage_repo: BaseStorageRepo,
     user_data: dict,
     file: Optional[UploadFile] = None,
     db: Session = Depends(get_db),
 ) -> UserDbSchema | None:
-    '''
+    """
     add user to db
-    '''
-    username = user_data['username']
-    storage_username = f'user_{username}'
+    """
+    username = user_data["username"]
+    storage_username = f"user_{username}"
     if file:
         await storage_repo.add_image(storage_username, file.file)
-    hashed_password = get_password_hash(user_data['password'])
+    hashed_password = get_password_hash(user_data["password"])
     new_user_dict = {
-        'username': username,
-        'hashed_password': hashed_password,
-        'first_name': user_data['first_name'],
-        'last_name': user_data['last_name']
+        "username": username,
+        "hashed_password": hashed_password,
+        "first_name": user_data["first_name"],
+        "last_name": user_data["last_name"],
     }
     new_user = User(**new_user_dict)
     db.add(new_user)
@@ -107,35 +103,35 @@ def create_access_token(
     user: UserDbSchema,
     expires_delta: timedelta | None = None
 ) -> str:
-    '''
+    """
     return JWT token with expires time
-    '''
+    """
     to_encode = {
-        'id': user.id,
-        'username': user.username,
+        "id": user.id,
+        "username": user.username,
     }
     if expires_delta:
         expire = datetime.now(timezone.utc) + expires_delta
     else:
         expire = (
-            datetime.now(timezone.utc) + timedelta(minutes=ACCESS_TOKEN_EXPIRE_MINUTES)
+            datetime.now(timezone.utc) +
+            timedelta(minutes=ACCESS_TOKEN_EXPIRE_MINUTES)
         )
     to_encode.update({"exp": expire})
     encoded_jwt = jwt.encode(
         to_encode,
-        JWT_TOKEN_SECRET_KEY,
-        algorithm=ALGORITHM
+        JWT_TOKEN_SECRET_KEY, algorithm=ALGORITHM
     )
     return encoded_jwt
 
 
 async def get_current_user(
-        token: Annotated[str, Depends(oauth2_scheme)],
-        db: Session = Depends(get_db)
+    token: Annotated[str, Depends(oauth2_scheme)],
+    db: Session = Depends(get_db)
 ) -> UserDbSchema:
-    '''
+    """
     return user from db according JWT-token data
-    '''
+    """
     credentials_exception = HTTPException(
         status_code=status.HTTP_401_UNAUTHORIZED,
         detail="Could not validate credentials",
@@ -152,7 +148,7 @@ async def get_current_user(
             raise credentials_exception
         token_data = TokenDataSchema(username=username)
     except InvalidTokenError:
-        print('InvalidTokenError!!!')
+        print("InvalidTokenError!!!")
         raise credentials_exception
     user = get_user(token_data.username, db)
     if user is None:

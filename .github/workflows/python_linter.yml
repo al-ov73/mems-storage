@@ -1,0 +1,48 @@
+name: Api tests
+
+on: [push]
+
+env:
+  DB_HOST: localhost
+  DB_PORT: 5432
+  TEST_DB_NAME: mems_test
+  DB_USER: postgres
+  DB_PASSWORD: postgres
+  JWT_TOKEN_SECRET_KEY: SECRET
+
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+
+    services:
+      db:
+        image: postgres
+        env:
+          POSTGRES_DB: postgres
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: postgres
+        ports:
+          - 5432:5432
+
+    steps:
+
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Set up python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Install Poetry
+        uses: snok/install-poetry@v1
+
+      - name: Install dependencies
+        run: |
+          ls
+          cd api
+          poetry install --no-interaction --no-root
+
+      - name: Run Pytest
+        run: flake8 ./api/app

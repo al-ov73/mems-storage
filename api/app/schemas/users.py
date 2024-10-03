@@ -11,5 +11,6 @@ class UserSchema(BaseModel):
 class UserDbSchema(UserSchema):
     hashed_password: str
 
+
 class UserWithPhoto(UserSchema):
     photo: str | None

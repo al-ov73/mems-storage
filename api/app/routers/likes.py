@@ -1,6 +1,4 @@
-from typing import Annotated
-from fastapi import Depends, UploadFile, File, Form, APIRouter
-from sqlalchemy import text
+from fastapi import Depends, Form, APIRouter
 from sqlalchemy.orm import Session
 
 from ..config.db_config import get_db
@@ -17,25 +15,27 @@ router = APIRouter()
 
 
 @router.get(
-    '',
-    # dependencies=[Depends(get_current_user)],
+    "",
+    dependencies=[Depends(get_current_user)],
 )
-async def get_likes(db: Session = Depends(get_db),
-                    likes_repo: LikesRepository = Depends(get_likes_repository),
-                    ):
+async def get_likes(
+    db: Session = Depends(get_db),
+    likes_repo: LikesRepository = Depends(get_likes_repository),
+):
     """
     return list of likes
     """
     likes = await likes_repo.get_likes(db)
     return likes
 
-@router.post('')
+
+@router.post("")
 async def post_like(
-        meme_id: str = Form(),
-        db: Session = Depends(get_db),
-        likes_repo: LikesRepository = Depends(get_likes_repository),
-        meme_repo: MemesRepository = Depends(get_memes_repository),
-        user: UserDbSchema = Depends(get_current_user),
+    meme_id: str = Form(),
+    db: Session = Depends(get_db),
+    likes_repo: LikesRepository = Depends(get_likes_repository),
+    meme_repo: MemesRepository = Depends(get_memes_repository),
+    user: UserDbSchema = Depends(get_current_user),
 ) -> MemeDbSchema:
     """
     add like to db
@@ -47,11 +47,14 @@ async def post_like(
     db.commit()
     return current_meme
 
-@router.delete('/{like_id}',)
+
+@router.delete(
+    "/{like_id}",
+)
 async def delete_like(
-        like_id: str,
-        db: Session = Depends(get_db),
-        likes_repo: LikesRepository = Depends(get_likes_repository),
+    like_id: str,
+    db: Session = Depends(get_db),
+    likes_repo: LikesRepository = Depends(get_likes_repository),
 ) -> LikeSchema:
     """
     add like to db

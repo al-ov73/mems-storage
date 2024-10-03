@@ -22,13 +22,21 @@ class Meme(Base):
     name: Mapped[str] = mapped_column(unique=True, nullable=False)
     created_at: Mapped[created_at]
 
-    author_id: Mapped[int] = mapped_column(ForeignKey('users.id', ondelete='CASCADE'))
-    author: Mapped['User'] = relationship(back_populates='memes')
+    author_id: Mapped[int] = mapped_column(
+        ForeignKey('users.id', ondelete='CASCADE'))
+    author: Mapped['User'] = relationship(  # noqa: F821
+        back_populates='memes'
+    )
 
     category: Mapped['CategoryEnum'] = mapped_column(Enum(CategoryEnum))
-    meme_labels: Mapped[list['Label']] = relationship(secondary='labels_meme', back_populates='label_memes')
-    comments: Mapped[list['Comment']] = relationship(back_populates='meme')
-    likes: Mapped[list['Like']] = relationship(back_populates='meme')
+    meme_labels: Mapped[list['Label']] = relationship(  # noqa: F821
+        secondary='labels_meme', back_populates='label_memes')
+    comments: Mapped[list['Comment']] = relationship(  # noqa: F821
+        back_populates='meme'
+    )
+    likes: Mapped[list['Like']] = relationship(  # noqa: F821
+        back_populates='meme'
+    )
 
     def to_dict(self):
         return {
@@ -41,5 +49,3 @@ class Meme(Base):
             'comments': self.comments,
             'likes': self.likes,
         }
-
-

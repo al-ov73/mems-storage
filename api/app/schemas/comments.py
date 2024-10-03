@@ -1,8 +1,6 @@
 from pydantic import BaseModel
 from datetime import datetime
 
-# from .memes import MemeDbSchema
-
 
 class CommentSchema(BaseModel):
     id: int

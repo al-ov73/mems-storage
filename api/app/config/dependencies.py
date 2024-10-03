@@ -19,14 +19,18 @@ def get_storage_repo():
 def get_messages_repository():
     return MessagesRepository()
 
+
 def get_labels_repository():
     return LabelsRepository()
+
 
 def get_comments_repository():
     return CommentsRepository()
 
+
 def get_likes_repository():
     return LikesRepository()
+
 
 def get_users_repository():
     return UsersRepository()
