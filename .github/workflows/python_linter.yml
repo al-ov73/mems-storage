@@ -1,4 +1,4 @@
-name: Api tests
+name: Api Linter
 
 on: [push]
 
@@ -47,4 +47,4 @@ jobs:
       - name: Run Pytest
         run: |
           cd api
-          flake8 ./app
+          poetry run flake8 ./app
