@@ -45,4 +45,6 @@ jobs:
           poetry install --no-interaction --no-root
 
       - name: Run Pytest
-        run: flake8 ./api/app
+        run: |
+          cd api
+          flake8 ./app
