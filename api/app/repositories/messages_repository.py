@@ -1,5 +1,6 @@
 from sqlalchemy.orm import Session, joinedload
 
+
 from ..models.message import Message
 from ..schemas.messages import MessageSchema
 
@@ -7,8 +8,10 @@ from ..schemas.messages import MessageSchema
 class MessagesRepository:
 
     async def get_messages(
-            self,
-            db: Session,
+        self,
+        skip: int,
+        limit: int,
+        db: Session,
     ) -> list[MessageSchema]:
         '''
         return list of messages from db

@@ -9,13 +9,14 @@ from ..config.dependencies import (
 from ..repositories.memes_repository import MemesRepository
 from ..repositories.labels_repository import LabelsRepository
 from ..schemas.memes import MemeDbSchema
+from ..utils.auth_utils import get_current_user
 
 router = APIRouter()
 
 
 @router.get(
     "",
-    # dependencies=[Depends(get_current_user)],
+    dependencies=[Depends(get_current_user)],
 )
 async def get_labels(
     skip: int = 0,

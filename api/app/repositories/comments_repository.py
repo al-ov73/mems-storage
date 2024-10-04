@@ -11,6 +11,8 @@ class CommentsRepository:
 
     async def get_comments(
         self,
+        skip: int,
+        limit: int,
         db: Session,
     ) -> list[CommentSchema]:
         """

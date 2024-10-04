@@ -5,6 +5,8 @@ start:
 test:
 		pytest
 
+coverage:
+		pytest --cov
 
 migration:
 		alembic revision --autogenerate -m "$(n)"

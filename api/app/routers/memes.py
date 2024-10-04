@@ -1,5 +1,5 @@
 from typing import Annotated
-from fastapi import Depends, UploadFile, File, Form, APIRouter
+from fastapi import Depends, UploadFile, File, Form, APIRouter, HTTPException
 from sqlalchemy import text
 from sqlalchemy.orm import Session
 
@@ -119,11 +119,15 @@ async def del_meme(
     delete meme from db and S3 storage
     """
     meme = await meme_repo.get_meme(meme_id, db)
-    print("meme", meme)
-    print("meme.id", meme.id)
+    print("meme to delete", meme)
+    print("meme.author id", meme.author_id)
+    print('request user', user.id)
     author_id = meme.author_id
     if user.id != author_id:
-        return "You don't have permissions to delete this meme"
+        raise HTTPException(
+            status_code=403,
+            detail="You don't have permissions to delete this meme"
+        )
     meme = await meme_repo.del_meme(meme_id, db)
     await storage_repo.delete_image(meme.name)
     return meme

@@ -1,29 +1,9 @@
-from dotenv import load_dotenv
-
-load_dotenv()
-TEST_FILE = {
-    "name": "test_filename",
-    "category": "OTHER",
-}
-TEST_USER = {
-    "username": "test_username",
-    "password": "test_password",
-}
-
-
-def test_protected_routes(test_client, signup_user):
-    response = test_client.get("/memes")
-    assert response.status_code == 401
-    access_token = signup_user(TEST_USER)
-    headers = {"Authorization": f"Bearer {access_token}"}
-    response = test_client.get("/memes", headers=headers)
-    assert response.status_code == 200
+from .fixtures.test_data import TEST_FILE, TEST_USER, TEST_USER2
 
 
 def test_new_meme_post(
     test_client,
     signup_user,
-    login_user,
     add_test_meme,
 ):
     access_token = signup_user(TEST_USER)
@@ -114,6 +94,13 @@ def test_meme_delete(
     response = test_client.get("/memes", headers=headers)
     memes_list = response.json()
     assert len(memes_list) == 1
+
+    # delete meme by other user
+    access_token_wrong = signup_user(TEST_USER2)
+    headers_wrong = {"Authorization": f"Bearer {access_token_wrong}"}
+    response = test_client.delete(
+        f"/memes/{init_meme_id}", headers=headers_wrong)
+    assert response.status_code == 403
 
     # delete meme
     response = test_client.delete(f"/memes/{init_meme_id}", headers=headers)

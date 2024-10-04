@@ -8,6 +8,7 @@ from ..config.db_config import get_db
 from ..config.dependencies import get_messages_repository
 from ..models.message import Message
 from ..schemas.messages import MessageSchema
+from ..utils.auth_utils import get_current_user
 from ..utils.chat_utils import ConnectionManager
 
 router = APIRouter()
@@ -15,15 +16,20 @@ router = APIRouter()
 manager = ConnectionManager()
 
 
-@router.get("/messages")
+@router.get(
+    "/messages",
+    dependencies=[Depends(get_current_user)],
+)
 async def get_last_messages(
+    skip: int = 0,
+    limit: int = 100,
     db: Session = Depends(get_db),
     messages_repo: MessagesRepository = Depends(get_messages_repository),
 ) -> List[MessageSchema]:
     '''
     send all last chat messages
     '''
-    messages = await messages_repo.get_messages(db)
+    messages = await messages_repo.get_messages(skip, limit, db)
     return messages
 
 
