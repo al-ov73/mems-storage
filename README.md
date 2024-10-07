@@ -1,6 +1,7 @@
 [![Code checks](https://github.com/al-ov73/mems-storage/actions/workflows/tests.yml/badge.svg)](https://github.com/al-ov73/mems-storage/actions/workflows/tests.yml)
 [![Api Linter](https://github.com/al-ov73/mems-storage/actions/workflows/python_linter.yml/badge.svg)](https://github.com/al-ov73/mems-storage/actions/workflows/python_linter.yml)
-https://img.shields.io/endpoint?url=https://gist.githubusercontent.com/al-ov73/2c5b53a767ccc15e5e119d945406e200/raw/covbadge.json
+[![Api Linter](https://img.shields.io/endpoint?url=https://gist.githubusercontent.com/al-ov73/554863d87243aba357ba8c67f7fb9324/raw/covbadge.json/badge.svg)](https://img.shields.io/endpoint?url=https://gist.githubusercontent.com/al-ov73/554863d87243aba357ba8c67f7fb9324/raw/covbadge.json)
+
 
 <br/>
 ![eslint](https://img.shields.io/badge/eslint-3A33D1?style=for-the-badge&logo=eslint&logoColor=white)
