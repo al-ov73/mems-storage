@@ -3,6 +3,8 @@ import jwt
 import json
 from .fixtures.test_data import TEST_MESSAGE, TEST_USER
 
+WS_URL = 'ws://127.0.0.1:8000/chat/ws'
+
 
 def test_messages(
     test_client,
@@ -21,8 +23,7 @@ def test_messages(
         'text': TEST_MESSAGE['text'],
         'author': user_id,
     }
-    print('message_data', message_data)
-    with test_client.websocket_connect(f"ws://127.0.0.1:8000/chat/ws") as websocket:
+    with test_client.websocket_connect(WS_URL) as websocket:
         websocket.send_text(json.dumps(message_data))
         new_message = websocket.receive_json()
         assert new_message['text'] == TEST_MESSAGE['text']

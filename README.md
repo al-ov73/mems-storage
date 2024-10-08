@@ -1,6 +1,5 @@
 [![Code checks](https://github.com/al-ov73/mems-storage/actions/workflows/tests.yml/badge.svg)](https://github.com/al-ov73/mems-storage/actions/workflows/tests.yml)
 [![Api Linter](https://github.com/al-ov73/mems-storage/actions/workflows/python_linter.yml/badge.svg)](https://github.com/al-ov73/mems-storage/actions/workflows/python_linter.yml)
-[![Api Linter](https://img.shields.io/endpoint?url=https://gist.githubusercontent.com/al-ov73/554863d87243aba357ba8c67f7fb9324/raw/covbadge.json/badge.svg)](https://img.shields.io/endpoint?url=https://gist.githubusercontent.com/al-ov73/554863d87243aba357ba8c67f7fb9324/raw/covbadge.json)
 
 
 <br/>
