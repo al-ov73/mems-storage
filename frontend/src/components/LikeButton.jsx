@@ -1,3 +1,4 @@
+import React from 'react';
 import { Button } from "react-bootstrap"
 import { getMemes, postLike, delLike } from "../utils/requests";
 import FormData from 'form-data'
@@ -16,11 +17,11 @@ const LikeButton = ({meme}) => {
 
   const likeHandler = async () => {
     if (userLike) {
-      const response = await delLike(userLike.id, access_token);
+      await delLike(userLike.id, access_token);
     } else {
       const form = new FormData();
       form.append('meme_id', meme.id);
-      const response = await postLike(form, access_token);
+      await postLike(form, access_token);
     }
     const getMemesResponse = await getMemes(access_token);
     dispatch(setMemes(getMemesResponse.data))

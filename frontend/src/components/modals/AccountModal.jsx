@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import Offcanvas from 'react-bootstrap/Offcanvas';
 import { getUserIdFromStorage } from '../../utils/utils';
 import { getUser, signupUser } from "../../utils/requests";
@@ -6,7 +6,6 @@ import SpinnerEl from "../spinners/SimpleSpinner";
 import Button from 'react-bootstrap/Button';
 import Form from 'react-bootstrap/Form';
 import { useNavigate } from "react-router-dom";
-import * as Yup from 'yup';
 import useAuth from "../../hooks";
 import AvatarAccounCard from "../cards/AvatarAccountCard";
 
@@ -18,8 +17,10 @@ const AccountModal = ({ show, onHide }) => {
   const [currentFirstName, setCurrentFirstName] = useState('');
   const [currentLastName, setCurrentLastName] = useState('');
   const [currentPassword, setCurrentPassword] = useState('');
-  const [currentPasswordConfirmation, setCurrentPasswordConfirmation] = useState('');
-  const [currentPhoto, setCurrentPhoto] = useState('');
+  const [
+    currentPasswordConfirmation, setCurrentPasswordConfirmation
+  ] = useState('');
+  const [_, setCurrentPhoto] = useState('');
 
   const [currentUser, setCurrentUser] = useState({});
   const [isSubmitLoading, setSubmbitLoading] = useState(false);
@@ -39,22 +40,6 @@ const AccountModal = ({ show, onHide }) => {
     }
     inner();
   }, [])
-
-  const SignupSchema = Yup.object().shape({
-    username: Yup.string()
-      .min(3, 'от 3 о 20 символов')
-      .max(20, 'от 3 о 20 символов')
-      .required('required field'),
-      first_name: Yup.string()
-      .min(3, 'от 3 о 20 символов')
-      .max(20, 'от 3 о 20 символов'),
-    last_name: Yup.string()
-      .min(3, 'от 3 о 20 символов')
-      .max(20, 'от 3 о 20 символов'),
-    password: Yup.string().min(2, 'больше 2 символов'),
-    passwordConfirmation: Yup.string()
-      .oneOf([Yup.ref('password'), null], 'Пароли должны совпадать'),
-  });
   
   const handleSubmit = (values) => async () => {
     setSubmbitLoading(true)

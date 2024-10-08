@@ -14,7 +14,6 @@ import SignupPage from './components/SignupPage.jsx';
 import useAuth from './hooks/index.js';
 import { AuthContext } from './contexts/index.js';
 import { validateToken } from './utils/requests.js';
-import SpinnerEl from './components/spinners/SimpleSpinner.jsx';
 import IndexPageSpinner from './components/spinners/IndexPageSpinner.jsx';
 
 

@@ -1,6 +1,7 @@
+import React from 'react';
 import Button from 'react-bootstrap/Button';
 import Figure from 'react-bootstrap/Figure';
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 import config from '../../config/config.js';
 import { setCurrentCategory } from '../../slices/categoriesSlice.js';
 

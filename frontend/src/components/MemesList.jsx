@@ -1,3 +1,4 @@
+import React from 'react';
 import ImageCard from './cards/ImageCard.jsx'
 import { useSelector } from "react-redux";
 import Col from 'react-bootstrap/Col';

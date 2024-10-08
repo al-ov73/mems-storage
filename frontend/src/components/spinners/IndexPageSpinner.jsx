@@ -1,4 +1,4 @@
-import Card from 'react-bootstrap/Card';
+import React from 'react';
 import Spinner from 'react-bootstrap/Spinner';
 
 function IndexPageSpinner() {

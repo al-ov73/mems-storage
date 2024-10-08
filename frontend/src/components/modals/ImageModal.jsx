@@ -1,6 +1,4 @@
-import { useState } from "react";
-import FormData from 'form-data'
-import Form from 'react-bootstrap/Form';
+import React from "react";
 import Button from 'react-bootstrap/Button';
 import Modal from 'react-bootstrap/Modal';
 import Image from 'react-bootstrap/Image';
@@ -8,7 +6,7 @@ import Container from 'react-bootstrap/Container';
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
 import { useDispatch } from "react-redux";
-import { getMemes, deleteMeme, postLabel } from '../../utils/requests';
+import { getMemes, deleteMeme } from '../../utils/requests';
 import { setMemes } from "../../slices/memesSlice";
 import CommentPostForm from "../forms/CommetPostForm";
 import CommentsList from "../lists/CommentsList";

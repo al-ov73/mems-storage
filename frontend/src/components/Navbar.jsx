@@ -2,7 +2,7 @@ import Navbar from 'react-bootstrap/Navbar';
 import Nav from 'react-bootstrap/Nav';
 import Container from 'react-bootstrap/Container';
 import Button from 'react-bootstrap/Button';
-import { useState, } from "react";
+import React, { useState, } from "react";
 
 import ChatModal from './modals/ChatModal.jsx'
 import useAuth from '../hooks/index.js';

@@ -42,7 +42,7 @@ const MemeCreateForm = ({ show, onHide }) => {
             form.append('file', selectedImage);
             form.append('filename', selectedName);
             form.append('category', selectedCategory);
-            const postMemeResponse = await postMeme(form, access_token);
+            await postMeme(form, access_token);
             const getMemesResponse = await getMemes(access_token);
             dispatch(setMemes(getMemesResponse.data))
             onHide();

@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import { Col, Row } from "react-bootstrap"
 import { getComments } from "../../utils/requests";
 import SpinnerEl from "../spinners/SimpleSpinner";

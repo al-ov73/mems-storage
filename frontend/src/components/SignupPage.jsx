@@ -7,7 +7,6 @@ import { FormikProvider, useFormik, ErrorMessage } from "formik";
 import * as Yup from 'yup';
 
 import useAuth from '../hooks/index.js';
-import IndexNavbar from './Navbar.jsx';
 import { signupUser } from '../utils/requests.js';
 
 const SignupPage = () => {

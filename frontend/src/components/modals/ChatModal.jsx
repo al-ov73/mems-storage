@@ -1,9 +1,9 @@
+
 import Button from 'react-bootstrap/Button';
 import Modal from 'react-bootstrap/Modal';
-import { Col, Row } from "react-bootstrap"
 import { FormikProvider, useFormik } from "formik";
 import Form from 'react-bootstrap/Form';
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { getUserIdFromStorage } from '../../utils/utils';
 import { getMessages } from '../../utils/requests';
 

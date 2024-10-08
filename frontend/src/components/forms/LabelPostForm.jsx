@@ -1,7 +1,6 @@
-import { useState, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import FormData from 'form-data'
 import { useDispatch } from "react-redux";
-import Form from 'react-bootstrap/Form';
 import { getLabelsNames, getMemes, postLabel } from '../../utils/requests';
 import { setMemes } from '../../slices/memesSlice';
 import CreatableSelect from 'react-select/creatable';
@@ -9,7 +8,6 @@ import CreatableSelect from 'react-select/creatable';
 const LabelPostForm = ({ meme }) => {
   const [labelNames, setLabelNames] = useState([]);
 
-  const [inputValue, setInputValue] = useState('');
   const access_token = localStorage.getItem('user')
   const dispatch = useDispatch();
 
