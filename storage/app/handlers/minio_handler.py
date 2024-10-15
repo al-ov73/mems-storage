@@ -14,6 +14,8 @@ class MinioHandler:
             secret_key=secret_key,
             secure=secure
         )
+        if not self.client.bucket_exists(bucket):
+            self.client.make_bucket(bucket)
         self.bucket = bucket
 
     def upload_file(self, filename: str, file: BinaryIO, length: int) -> str:

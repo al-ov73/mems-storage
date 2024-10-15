@@ -35,6 +35,33 @@ async def get_meme_category(
         categories.append(category[0])
     return categories
 
+@router.get(
+    "/top_liked_memes",
+    # dependencies=[Depends(get_current_user)],
+)
+async def get_top_liked_memes(
+    limit: int = 100,
+    db: Session = Depends(get_db),
+    meme_repo: MemesRepository = Depends(get_memes_repository),
+    storage_repo: BaseStorageRepo = Depends(get_storage_repo),
+):
+    """
+    return list of memes with links to download
+    """
+    logger.info("Got request for top liked memes")
+    memes = await meme_repo.get_top_liked_memes(limit, db)
+    print('type memes', type(memes))
+    print('type 1 meme', type(memes[0]))
+    # print('memes', memes)
+    for meme in memes:
+        print(meme)
+        # row = meme.fetchone()
+        dict_row = dict(meme)
+        print(dict_row)
+    #     link = await storage_repo.get_link(meme.id)
+    #     meme.link = link
+    return memes
+
 
 @router.get(
     "",

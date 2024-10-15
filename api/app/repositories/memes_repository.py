@@ -1,7 +1,9 @@
+from ..models.like import Like
 from ..models.meme import Meme
 from ..models.comment import Comment
 from ..schemas.memes import MemeDbSchema
-from sqlalchemy.orm import Session, joinedload, selectinload, contains_eager
+from sqlalchemy import func
+from sqlalchemy.orm import Session, joinedload, selectinload, contains_eager, load_only
 
 
 class MemesRepository:
@@ -97,3 +99,29 @@ class MemesRepository:
             return meme
         except Exception:
             return f'error "{Exception}"'
+
+    async def get_top_liked_memes(
+            self,
+            limit: int,
+            db: Session,
+        ) -> list[MemeDbSchema]:
+            """
+            return list of top liked memes from db
+            """
+
+            memes = (
+                db.query(
+                    Meme.id,
+                    Meme.name,
+                    func.count(Like.id).label('likes_count')
+                    # func.count(Meme.likes)
+                )
+                .join(Like)
+                # .options(selectinload(Meme.likes))
+                .group_by(Meme.id, Meme.name)
+                .order_by(func.count(Like.id).desc())
+                # .options(load_only(Meme.id, Meme.name))
+                .limit(limit)
+                .all()
+            )
+            return memes
