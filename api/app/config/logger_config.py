@@ -1,7 +1,7 @@
 import logging
 
 
-def get_logger(name: str, level: str = logging.DEBUG):
+def get_logger(name: str, level: str = logging.INFO):
     strfmt = '[%(asctime)s] [%(name)s] [%(levelname)s] %(message)s'
     datefmt = '%Y-%m-%d %H:%M:%S'
 

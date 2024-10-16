@@ -47,6 +47,7 @@ async def get_top_liked_memes(
     """
     return list of memes with links to download
     """
+    print('top limit', limit)
     logger.info("Got request for top liked memes")
     memes = await meme_repo.get_top_liked_memes(limit, db)
     return memes

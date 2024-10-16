@@ -127,11 +127,12 @@ const getUser = async (userId, accessToken) => {
   return response.data;
 };
 
-const getTopLikedMemes = async (accessToken) => {
+const getTopLikedMemes = async (accessToken, limit) => {
   const response = await axios.get(`${routes.memesPath}/top_liked_memes`, {
     headers: {
       Authorization: `Bearer ${accessToken}`,
     },
+    params: {limit},
   })
   return response.data
 };

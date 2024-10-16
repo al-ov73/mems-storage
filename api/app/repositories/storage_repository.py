@@ -43,16 +43,16 @@ class StorageRepository(BaseStorageRepo):
         redis = get_redis()
         cache = await redis.get(filename)
         if cache is not None:
-            logger.info(f"Link for image {filename} from cache")
+            # logger.info(f"Link for image {filename} from cache")
             return cache
         async with aiohttp.ClientSession() as session:
             async with session.get(
                 f"{self.api_url}/images/link/{filename}"
             ) as resp:
                 link = await resp.text()
-                logger.info(
-                    f"Link for image {filename} from S3 service"
-                )
+                # logger.info(
+                #     f"Link for image {filename} from S3 service"
+                # )
                 await redis.set(filename, link)
                 return link
 

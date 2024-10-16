@@ -1,6 +1,9 @@
 import React, { useState, useEffect } from "react";
 import SpinnerEl from './spinners/SimpleSpinner';
+import { Col, Row } from "react-bootstrap"
 import { getTopLikedMemes } from "../utils/requests";
+
+const TOP_LIKED_COUNT = 3;
 
 
 const SidePanel = () => {
@@ -12,14 +15,12 @@ const SidePanel = () => {
   // get top liked memes
   useEffect(() => {
     const inner = async () => {
-      const response = await getTopLikedMemes(access_token);
+      const response = await getTopLikedMemes(access_token, TOP_LIKED_COUNT);
       setTopLikedMemes(response);
       setLoading(false);
     }
     inner();
   }, [])
-
-  console.log('topLikedMemes', topLikedMemes)
 
   if (isLoading) {
     return <SpinnerEl/>
@@ -31,16 +32,14 @@ const SidePanel = () => {
         <div className="sidebar-container">
           <div className="sidebar-nav">
             <div className="sidenav">
-
-              <a className="sidebar-item">
-                <div className="sidebar-item-content">
-                  <i className="fa fa-th-large sidebar-icon sidebar-icon-lg"></>
-                  <span>Dashboard</span>
-                  <div className="suffix">
-                    <div className="badge rounded-pill bg-danger">new</div>
-                  </div>
-                </div>
-              </a>
+              <h6>Топ лучших мемов</h6>
+              {topLikedMemes.map((meme) => {
+                return <Row key={meme.id}>
+                  <Col>
+                    <a href="">{meme.name}</a>: {meme.likes_count} лайков
+                  </Col>
+                </Row>
+              })}
 
             </div>
           </div>
