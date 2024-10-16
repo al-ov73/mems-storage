@@ -9,6 +9,7 @@ import NavbarPage from "./Navbar.jsx";
 import { setCategories } from "../slices/categoriesSlice.js";
 import MemesList from "./MemesList.jsx";
 import CategoryCard from "./cards/CategoryCard.jsx";
+import SidePanel from "./SidePanel.jsx";
 
 const IndexPage = () => {
   const dispatch = useDispatch();
@@ -42,17 +43,18 @@ const IndexPage = () => {
   return (
     <>
     <NavbarPage/>
-
-    <Container>
-    <Row xs="auto" className="justify-content-md-center my-4">
-
+    <Container className="d-flex">
+      <Container>
+        <Row xs="auto" className="justify-content-md-center my-4">
           <Col> <CategoryCard category={'ALL'}/></Col>
           {categories.map((category) => <Col key={category}><CategoryCard key={category} category={category}/></Col>)}
+        </Row>
+        <Row>
+          <MemesList/>
+        </Row>
+      </Container>
 
-      </Row>
-      <Row>
-        <MemesList/>
-      </Row>
+      <SidePanel/>
     </Container>
   </>
   );

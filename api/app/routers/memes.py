@@ -9,7 +9,7 @@ from ..config.dependencies import get_storage_repo, get_memes_repository
 from ..models.meme import Meme
 from ..repositories.memes_repository import MemesRepository
 from ..repositories.storage_repository import BaseStorageRepo
-from ..schemas.memes import MemeDbSchema, MemeSchema
+from ..schemas.memes import MemeDbSchema, MemeSchema, MemeTopLikedSchema
 from ..schemas.users import UserDbSchema
 from ..utils.auth_utils import get_current_user
 
@@ -43,23 +43,12 @@ async def get_top_liked_memes(
     limit: int = 100,
     db: Session = Depends(get_db),
     meme_repo: MemesRepository = Depends(get_memes_repository),
-    storage_repo: BaseStorageRepo = Depends(get_storage_repo),
-):
+) -> list[MemeTopLikedSchema]:
     """
     return list of memes with links to download
     """
     logger.info("Got request for top liked memes")
     memes = await meme_repo.get_top_liked_memes(limit, db)
-    print('type memes', type(memes))
-    print('type 1 meme', type(memes[0]))
-    # print('memes', memes)
-    for meme in memes:
-        print(meme)
-        # row = meme.fetchone()
-        dict_row = dict(meme)
-        print(dict_row)
-    #     link = await storage_repo.get_link(meme.id)
-    #     meme.link = link
     return memes
 
 

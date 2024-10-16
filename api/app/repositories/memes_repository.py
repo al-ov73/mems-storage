@@ -114,13 +114,10 @@ class MemesRepository:
                     Meme.id,
                     Meme.name,
                     func.count(Like.id).label('likes_count')
-                    # func.count(Meme.likes)
                 )
                 .join(Like)
-                # .options(selectinload(Meme.likes))
                 .group_by(Meme.id, Meme.name)
                 .order_by(func.count(Like.id).desc())
-                # .options(load_only(Meme.id, Meme.name))
                 .limit(limit)
                 .all()
             )

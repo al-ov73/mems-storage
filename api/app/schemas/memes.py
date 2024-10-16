@@ -20,3 +20,9 @@ class MemeDbSchema(BaseModel):
 
 class MemeSchema(MemeDbSchema):
     link: str
+
+
+class MemeTopLikedSchema(BaseModel):
+    id: int
+    name: str
+    likes_count: int
