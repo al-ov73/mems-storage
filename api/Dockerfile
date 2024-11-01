@@ -19,3 +19,5 @@ RUN apk add --no-cache curl bash make
 RUN curl -sSL https://install.python-poetry.org | python3 - && poetry --version
 
 RUN poetry install
+
+COPY . .
