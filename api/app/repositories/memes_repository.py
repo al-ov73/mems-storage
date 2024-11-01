@@ -3,7 +3,12 @@ from ..models.meme import Meme
 from ..models.comment import Comment
 from ..schemas.memes import MemeDbSchema
 from sqlalchemy import func
-from sqlalchemy.orm import Session, joinedload, selectinload, contains_eager, load_only
+from sqlalchemy.orm import (
+    Session,
+    joinedload,
+    selectinload,
+    contains_eager
+)
 
 
 class MemesRepository:
@@ -104,21 +109,20 @@ class MemesRepository:
             self,
             limit: int,
             db: Session,
-        ) -> list[MemeDbSchema]:
-            """
-            return list of top liked memes from db
-            """
-
-            memes = (
-                db.query(
-                    Meme.id,
-                    Meme.name,
-                    func.count(Like.id).label('likes_count')
-                )
-                .join(Like)
-                .group_by(Meme.id, Meme.name)
-                .order_by(func.count(Like.id).desc())
-                .limit(limit)
-                .all()
+    ) -> list[MemeDbSchema]:
+        """
+        return list of top liked memes from db
+        """
+        memes = (
+            db.query(
+                Meme.id,
+                Meme.name,
+                func.count(Like.id).label('likes_count')
             )
-            return memes
+            .join(Like)
+            .group_by(Meme.id, Meme.name)
+            .order_by(func.count(Like.id).desc())
+            .limit(limit)
+            .all()
+        )
+        return memes

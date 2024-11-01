@@ -1,7 +1,6 @@
 volumes:
   pgdata:
   minio_data:
-  pgadmin:
 
 services:
   frontend:
@@ -10,19 +9,21 @@ services:
     container_name: mems-frontend
     env_file:
       - .env-non-dev
+    ports:
+      - 3000:3000
     volumes:
       - ./frontend/public:/app/public
       - ./frontend/src:/app/src
-    network_mode: "host"
       
   db:
     image: postgres:15
     container_name: db_mems
     env_file:
       - .env-non-dev
+    ports:
+      - 5432:5432
     volumes:
       - pgdata:/var/lib/postgresql/data/
-    network_mode: "host"
       
   api:
     build:
@@ -30,17 +31,12 @@ services:
     env_file:
       - .env-non-dev
     container_name: mems-api
+    ports:
+      - 8000:8000
     volumes:
       - ./api:/api
     restart: always
-    depends_on:
-      - db
-      - s3_storage
-      - frontend
-      - redis
-      - pgadmin
     command: alembic upgrade head && gunicorn app.main:app --workers 4 --worker-class uvicorn.workers.UvicornWorker --bind=0.0.0.0:8000 --reload
-    network_mode: "host"
       
   s3_storage:
     build:
@@ -48,13 +44,14 @@ services:
     env_file:
       - .env-non-dev
     container_name: s3-storage-api
+    ports:
+      - 8888:8888
     restart: always
     volumes:
       - ./storage/app:/storage/app
     depends_on:
       - minio
     command: gunicorn app.main:app --workers 4 --worker-class uvicorn.workers.UvicornWorker --bind=0.0.0.0:8888 --reload
-    network_mode: "host"
       
   minio:
     container_name: minio
@@ -62,24 +59,13 @@ services:
     env_file:
       - .env-non-dev
     command: server /data --console-address ":9001"
+    ports:
+      - 9000:9000
+      - 9001:9001
     volumes:
       - minio_data:/data
-    network_mode: "host"
 
   redis:
     image: redis
     expose:
       - 6379
-    network_mode: "host"
-
-  pgadmin:
-    image: elestio/pgadmin:latest
-    restart: always
-    env_file:
-      - .env-non-dev
-    volumes:
-      - ./servers.json:/pgadmin4/servers.json
-    depends_on:
-      - db
-    network_mode: "host"
-    
