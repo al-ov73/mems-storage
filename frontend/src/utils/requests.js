@@ -137,6 +137,15 @@ const getTopLikedMemes = async (accessToken, limit) => {
   return response.data
 };
 
+const postQuestion = async (form, accessToken) => {
+  return axios.post(routes.questionPath, form, {
+    headers: {
+      Authorization: `Bearer ${accessToken}`,
+    },
+  })
+};
+
+
 export {
   getMemes,
   getMessages,
@@ -154,4 +163,5 @@ export {
   getLabelsNames,
   getUser,
   getTopLikedMemes,
+  postQuestion,
 };

@@ -1,15 +1,17 @@
 import React, { useState, useEffect } from "react";
 import SpinnerEl from './spinners/SimpleSpinner';
-import { Col, Row } from "react-bootstrap"
-import { getTopLikedMemes } from "../utils/requests";
+import { Col, Form, Row } from "react-bootstrap"
+import { getTopLikedMemes, postQuestion } from "../utils/requests";
 
 const TOP_LIKED_COUNT = 3;
 
 
 const SidePanel = () => {
   const [isLoading, setLoading] = useState(true);
+  const [isQuestionLoading, setQuestionLoading] = useState(false);
   const [topLikedMemes, setTopLikedMemes] = useState([])
-
+  const [question, setQuestion] = useState('');
+  const [gigaResponse, setGigaResponse] = useState('');
   const access_token = localStorage.getItem('user')
 
   // get top liked memes
@@ -40,7 +42,40 @@ const SidePanel = () => {
                   </Col>
                 </Row>
               })}
-
+              <h6>Задай любой вопрос:</h6>
+              <Row className="my-3">
+                <Col>
+                  <Form onSubmit={async (event) => {
+                    event.preventDefault();
+                    try {
+                      const form = new FormData();
+                      form.append('question', question);
+                      setQuestionLoading(true);
+                      const response = await postQuestion(form, access_token);
+                      setQuestionLoading(false);
+                      setGigaResponse(response.data)
+                      setQuestion('');
+                    } catch (error) {
+                      console.log('error->', error)
+                    }
+                  }}>
+                    <Form.Group>
+                      <Form.Control
+                        placeholder="Напишите вопрос ..."
+                        type="text"
+                        name="question"
+                        onChange={(event) => {
+                          setQuestion(event.target.value);
+                        }}
+                        value={question}
+                      />
+                    </Form.Group>
+                  </Form>
+                </Col>
+              </Row>
+              <Row>
+                {isQuestionLoading ? <SpinnerEl /> : gigaResponse}
+              </Row>
             </div>
           </div>
         </div>

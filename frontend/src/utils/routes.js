@@ -12,4 +12,5 @@ export default {
   chatPath: `${apiPath}/chat`,
   messagesPath: `${apiPath}/chat/messages`,
   apiStatic: `${apiPath}/static`,
+  questionPath: `${apiPath}/question`,
 };

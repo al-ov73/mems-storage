@@ -9,6 +9,7 @@ from .routers.labels import router as router_labels
 from .routers.comments import router as router_comments
 from .routers.likes import router as router_likes
 from .routers.users import router as router_users
+from .routers.aichat import router as router_aichat
 
 app = FastAPI()
 
@@ -27,46 +28,11 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-# app.mount("/static", StaticFiles(directory="app/static"), name="static")
-
-app.include_router(
-    router_auth,
-    prefix="/auth/jwt",
-    tags=["auth"],
-)
-
-app.include_router(
-    router_memes,
-    prefix="/memes",
-    tags=["memes"],
-)
-
-app.include_router(
-    router_chat,
-    prefix="/chat",
-    tags=["chat"],
-)
-
-app.include_router(
-    router_labels,
-    prefix="/labels",
-    tags=["labels"],
-)
-
-app.include_router(
-    router_comments,
-    prefix="/comments",
-    tags=["comments"],
-)
-
-app.include_router(
-    router_likes,
-    prefix="/likes",
-    tags=["likes"],
-)
-
-app.include_router(
-    router_users,
-    prefix="/users",
-    tags=["users"],
-)
+app.include_router(router_auth, prefix="/auth/jwt", tags=["auth"])
+app.include_router(router_memes, prefix="/memes", tags=["memes"])
+app.include_router(router_chat, prefix="/chat", tags=["chat"])
+app.include_router(router_labels, prefix="/labels", tags=["labels"])
+app.include_router(router_comments, prefix="/comments", tags=["comments"])
+app.include_router(router_likes, prefix="/likes", tags=["likes"])
+app.include_router(router_users, prefix="/users", tags=["users"])
+app.include_router(router_aichat, prefix="/question", tags=["aichat"])
