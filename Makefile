@@ -27,4 +27,6 @@ docker-stop:
 
 connect-frontend:
 		docker exec -it mems-frontend /bin/sh
-		
+
+serv:
+		ssh -R memes-storage:80:localhost:3000 serveo.net

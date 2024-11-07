@@ -16,6 +16,7 @@ origins = [
     "http://localhost:3000",
     "http://127.0.0.1:3000",
     "http://172.18.0.1:3000",
+    "https://memes-storage.serveo.net",
 ]
 
 app.add_middleware(
