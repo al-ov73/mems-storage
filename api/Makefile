@@ -1,6 +1,5 @@
 start:
-		# gunicorn app.main:app --workers 4 --worker-class uvicorn.workers.UvicornWorker --bind=0.0.0.0:8000 --reload
-		poetry run gunicorn app.main:app --workers 4 --worker-class uvicorn.workers.UvicornWorker --bind=0.0.0.0:8000 --reload
+		poetry run fastapi run app/main.py
 
 test:
 		pytest
