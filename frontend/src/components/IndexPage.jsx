@@ -1,27 +1,14 @@
 import React, { useEffect } from "react";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 import Container from 'react-bootstrap/Container';
 import Row from 'react-bootstrap/Row';
-import Col from 'react-bootstrap/Col';
 import { setMemes } from "../slices/memesSlice";
-import { getMemes, getCategories } from "../utils/requests.js";
+import { getMemes } from "../utils/requests.js";
 import NavbarPage from "./Navbar.jsx";
-import { setCategories } from "../slices/categoriesSlice.js";
 import MemesList from "./MemesList.jsx";
-import CategoryCard from "./cards/CategoryCard.jsx";
-import SidePanel from "./SidePanel.jsx";
 
 const IndexPage = () => {
   const dispatch = useDispatch();
-
-  // get categories
-  // useEffect(() => {
-  //   const inner = async () => {
-  //     const response = await getCategories(access_token)
-  //     dispatch(setCategories(response));
-  //   }
-  //   inner();
-  // }, [])
 
   // get memes
   useEffect(() => {
@@ -38,7 +25,6 @@ const IndexPage = () => {
     inner();
   }, []);
 
-  // const categories = useSelector((state) => state.categories.categories);
   const access_token = localStorage.getItem('user')
 
   return (
@@ -50,8 +36,6 @@ const IndexPage = () => {
           <MemesList/>
         </Row>
       </Container>
-
-      <SidePanel/>
     </Container>
   </>
   );

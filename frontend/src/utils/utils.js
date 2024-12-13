@@ -8,9 +8,9 @@ const getUsernameFromStorage = () => {
 };
 
 const getUserIdFromStorage = () => {
-  const token = localStorage.getItem('user');
-  const tokenData = jwtDecode(token);
-  const userId = tokenData.id;
+  // const token = localStorage.getItem('user');
+  // const tokenData = jwtDecode(token);
+  // const userId = tokenData.id;
   return '1';
 };
 

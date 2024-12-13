@@ -5,13 +5,10 @@ import Col from 'react-bootstrap/Col';
 
 
 const MemesList = () => {
-  const currentCategory = useSelector((state) => state.categories.currentCategory);
   let memes = useSelector((state) => state.memes.memes);
-
-  memes = (currentCategory === 'ALL') ? 
-          memes :
-          memes.filter((meme) => meme.category === currentCategory)
-
+  if (memes.length === 0) {
+        return "мемов пока нет"
+  }
   return memes.map((meme) => {
               return <Col className="mx-1 my-1" key={meme.id}>
                       <ImageCard meme={meme}/>

@@ -31,28 +31,28 @@ function AuthProvider({ children }) {
   );
 }
 
-function PrivateRoute({ children }) {
-  const auth = useAuth();
-  const location = useLocation();
-  const [loading, setLoading] = useState(true);
+// function PrivateRoute({ children }) {
+//   const auth = useAuth();
+//   const location = useLocation();
+//   const [loading, setLoading] = useState(true);
 
-  const access_token = localStorage.getItem('user');
+//   const access_token = localStorage.getItem('user');
 
-  useEffect(() => {
-    const inner = async () => {
-      auth.loggedIn = await validateToken(access_token);
-      setLoading(false);
-    };
-    inner();
-  }, []);
+//   useEffect(() => {
+//     const inner = async () => {
+//       auth.loggedIn = await validateToken(access_token);
+//       setLoading(false);
+//     };
+//     inner();
+//   }, []);
 
-  if (!access_token) {
-    return <Navigate to="/login" state={{ from: location }} />;
-  }
+//   if (!access_token) {
+//     return <Navigate to="/login" state={{ from: location }} />;
+//   }
 
-  const content = auth.loggedIn ? children : <Navigate to="/login" state={{ from: location }} />;
-  return loading ? <IndexPageSpinner/> : content;
-}
+//   const content = auth.loggedIn ? children : <Navigate to="/login" state={{ from: location }} />;
+//   return loading ? <IndexPageSpinner/> : content;
+// }
 
 function App() {
   return (
