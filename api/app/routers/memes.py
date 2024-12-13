@@ -20,7 +20,7 @@ logger = get_logger(__name__)
 
 @router.get(
     "/categories",
-    dependencies=[Depends(get_current_user)],
+    # dependencies=[Depends(get_current_user)],
 )
 async def get_meme_category(
     db: Session = Depends(get_db),
@@ -38,7 +38,7 @@ async def get_meme_category(
 
 @router.get(
     "/top_liked_memes",
-    dependencies=[Depends(get_current_user)],
+    # dependencies=[Depends(get_current_user)],
 )
 async def get_top_liked_memes(
     limit: int = 100,
@@ -56,7 +56,7 @@ async def get_top_liked_memes(
 
 @router.get(
     "",
-    dependencies=[Depends(get_current_user)],
+    # dependencies=[Depends(get_current_user)],
 )
 async def get_memes(
     skip: int = 0,
