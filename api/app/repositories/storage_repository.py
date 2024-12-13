@@ -6,7 +6,7 @@ from tempfile import SpooledTemporaryFile
 from typing import BinaryIO
 
 from ..config.logger_config import get_logger
-from ..config.redis_config import get_redis
+# from ..config.redis_config import get_redis
 
 logger = get_logger(__name__)
 
@@ -40,11 +40,11 @@ class StorageRepository(BaseStorageRepo):
         file_id: int,
     ) -> str:
         filename = str(file_id)
-        redis = get_redis()
-        cache = await redis.get(filename)
-        if cache is not None:
+        # redis = get_redis()
+        # cache = await redis.get(filename)
+        # if cache is not None:
             # logger.info(f"Link for image {filename} from cache")
-            return cache
+            # return cache
         async with aiohttp.ClientSession() as session:
             async with session.get(
                 f"{self.api_url}/images/link/{filename}"
@@ -53,7 +53,7 @@ class StorageRepository(BaseStorageRepo):
                 # logger.info(
                 #     f"Link for image {filename} from S3 service"
                 # )
-                await redis.set(filename, link)
+                # await redis.set(filename, link)
                 return link
 
     async def get_image(

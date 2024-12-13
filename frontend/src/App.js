@@ -64,9 +64,9 @@ function App() {
           <Route
             path="/"
             element={(
-              <PrivateRoute>
+              // <PrivateRoute>
                 <IndexPage />
-              </PrivateRoute>
+              // </PrivateRoute>
                   )}
           />
         </Routes>

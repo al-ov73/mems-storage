@@ -4,12 +4,12 @@ import Container from 'react-bootstrap/Container';
 import Button from 'react-bootstrap/Button';
 import React, { useState, } from "react";
 
-import ChatModal from './modals/ChatModal.jsx'
+// import ChatModal from './modals/ChatModal.jsx'
 import useAuth from '../hooks/index.js';
 import { useNavigate } from "react-router-dom";
 import MemeCreateForm from "./forms/MemeCreateForm.jsx";
 import { getUsernameFromStorage } from '../utils/utils.js';
-import AccountModal from './modals/AccountModal.jsx';
+// import AccountModal from './modals/AccountModal.jsx';
 
 const NavbarPage = () => {
   const auth = useAuth();
@@ -19,11 +19,11 @@ const NavbarPage = () => {
   const [createFormShow, setCreateFormShow] = useState(false);
   const username = getUsernameFromStorage()
 
-  const handleLogout = () => {
-    localStorage.removeItem('user');
-    auth.loggedIn = false;
-    return navigate('/login');
-  }
+  // const handleLogout = () => {
+  //   localStorage.removeItem('user');
+  //   auth.loggedIn = false;
+  //   return navigate('/login');
+  // }
 
   return <>
       <Navbar bg="white" data-bs-theme="light" className="shadow-lg justify-content-between">
@@ -38,14 +38,14 @@ const NavbarPage = () => {
                     Добавить мем
           </Button>
           
-            <Button variant="outline-success" onClick={() => setModalChatShow(true)}>
+            {/* <Button variant="outline-success" onClick={() => setModalChatShow(true)}>
               Чатик
-            </Button>
+            </Button> */}
             <Nav>
             <Navbar.Brand>Здравствуйте, {username}</Navbar.Brand>
-            <Button className="mx-4" type="submit" onClick={handleLogout}>
+            {/* <Button className="mx-4" type="submit" onClick={handleLogout}>
               Выйти
-            </Button>
+            </Button> */}
             <Button className="mx-4" type="submit" onClick={() => setModalAccount(true)}>
               Аккаунт
             </Button>
@@ -53,20 +53,11 @@ const NavbarPage = () => {
         </Container>
       </Navbar>
 
-      <ChatModal
-        show={modalChatShow}
-        onHide={() => setModalChatShow(false)}
-      />
-
       <MemeCreateForm
         show={createFormShow}
         onHide={() => setCreateFormShow(false)}
       />
 
-      <AccountModal
-        show={modalAccount}
-        onHide={() => setModalAccount(false)}
-      />
     </>
 }
 

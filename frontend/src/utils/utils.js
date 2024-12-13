@@ -1,17 +1,17 @@
 import { jwtDecode } from 'jwt-decode';
 
 const getUsernameFromStorage = () => {
-  const token = localStorage.getItem('user');
-  const tokenData = jwtDecode(token);
-  const { username } = tokenData;
-  return username;
+  // const token = localStorage.getItem('user');
+  // const tokenData = jwtDecode(token);
+  // const { username } = tokenData;
+  return 'user';
 };
 
 const getUserIdFromStorage = () => {
   const token = localStorage.getItem('user');
   const tokenData = jwtDecode(token);
   const userId = tokenData.id;
-  return userId;
+  return '1';
 };
 
 const convertDateTime = (isoString) => {

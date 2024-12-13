@@ -37,7 +37,7 @@ services:
       - db
       - s3_storage
       - frontend
-      - redis
+      # - redis
       - pgadmin
     command: gunicorn app.main:app --workers 4 --worker-class uvicorn.workers.UvicornWorker --bind=0.0.0.0:8000 --reload
     network_mode: "host"
@@ -66,11 +66,11 @@ services:
       - minio_data:/data
     network_mode: "host"
 
-  redis:
-    image: redis
-    expose:
-      - 6379
-    network_mode: "host"
+  # redis:
+  #   image: redis
+  #   expose:
+  #     - 6379
+  #   network_mode: "host"
 
   pgadmin:
     image: elestio/pgadmin:latest

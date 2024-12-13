@@ -15,13 +15,13 @@ const IndexPage = () => {
   const dispatch = useDispatch();
 
   // get categories
-  useEffect(() => {
-    const inner = async () => {
-      const response = await getCategories(access_token)
-      dispatch(setCategories(response));
-    }
-    inner();
-  }, [])
+  // useEffect(() => {
+  //   const inner = async () => {
+  //     const response = await getCategories(access_token)
+  //     dispatch(setCategories(response));
+  //   }
+  //   inner();
+  // }, [])
 
   // get memes
   useEffect(() => {
@@ -32,12 +32,13 @@ const IndexPage = () => {
       } catch (e) {
         console.log('memes get error');
         console.log(e)
+        dispatch(setMemes([]))
       }      
     }
     inner();
   }, []);
 
-  const categories = useSelector((state) => state.categories.categories);
+  // const categories = useSelector((state) => state.categories.categories);
   const access_token = localStorage.getItem('user')
 
   return (
@@ -45,10 +46,6 @@ const IndexPage = () => {
     <NavbarPage/>
     <Container className="d-flex">
       <Container>
-        <Row xs="auto" className="justify-content-md-center my-4">
-          <Col> <CategoryCard category={'ALL'}/></Col>
-          {categories.map((category) => <Col key={category}><CategoryCard key={category} category={category}/></Col>)}
-        </Row>
         <Row>
           <MemesList/>
         </Row>
