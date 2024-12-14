@@ -31,4 +31,11 @@ ALGORITHM = "HS256"
 ACCESS_TOKEN_EXPIRE_MINUTES = 120
 
 # Static files directory
-STATIC_FILES = 'app/static/'
+STATIC_FILES = 'app/static/photos/'
+
+# parser config
+API_ID = os.getenv("API_ID")
+API_HASH = os.getenv("API_HASH")
+CHANNEL = os.getenv("CHANNEL")
+YA_TOKEN = os.getenv("YA_TOKEN")
+CHANNELS = os.getenv("CHANNELS").split(' ')

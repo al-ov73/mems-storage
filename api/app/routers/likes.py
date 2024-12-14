@@ -16,7 +16,7 @@ router = APIRouter()
 
 @router.get(
     "",
-    dependencies=[Depends(get_current_user)],
+    # dependencies=[Depends(get_current_user)],
 )
 async def get_likes(
     db: Session = Depends(get_db),
@@ -35,7 +35,7 @@ async def post_like(
     db: Session = Depends(get_db),
     likes_repo: LikesRepository = Depends(get_likes_repository),
     meme_repo: MemesRepository = Depends(get_memes_repository),
-    user: UserDbSchema = Depends(get_current_user),
+    # user: UserDbSchema = Depends(get_current_user),
 ) -> MemeDbSchema:
     """
     add like to db

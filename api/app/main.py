@@ -1,10 +1,9 @@
 from fastapi import FastAPI
+from fastapi.staticfiles import StaticFiles
 from fastapi.middleware.cors import CORSMiddleware
 # from fastapi.staticfiles import StaticFiles
 
 from .routers.memes import router as router_memes
-from .routers.auth import router as router_auth
-from .routers.chat import router as router_chat
 from .routers.labels import router as router_labels
 from .routers.comments import router as router_comments
 from .routers.likes import router as router_likes
@@ -16,8 +15,6 @@ app = FastAPI()
 origins = [
     "http://localhost:3000",
     "http://127.0.0.1:3000",
-    "http://172.18.0.1:3000",
-    "https://memes-storage.serveo.net",
     "http://45.80.71.178:3000",
 ]
 
@@ -29,9 +26,9 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-app.include_router(router_auth, prefix="/auth/jwt", tags=["auth"])
+app.mount('/static', StaticFiles(directory='app/static'), 'static')
+
 app.include_router(router_memes, prefix="/memes", tags=["memes"])
-app.include_router(router_chat, prefix="/chat", tags=["chat"])
 app.include_router(router_labels, prefix="/labels", tags=["labels"])
 app.include_router(router_comments, prefix="/comments", tags=["comments"])
 app.include_router(router_likes, prefix="/likes", tags=["likes"])

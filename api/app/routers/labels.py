@@ -16,7 +16,7 @@ router = APIRouter()
 
 @router.get(
     "",
-    dependencies=[Depends(get_current_user)],
+    # dependencies=[Depends(get_current_user)],
 )
 async def get_labels(
     skip: int = 0,

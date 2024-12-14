@@ -50,9 +50,6 @@ const ImageModal = ({ meme, show, onHide }) => {
                 alt='Картинка не загрузилась:('/>
       </Modal.Body>
       <Modal.Footer>
-      <footer className="blockquote-footer">
-           Загрузил {meme.author.username} {dateFormat}
-          </footer>
       <Container>
       <Row className="my-3">
         <Col className="my-1" sm={6}><LikeButton meme={meme}/></Col>

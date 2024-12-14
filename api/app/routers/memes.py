@@ -71,9 +71,9 @@ async def get_memes(
     logger.info("Got request for all memes")
     memes = await meme_repo.get_memes(skip, limit, db)
     logger.debug(f"Got {len(memes)} memes from db")
-    for meme in memes:
-        link = await storage_repo.get_link(meme.id)
-        meme.link = link
+    # for meme in memes:
+    #     link = await storage_repo.get_link(meme.id)
+    #     meme.link = link
     return memes
 
 

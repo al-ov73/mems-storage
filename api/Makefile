@@ -15,3 +15,6 @@ migration:
 
 migrate:
 		alembic upgrade head
+
+parse:
+		poetry run python3 parse.py

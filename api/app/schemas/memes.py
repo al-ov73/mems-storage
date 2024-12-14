@@ -10,7 +10,6 @@ from .users import UserSchema
 class MemeDbSchema(BaseModel):
     id: int
     name: str
-    author: UserSchema
     created_at: datetime
     category: str
     meme_labels: list[LabelSchema]

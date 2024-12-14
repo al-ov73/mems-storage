@@ -21,9 +21,4 @@ class User(Base):
     last_name: Mapped[Optional[str]]
     registered_at: Mapped[created_at]
     hashed_password: Mapped[str] = mapped_column(nullable=False)
-    memes: Mapped["Meme"] = relationship(  # noqa: F821
-        back_populates="author"
-    )
-    messages: Mapped["Message"] = relationship(  # noqa: F821
-        back_populates="author"
-    )
+    messages: Mapped["Message"] = relationship(back_populates="author")

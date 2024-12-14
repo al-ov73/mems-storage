@@ -14,7 +14,7 @@ router = APIRouter()
 
 @router.get(
     "",
-    dependencies=[Depends(get_current_user)],
+    # dependencies=[Depends(get_current_user)],
 )
 async def get_comments(
     skip: int = 0,
@@ -31,7 +31,7 @@ async def get_comments(
 
 @router.get(
     "/meme/{meme_id}",
-    dependencies=[Depends(get_current_user)],
+    # dependencies=[Depends(get_current_user)],
 )
 async def get_comments_by_meme_id(
     meme_id: str,
@@ -52,7 +52,7 @@ async def post_comment(
     db: Session = Depends(get_db),
     comments_repo: CommentsRepository = Depends(get_comments_repository),
     meme_repo: MemesRepository = Depends(get_memes_repository),
-    user: UserDbSchema = Depends(get_current_user),
+    # user: UserDbSchema = Depends(get_current_user),
 ) -> MemeDbSchema:
     """
     add comment to db
