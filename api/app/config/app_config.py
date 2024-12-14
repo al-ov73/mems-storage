@@ -31,7 +31,8 @@ ALGORITHM = "HS256"
 ACCESS_TOKEN_EXPIRE_MINUTES = 120
 
 # Static files directory
-STATIC_FILES = 'app/static/photos/'
+STATIC_DIR = 'app/static'
+STATIC_URL = 'static'
 
 # parser config
 API_ID = os.getenv("API_ID")

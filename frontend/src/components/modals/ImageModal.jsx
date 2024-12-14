@@ -44,7 +44,7 @@ const ImageModal = ({ meme, show, onHide }) => {
       </Modal.Header>
       <Modal.Body>
       <Image 
-                height="330rem"
+                width="100%"
                 src={meme.link}
                 className="rounded mx-auto d-block"
                 alt='Картинка не загрузилась:('/>

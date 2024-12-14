@@ -1,7 +1,8 @@
 from fastapi import FastAPI
 from fastapi.staticfiles import StaticFiles
 from fastapi.middleware.cors import CORSMiddleware
-# from fastapi.staticfiles import StaticFiles
+
+from .config.app_config import STATIC_DIR, STATIC_URL
 
 from .routers.memes import router as router_memes
 from .routers.labels import router as router_labels
@@ -26,7 +27,7 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-app.mount('/static', StaticFiles(directory='app/static'), 'static')
+app.mount('/static', StaticFiles(directory=STATIC_DIR), STATIC_URL)
 
 app.include_router(router_memes, prefix="/memes", tags=["memes"])
 app.include_router(router_labels, prefix="/labels", tags=["labels"])

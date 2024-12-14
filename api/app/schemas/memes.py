@@ -9,19 +9,10 @@ from .users import UserSchema
 
 class MemeDbSchema(BaseModel):
     id: int
-    name: str
+    source_type: str
+    source_name: str
     created_at: datetime
     category: str
     meme_labels: list[LabelSchema]
     likes: list[LikeSchema]
     comments: list[CommentSchema]
-
-
-class MemeSchema(MemeDbSchema):
-    link: str
-
-
-class MemeTopLikedSchema(BaseModel):
-    id: int
-    name: str
-    likes_count: int
