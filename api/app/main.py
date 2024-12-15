@@ -1,6 +1,10 @@
+from contextlib import asynccontextmanager
+from fastapi import BackgroundTasks, FastAPI
 from fastapi import FastAPI
 from fastapi.staticfiles import StaticFiles
 from fastapi.middleware.cors import CORSMiddleware
+
+from .parsers.telegram_parser import parse_telegram_channels
 
 from .config.app_config import STATIC_DIR, STATIC_URL
 
@@ -11,6 +15,7 @@ from .routers.comments import router as router_comments
 from .routers.likes import router as router_likes
 from .routers.users import router as router_users
 from .routers.aichat import router as router_aichat
+
 
 app = FastAPI()
 
@@ -29,6 +34,8 @@ app.add_middleware(
 )
 
 app.mount('/static', StaticFiles(directory=STATIC_DIR), STATIC_URL)
+
+
 
 app.include_router(router_auth, prefix="/auth/jwt", tags=["auth"])
 app.include_router(router_memes, prefix="/memes", tags=["memes"])
