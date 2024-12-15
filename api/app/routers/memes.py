@@ -7,6 +7,7 @@ from ..config.logger_config import get_logger
 from ..config.db_config import get_db
 from ..config.dependencies import get_storage_repo, get_memes_repository
 from ..models.meme import Meme
+from ..parsers.telegram_parser import parse_telegram_channels
 from ..repositories.memes_repository import MemesRepository
 from ..repositories.storage_repository import BaseStorageRepo
 from ..schemas.memes import MemeDbSchema
@@ -35,6 +36,11 @@ async def get_memes(
     memes = await meme_repo.get_memes(skip, limit, db)
     logger.debug(f"Got {len(memes)} memes from db")
     return memes
+
+@router.get("/parse")
+async def parse_memes():
+    await parse_telegram_channels()
+    return {"result": "ok"}
 
 
 # @router.get("/{meme_id}", dependencies=[Depends(get_current_user)])
