@@ -5,7 +5,7 @@ import Row from 'react-bootstrap/Row';
 import { setMemes } from "../slices/memesSlice";
 import { getMemes } from "../utils/requests.js";
 import NavbarPage from "./Navbar.jsx";
-import MemesList from "./MemesList.jsx";
+import MemesList from "./lists/MemesList.jsx";
 
 const IndexPage = () => {
   const dispatch = useDispatch();
