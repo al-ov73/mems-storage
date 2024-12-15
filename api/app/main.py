@@ -4,6 +4,7 @@ from fastapi.middleware.cors import CORSMiddleware
 
 from .config.app_config import STATIC_DIR, STATIC_URL
 
+from .routers.auth import router as router_auth
 from .routers.memes import router as router_memes
 from .routers.labels import router as router_labels
 from .routers.comments import router as router_comments
@@ -29,6 +30,7 @@ app.add_middleware(
 
 app.mount('/static', StaticFiles(directory=STATIC_DIR), STATIC_URL)
 
+app.include_router(router_auth, prefix="/auth/jwt", tags=["auth"])
 app.include_router(router_memes, prefix="/memes", tags=["memes"])
 app.include_router(router_labels, prefix="/labels", tags=["labels"])
 app.include_router(router_comments, prefix="/comments", tags=["comments"])

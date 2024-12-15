@@ -29,7 +29,7 @@ const IndexPage = () => {
 
   return (
     <>
-    <NavbarPage/>
+    <NavbarPage full={true}/>
     <Container className="d-flex">
       <Container>
         <Row>

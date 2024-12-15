@@ -8,6 +8,7 @@ import * as Yup from 'yup';
 import useAuth from '../hooks/index.js';
 import { loginUser } from '../utils/requests.js';
 import SpinnerEl from './spinners/SimpleSpinner.jsx';
+import NavbarPage from "./Navbar.jsx";
 
 
 const LoginPage = () => {
@@ -53,6 +54,7 @@ const LoginPage = () => {
   });
 
   return <>
+    <NavbarPage full={false}/>
     <div className='d-flex flex-column h-100'>
       <div className='container-fluid h-100'>
         <div className='row justify-content-center align-content-center h-100'>

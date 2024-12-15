@@ -12,7 +12,6 @@ class MemeDbSchema(BaseModel):
     source_type: str
     source_name: str
     created_at: datetime
-    category: str
     meme_labels: list[LabelSchema]
     likes: list[LikeSchema]
     comments: list[CommentSchema]

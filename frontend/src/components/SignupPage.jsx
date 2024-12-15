@@ -4,6 +4,7 @@ import Form from 'react-bootstrap/Form';
 import { useDispatch } from 'react-redux'
 import { useNavigate } from "react-router-dom";
 import { FormikProvider, useFormik, ErrorMessage } from "formik";
+import NavbarPage from "./Navbar.jsx";
 import * as Yup from 'yup';
 
 import useAuth from '../hooks/index.js';
@@ -63,6 +64,7 @@ const SignupPage = () => {
   });
 
   return <>
+    <NavbarPage full={false}/>
     <div className='d-flex flex-column h-100'>
       <div className='container-fluid h-100'>
         <div className='row justify-content-center align-content-center h-100'>

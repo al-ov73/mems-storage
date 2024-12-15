@@ -1,17 +1,26 @@
 import { jwtDecode } from 'jwt-decode';
 
 const getUsernameFromStorage = () => {
-  // const token = localStorage.getItem('user');
-  // const tokenData = jwtDecode(token);
-  // const { username } = tokenData;
-  return 'user';
+  try {
+    const token = localStorage.getItem('user');
+    const tokenData = jwtDecode(token);
+    const { username } = tokenData;
+    return username;
+  } catch (InvalidTokenError) {
+    return null
+  }
+  
 };
 
 const getUserIdFromStorage = () => {
-  // const token = localStorage.getItem('user');
-  // const tokenData = jwtDecode(token);
-  // const userId = tokenData.id;
-  return '1';
+  try {
+    const token = localStorage.getItem('user');
+    const tokenData = jwtDecode(token);
+    const userId = tokenData.id;
+    return userId;
+  } catch (InvalidTokenError) {
+    return null
+  }
 };
 
 const convertDateTime = (isoString) => {
