@@ -6,7 +6,7 @@ import Col from 'react-bootstrap/Col';
 import React, { useState } from "react";
 import ImageModal from '../modals/ImageModal';
 
-const ImageCard = ({ meme })  => {
+const ImageCard = ({ meme, index })  => {
   const [modalShow, setModalShow] = useState(false);
 
   return (
@@ -20,6 +20,7 @@ const ImageCard = ({ meme })  => {
         />
       <ImageModal
         meme={meme}
+        index={index}
         show={modalShow}
         onHide={() => setModalShow(false)}
       />

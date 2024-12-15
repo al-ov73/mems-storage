@@ -5,6 +5,8 @@ import Image from 'react-bootstrap/Image';
 import Container from 'react-bootstrap/Container';
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
+import { useSelector } from "react-redux";
+import Carousel from 'react-bootstrap/Carousel';
 import { useDispatch } from "react-redux";
 import { getMemes, deleteMeme } from '../../utils/requests';
 import { setMemes } from "../../slices/memesSlice";
@@ -14,10 +16,11 @@ import LikeButton from "../LikeButton";
 import LabelPostForm from "../forms/LabelPostForm";
 import { convertDateTime, getUserIdFromStorage } from "../../utils/utils";
 
-const ImageModal = ({ meme, show, onHide }) => {
+const ImageModal = ({ meme, index, show, onHide }) => {
   const access_token = localStorage.getItem('user')
   const dispatch = useDispatch();
   const userId = getUserIdFromStorage();
+  let memes = useSelector((state) => state.memes.memes);
 
   const handleDelete = async (id, token) => {
     const deleteResponse = await deleteMeme(id, token)
@@ -37,6 +40,19 @@ const ImageModal = ({ meme, show, onHide }) => {
       aria-labelledby="contained-modal-title-vcenter"
       centered
     >
+            <Carousel controls indicators activeIndex={index}>
+              {memes.map(meme => (
+                  <Carousel.Item key={meme.id}>
+                    <img
+                      className="testimonialImages d-block w-50"
+                      src={meme.link}
+                    />
+                  </Carousel.Item>
+                ))}
+
+        </Carousel>
+
+
       <Modal.Header closeButton>
         <Modal.Title id="contained-modal-title-vcenter">
           {meme.name}

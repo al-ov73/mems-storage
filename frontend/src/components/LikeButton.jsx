@@ -6,12 +6,14 @@ import { getUserIdFromStorage } from "../utils/utils";
 import { setMemes } from "../slices/memesSlice";
 import { useDispatch } from "react-redux";
 import HeartComponent from "./Heart";
+import { getUsernameFromStorage } from '../utils/utils.js';
+
 
 const LikeButton = ({meme}) => {
   const dispatch = useDispatch();
   const access_token = localStorage.getItem('user');
   const userId = getUserIdFromStorage();
-
+  const username = getUsernameFromStorage()
   let userLike = meme.likes.find((like) => like.author_id === userId)
   const buttonVariant = userLike ? "danger" : "outline-danger"
 
@@ -30,7 +32,8 @@ const LikeButton = ({meme}) => {
   return <>
     <Button 
           variant={buttonVariant}
-          onClick={likeHandler}>
+          onClick={likeHandler}
+          disabled={!Boolean(username)}>
     {meme.likes.length > 0 && meme.likes.length} <HeartComponent/> Нравится
     </Button>
   </>
