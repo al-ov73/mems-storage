@@ -8,7 +8,7 @@ from telethon import TelegramClient
 meme_repo = get_memes_repository()
 db = next(get_db())
 
-CHANNEL_FILES_LIMIT = 3
+CHANNEL_FILES_LIMIT = config.PARSE_LIMIT
 os.makedirs(config.STATIC_DIR, exist_ok=True)
 
 async def parse_telegram_channels() -> None:
