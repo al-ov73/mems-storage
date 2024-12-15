@@ -27,6 +27,7 @@ async def parse_telegram_channels() -> None:
                     if not os.path.exists(f"{filepath}.jpg"):
                         
                         new_meme = Meme(
+                            name=f"{filename}.jpg",
                             source_type="tg",
                             source_name=message._chat.username,
                             link=f"{API_URL}/{STATIC_URL}/photos/{filename}.jpg",

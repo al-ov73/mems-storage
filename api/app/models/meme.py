@@ -9,8 +9,9 @@ class Meme(Base):
     __tablename__ = 'memes'
 
     id: Mapped[intpk]
-    source_name: Mapped[str] = mapped_column(nullable=False)
-    source_type: Mapped[str] = mapped_column(nullable=False)
+    name: Mapped[str] = mapped_column(nullable=False)
+    source_name: Mapped[str] = mapped_column(nullable=True)
+    source_type: Mapped[str] = mapped_column(nullable=True)
     link: Mapped[str] = mapped_column(unique=True, nullable=False)
     created_at: Mapped[created_at]
 
@@ -21,6 +22,7 @@ class Meme(Base):
     def to_dict(self):
         return {
             'id': self.id,
+            'name': self.name,
             'source_name': self.source_name,
             'source_type': self.source_type,
             'link': self.link,
