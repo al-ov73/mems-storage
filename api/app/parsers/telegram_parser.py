@@ -11,7 +11,8 @@ db = next(get_db())
 CHANNEL_FILES_LIMIT = int(config.PARSE_LIMIT)
 os.makedirs(config.STATIC_DIR, exist_ok=True)
 
-async def parse_telegram_channels() -> None:
+async def parse_telegram_channels() -> int:
+    count = 0
     async with TelegramClient('session_name', config.API_ID, config.API_HASH,
                               system_version='4.16.30-vxCUSTOM') as client:
         for channel in config.CHANNELS:
@@ -24,7 +25,7 @@ async def parse_telegram_channels() -> None:
                     filename = f"tg_{message._chat.username}_{message.photo.id}"
                     filepath = f"{config.STATIC_DIR}/photos/{filename}"
                     if not os.path.exists(f"{filepath}.jpg"):
-                        
+
                         new_meme = Meme(
                             name=f"{filename}.jpg",
                             source_type="tg",
@@ -35,3 +36,4 @@ async def parse_telegram_channels() -> None:
                         print(f"meme {meme_in_db} added to db")
                         await client.download_media(message.photo, filepath)
                         print(f"file {filepath} downloaded")
+    return count

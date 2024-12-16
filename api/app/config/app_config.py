@@ -41,3 +41,6 @@ CHANNEL = os.getenv("CHANNEL")
 YA_TOKEN = os.getenv("YA_TOKEN")
 CHANNELS = os.getenv("CHANNELS").split(' ')
 PARSE_LIMIT = os.getenv("PARSE_LIMIT")
+
+# telegram bot config
+BOT_TOKEN = os.getenv("BOT_TOKEN")

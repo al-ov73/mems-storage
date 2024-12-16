@@ -1,5 +1,5 @@
 import asyncio
-from app.parsers.telegram_parser import parse_telegram_channels
+from .app.parsers.telegram_parser import parse_telegram_channels
 
 
 async def parse():

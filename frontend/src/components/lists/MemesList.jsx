@@ -76,7 +76,7 @@ const MemesList = () => {
                     {memes.map(meme => (
                         <Carousel.Item key={meme.id}>
                           <img
-                            width="100%"
+                            height="80%"
                             src={meme.link}
                             className="rounded mx-auto d-block"
                             alt='Картинка не загрузилась:('
