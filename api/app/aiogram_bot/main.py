@@ -7,6 +7,7 @@ from aiogram.types import Message, ReplyKeyboardMarkup
 from aiogram.types import InlineKeyboardButton, InlineKeyboardMarkup
 from aiogram.types import CallbackQuery
 import asyncio
+import os
 from ..config import app_config as config
 from ...parse import parse
 
@@ -28,6 +29,12 @@ async def parse_command(message: Message):
     await message.answer("Вы вызвали команду parse")
     count = await parse()
     await message.answer(f"count: {count}")
+
+
+@dp.message(Command('stat'))
+async def parse_command(message: Message):
+    image_count = len(os.listdir(path=f"{STATIC_DIR}/photos"))
+    await message.answer(f"картинок сейчас: {image_count}")
 
 async def start_bot():
     loop = asyncio.get_event_loop()
