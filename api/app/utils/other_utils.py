@@ -12,3 +12,14 @@ def clean_dir(dir_path: str) -> None:
                 shutil.rmtree(file_path)
         except Exception as e:
             print('Failed to delete %s. Reason: %s' % (file_path, e))
+
+def get_folder_size(path):
+    total_size = 0
+    for dirpath, dirnames, filenames in os.walk(path):
+        for filename in filenames:
+            file_path = os.path.join(dirpath, filename)
+            try:
+                total_size += os.path.getsize(file_path)
+            except OSError as e:
+                print(f"Ошибка при получении размера файла {file_path}: {e}")
+    return total_size

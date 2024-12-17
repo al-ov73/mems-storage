@@ -44,3 +44,5 @@ PARSE_LIMIT = os.getenv("PARSE_LIMIT")
 
 # telegram bot config
 BOT_TOKEN = os.getenv("BOT_TOKEN")
+CHAT_ID = os.getenv("CHAT_ID")
+MY_API_ID = os.getenv("MY_API_ID")
