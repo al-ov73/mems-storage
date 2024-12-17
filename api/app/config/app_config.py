@@ -4,6 +4,8 @@ from dotenv import load_dotenv
 
 load_dotenv()
 
+ENV = os.getenv("ENV")
+
 # Postgress config
 DB_HOST = os.getenv("DB_HOST")
 DB_PORT = os.getenv("DB_PORT")
@@ -31,18 +33,20 @@ ALGORITHM = "HS256"
 ACCESS_TOKEN_EXPIRE_MINUTES = 120
 
 # Static files directory
-STATIC_DIR = 'app/static'
-STATIC_URL = 'static'
+STATIC_DIR = "app/static"
+STATIC_URL = "static"
 
 # parser config
 API_ID = os.getenv("API_ID")
 API_HASH = os.getenv("API_HASH")
 CHANNEL = os.getenv("CHANNEL")
 YA_TOKEN = os.getenv("YA_TOKEN")
-CHANNELS = os.getenv("CHANNELS").split(' ')
+CHANNELS = os.getenv("CHANNELS").split(" ")
 PARSE_LIMIT = os.getenv("PARSE_LIMIT")
 
 # telegram bot config
 BOT_TOKEN = os.getenv("BOT_TOKEN")
 CHAT_ID = os.getenv("CHAT_ID")
 MY_API_ID = os.getenv("MY_API_ID")
+SEND_PHOTO_INTERVAL = os.getenv("SEND_PHOTO_INTERVAL")
+PARSE_INTERVAL = os.getenv("PARSE_INTERVAL")

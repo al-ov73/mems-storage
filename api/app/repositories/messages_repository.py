@@ -13,34 +13,34 @@ class MessagesRepository:
         limit: int,
         db: Session,
     ) -> list[MessageSchema]:
-        '''
+        """
         return list of messages from db
-        '''
+        """
         query = db.query(Message)
         query = query.options(joinedload(Message.author))
         return query
 
     async def get_message(
-            self,
-            message_id: str,
-            db: Session,
+        self,
+        message_id: str,
+        db: Session,
     ) -> MessageSchema:
-        '''
+        """
         return message from db
-        '''
+        """
         message = db.get(Message, message_id)
         if not message:
-            return 'message not exist'
+            return "message not exist"
         return message
 
     async def add_message(
-            self,
-            new_message: MessageSchema,
-            db: Session,
+        self,
+        new_message: MessageSchema,
+        db: Session,
     ) -> MessageSchema:
-        '''
+        """
         add message to db
-        '''
+        """
         db.add(new_message)
         db.commit()
         db.refresh(new_message)

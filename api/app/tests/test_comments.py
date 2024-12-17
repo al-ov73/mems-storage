@@ -12,18 +12,14 @@ def test_comments(
     init_meme_id = meme["id"]
     # create comment
     comment_data = {
-        'text': TEST_COMMENT['text'],
-        'meme_id': init_meme_id,
+        "text": TEST_COMMENT["text"],
+        "meme_id": init_meme_id,
     }
     headers = {"Authorization": f"Bearer {access_token}"}
-    response = test_client.post(
-        "/comments",
-        data=comment_data,
-        headers=headers
-    )
+    response = test_client.post("/comments", data=comment_data, headers=headers)
     # check comment create
     meme = response.json()
-    assert meme['id'] == init_meme_id
-    meme_comments = meme['comments']
+    assert meme["id"] == init_meme_id
+    meme_comments = meme["comments"]
     assert len(meme_comments) == 1
-    assert meme_comments[0]['text'] == TEST_COMMENT['text']
+    assert meme_comments[0]["text"] == TEST_COMMENT["text"]

@@ -12,10 +12,8 @@ class Message(Base):
     id: Mapped[intpk]
     text: Mapped[str]
     created_at: Mapped[created_at]
-    author_id: Mapped[int] = mapped_column(
-        ForeignKey("users.id", ondelete="CASCADE"))
-    author: Mapped["User"] = relationship(  # noqa: F821
-        back_populates="messages")
+    author_id: Mapped[int] = mapped_column(ForeignKey("users.id", ondelete="CASCADE"))
+    author: Mapped["User"] = relationship(back_populates="messages")  # noqa: F821
 
     def to_dict(self):
         return {

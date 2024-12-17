@@ -16,23 +16,33 @@ from ..config import app_config as config
 from ...parse import parse
 
 
-bot = Bot(token=config.BOT_TOKEN, default=DefaultBotProperties(parse_mode=ParseMode.HTML))
+bot = Bot(
+    token=config.BOT_TOKEN, default=DefaultBotProperties(parse_mode=ParseMode.HTML)
+)
 dp = Dispatcher()
 
 
-async def send_message_periodically():
+async def send_photo_periodically():
     images = os.listdir(path=f"{config.STATIC_DIR}/photos")
     random_image = random.choice(images)
-    await bot.send_photo(config.CHAT_ID, FSInputFile(f"{config.STATIC_DIR}/photos/{random_image}"))
+    await bot.send_photo(
+        config.CHAT_ID, FSInputFile(f"{config.STATIC_DIR}/photos/{random_image}")
+    )
+
 
 async def parse_periodically():
     count_before = len(os.listdir(path=f"{config.STATIC_DIR}/photos"))
     await bot.send_message(config.MY_API_ID, "Скачиваем картинки")
     await parse()
     count_after = len(os.listdir(path=f"{config.STATIC_DIR}/photos"))
-    await bot.send_message(config.MY_API_ID, f"Скачалось {count_after - count_before} картинок")
+    await bot.send_message(
+        config.MY_API_ID, f"Скачалось {count_after - count_before} картинок"
+    )
     folder_size = get_folder_size(f"{config.STATIC_DIR}/photos")
-    await bot.send_message(config.MY_API_ID, f"Общий объем директории с мемами: {folder_size / 10^6}МБ")
+    await bot.send_message(
+        config.MY_API_ID, f"Общий объем директории с мемами: {folder_size / 10^6}МБ"
+    )
+
 
 @dp.message(CommandStart())
 async def command_start_handler(message: Message) -> None:
@@ -43,27 +53,31 @@ async def command_start_handler(message: Message) -> None:
     await message.answer("Кнопки:", reply_markup=test_kb)
 
 
-@dp.message(Command('parse'))
+@dp.message(Command("parse"))
 async def parse_command(message: Message):
     count_before = len(os.listdir(path=f"{config.STATIC_DIR}/photos"))
     await message.answer("Скачиваем картинки")
     await parse()
     count_after = len(os.listdir(path=f"{config.STATIC_DIR}/photos"))
     await message.answer(f"Скачалось {count_after - count_before} картинок")
-    folder_size = get_folder_size(f"{config.STATIC_DIR}/photos") / 10 ** 6
+    folder_size = get_folder_size(f"{config.STATIC_DIR}/photos") / 10**6
     await message.answer(f"Общий объем директории с мемами: {round(folder_size, 1)}МБ")
 
 
-@dp.message(Command('stat'))
+@dp.message(Command("stat"))
 async def parse_command(message: Message):
     image_count = len(os.listdir(path=f"{config.STATIC_DIR}/photos"))
     await message.answer(f"картинок сейчас: {image_count}")
 
+
 async def start_bot():
-    scheduler = AsyncIOScheduler()
-    scheduler.add_job(send_message_periodically, 'interval', hours=1)
-    scheduler.add_job(parse_periodically, 'interval', hours=4)
-    scheduler.start()
-    
+    if config.ENV == "prod":
+        scheduler = AsyncIOScheduler()
+        scheduler.add_job(
+            send_photo_periodically, "interval", minutes=config.SEND_PHOTO_INTERVAL
+        )
+        scheduler.add_job(parse_periodically, "interval", hours=config.PARSE_INTERVAL)
+        scheduler.start()
+
     loop = asyncio.get_event_loop()
     loop.create_task(dp.start_polling(bot))

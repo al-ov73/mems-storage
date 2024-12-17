@@ -33,8 +33,7 @@ engine = create_engine(SQLALCHEMY_DATABASE_URL)
 if not database_exists(SQLALCHEMY_DATABASE_URL):
     create_database(SQLALCHEMY_DATABASE_URL)
 
-TestingSessionLocal = sessionmaker(autocommit=False, autoflush=False,
-                                   bind=engine)
+TestingSessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 
 Base.metadata.create_all(bind=engine)
 
@@ -55,12 +54,13 @@ def db_session():
 
 @pytest.fixture(scope="function")
 def test_client(db_session):
-    '''
+    """
     test FastApi client with overrided:
     - storage repository
     - database inside session
 
-    '''
+    """
+
     def override_get_db():
         try:
             yield db_session
@@ -78,46 +78,52 @@ def test_client(db_session):
 
 @pytest.fixture(scope="function")
 def signup_user(test_client):
-    '''
+    """
     signup user: dict
     and return JWT-token: str
-    '''
+    """
+
     def _signup_user(test_user: dict) -> str:
         response = test_client.post("/auth/jwt/signup", data=test_user)
-        print('response_signup', response.json())
-        return response.json()['access_token']
+        print("response_signup", response.json())
+        return response.json()["access_token"]
+
     return _signup_user
 
 
 @pytest.fixture(scope="function")
 def login_user(test_client):
-    '''
+    """
     login user: dict
     and return JWT-token: str
-    '''
+    """
+
     def _login_user(test_user: dict) -> str:
         response = test_client.post("/auth/jwt/login", data=test_user)
-        print('response_login', response.json())
-        return response.json()['access_token']
+        print("response_login", response.json())
+        return response.json()["access_token"]
+
     return _login_user
 
 
 @pytest.fixture(scope="function")
 def add_test_meme(test_client, login_user) -> list[MemeSchema]:
-    '''
+    """
     - login user: dict
     - add file to storage: str
     - return list of memes: list[MemeSchema]
-    '''
+    """
+
     def create_meme(file: dict, access_token: str):
-        headers = {'Authorization': f'Bearer {access_token}'}
+        headers = {"Authorization": f"Bearer {access_token}"}
         with open("app/tests/fixtures/test_meme.jpg", "rb") as image_file:
             response = test_client.post(
                 "/memes/",
-                files={'file': ('init_filename', image_file)},
-                data={'filename': file['name'], 'category': file['category']},
+                files={"file": ("init_filename", image_file)},
+                data={"filename": file["name"], "category": file["category"]},
                 headers=headers,
             )
-            print('response.json()', response.json())
+            print("response.json()", response.json())
             return response.json()
+
     return create_meme

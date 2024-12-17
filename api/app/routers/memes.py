@@ -18,6 +18,7 @@ router = APIRouter()
 
 logger = get_logger(__name__)
 
+
 @router.get(
     "",
     # dependencies=[Depends(get_current_user)],
@@ -36,6 +37,7 @@ async def get_memes(
     memes = await meme_repo.get_memes(skip, limit, db)
     logger.debug(f"Got {len(memes)} memes from db")
     return memes
+
 
 @router.get("/parse")
 async def parse_memes():
@@ -59,7 +61,6 @@ async def parse_memes():
 #         return "meme not exist"
 #     meme.link = await storage_repo.get_link(meme.name)
 #     return meme
-
 
 
 # @router.delete(

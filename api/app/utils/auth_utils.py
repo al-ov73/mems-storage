@@ -55,9 +55,7 @@ def get_user(
 
 
 def authenticate_user(
-        username: str,
-        password: str,
-        db: Session = Depends(get_db)
+    username: str, password: str, db: Session = Depends(get_db)
 ) -> UserDbSchema | None:
     """
     return user if login and password match data in db
@@ -100,8 +98,7 @@ async def register_user(
 
 
 def create_access_token(
-    user: UserDbSchema,
-    expires_delta: timedelta | None = None
+    user: UserDbSchema, expires_delta: timedelta | None = None
 ) -> str:
     """
     return JWT token with expires time
@@ -113,21 +110,16 @@ def create_access_token(
     if expires_delta:
         expire = datetime.now(timezone.utc) + expires_delta
     else:
-        expire = (
-            datetime.now(timezone.utc) +
-            timedelta(minutes=ACCESS_TOKEN_EXPIRE_MINUTES)
+        expire = datetime.now(timezone.utc) + timedelta(
+            minutes=ACCESS_TOKEN_EXPIRE_MINUTES
         )
     to_encode.update({"exp": expire})
-    encoded_jwt = jwt.encode(
-        to_encode,
-        JWT_TOKEN_SECRET_KEY, algorithm=ALGORITHM
-    )
+    encoded_jwt = jwt.encode(to_encode, JWT_TOKEN_SECRET_KEY, algorithm=ALGORITHM)
     return encoded_jwt
 
 
 async def get_current_user(
-    token: Annotated[str, Depends(oauth2_scheme)],
-    db: Session = Depends(get_db)
+    token: Annotated[str, Depends(oauth2_scheme)], db: Session = Depends(get_db)
 ) -> UserDbSchema:
     """
     return user from db according JWT-token data
@@ -138,11 +130,7 @@ async def get_current_user(
         headers={"WWW-Authenticate": "Bearer"},
     )
     try:
-        payload = jwt.decode(
-            token,
-            JWT_TOKEN_SECRET_KEY,
-            algorithms=[ALGORITHM]
-        )
+        payload = jwt.decode(token, JWT_TOKEN_SECRET_KEY, algorithms=[ALGORITHM])
         username: str = payload.get("username")
         if username is None:
             raise credentials_exception

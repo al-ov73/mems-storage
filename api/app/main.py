@@ -20,10 +20,6 @@ from .routers.users import router as router_users
 from .routers.aichat import router as router_aichat
 
 
-
-
-
-
 app = FastAPI()
 
 origins = [
@@ -40,13 +36,13 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-app.mount('/static', StaticFiles(directory=STATIC_DIR), STATIC_URL)
-
+app.mount("/static", StaticFiles(directory=STATIC_DIR), STATIC_URL)
 
 
 @app.on_event("startup")
 async def on_startup():
     asyncio.create_task(start_bot())
+
 
 app.include_router(router_auth, prefix="/auth/jwt", tags=["auth"])
 app.include_router(router_memes, prefix="/memes", tags=["memes"])

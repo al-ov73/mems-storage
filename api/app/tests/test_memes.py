@@ -98,8 +98,7 @@ def test_meme_delete(
     # delete meme by other user
     access_token_wrong = signup_user(TEST_USER2)
     headers_wrong = {"Authorization": f"Bearer {access_token_wrong}"}
-    response = test_client.delete(
-        f"/memes/{init_meme_id}", headers=headers_wrong)
+    response = test_client.delete(f"/memes/{init_meme_id}", headers=headers_wrong)
     assert response.status_code == 403
 
     # delete meme

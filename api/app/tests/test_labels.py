@@ -12,18 +12,14 @@ def test_labels(
     init_meme_id = meme["id"]
     # create label
     label_data = {
-        'title': TEST_LABEL['title'],
-        'meme_id': init_meme_id,
+        "title": TEST_LABEL["title"],
+        "meme_id": init_meme_id,
     }
     headers = {"Authorization": f"Bearer {access_token}"}
-    response = test_client.post(
-        "/labels",
-        data=label_data,
-        headers=headers
-    )
+    response = test_client.post("/labels", data=label_data, headers=headers)
     # check label create
     meme = response.json()
-    assert meme['id'] == init_meme_id
-    meme_labels = meme['meme_labels']
+    assert meme["id"] == init_meme_id
+    meme_labels = meme["meme_labels"]
     assert len(meme_labels) == 1
-    assert meme_labels[0]['title'] == TEST_LABEL['title']
+    assert meme_labels[0]["title"] == TEST_LABEL["title"]
