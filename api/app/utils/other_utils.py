@@ -13,7 +13,7 @@ def clean_dir(dir_path: str) -> None:
         except Exception as e:
             print('Failed to delete %s. Reason: %s' % (file_path, e))
 
-def get_folder_size(path):
+def get_folder_size(path: str) -> int:
     total_size = 0
     for dirpath, dirnames, filenames in os.walk(path):
         for filename in filenames:

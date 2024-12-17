@@ -50,8 +50,8 @@ async def parse_command(message: Message):
     await parse()
     count_after = len(os.listdir(path=f"{config.STATIC_DIR}/photos"))
     await message.answer(f"Скачалось {count_after - count_before} картинок")
-    folder_size = get_folder_size(f"{config.STATIC_DIR}/photos")
-    await message.answer(f"Общий объем директории с мемами: {folder_size / 10^6}МБ")
+    folder_size = get_folder_size(f"{config.STATIC_DIR}/photos") / 10 ** 6
+    await message.answer(f"Общий объем директории с мемами: {round(folder_size, 1)}МБ")
 
 
 @dp.message(Command('stat'))
