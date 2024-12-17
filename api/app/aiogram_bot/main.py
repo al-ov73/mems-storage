@@ -3,9 +3,8 @@ from aiogram.client.default import DefaultBotProperties
 from aiogram.enums import ParseMode
 from aiogram.filters import CommandStart
 from aiogram.filters.command import Command
-from aiogram.types import Message, ReplyKeyboardMarkup
+from aiogram.types import Message
 from aiogram.types import InlineKeyboardButton, InlineKeyboardMarkup
-from aiogram.types import CallbackQuery
 import asyncio
 import os
 from ..config import app_config as config
@@ -33,7 +32,7 @@ async def parse_command(message: Message):
 
 @dp.message(Command('stat'))
 async def parse_command(message: Message):
-    image_count = len(os.listdir(path=f"{STATIC_DIR}/photos"))
+    image_count = len(os.listdir(path=f"{config.STATIC_DIR}/photos"))
     await message.answer(f"картинок сейчас: {image_count}")
 
 async def start_bot():
