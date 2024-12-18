@@ -74,9 +74,9 @@ async def start_bot():
     if config.ENV == "prod":
         scheduler = AsyncIOScheduler()
         scheduler.add_job(
-            send_photo_periodically, "interval", minutes=config.SEND_PHOTO_INTERVAL
+            send_photo_periodically, "interval", minutes=int(config.SEND_PHOTO_INTERVAL)
         )
-        scheduler.add_job(parse_periodically, "interval", hours=config.PARSE_INTERVAL)
+        scheduler.add_job(parse_periodically, "interval", hours=int(config.PARSE_INTERVAL))
         scheduler.start()
 
     loop = asyncio.get_event_loop()
