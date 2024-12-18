@@ -1,8 +1,8 @@
 from ..repositories.users_repository import UsersRepository
-from .app_config import MINIO_API_URL
+from ..config import app_config as config
 from ..repositories.comments_repository import CommentsRepository
 from ..repositories.memes_repository import MemesRepository
-from ..repositories.storage_repository import StorageRepository
+from ..repositories.storage_repository import FSStorageRepository
 from ..repositories.messages_repository import MessagesRepository
 from ..repositories.labels_repository import LabelsRepository
 from ..repositories.likes_repository import LikesRepository
@@ -13,7 +13,8 @@ def get_memes_repository():
 
 
 def get_storage_repo():
-    return StorageRepository(MINIO_API_URL)
+    return FSStorageRepository(config.PHOTOS_DIR)
+    # return StorageRepository(MINIO_API_URL)
 
 
 def get_messages_repository():

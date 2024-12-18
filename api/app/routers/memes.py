@@ -63,32 +63,19 @@ async def parse_memes():
 #     return meme
 
 
-# @router.delete(
-#     "/{meme_id}",
-# )
-# async def del_meme(
-#     meme_id: str,
-#     db: Session = Depends(get_db),
-#     meme_repo: MemesRepository = Depends(get_memes_repository),
-#     storage_repo: BaseStorageRepo = Depends(get_storage_repo),
-#     user: UserDbSchema = Depends(get_current_user),
-# ) -> MemeDbSchema | str:
-#     """
-#     delete meme from db and S3 storage
-#     """
-#     meme = await meme_repo.get_meme(meme_id, db)
-#     print("meme to delete", meme)
-#     print("meme.author id", meme.author_id)
-#     print('request user', user.id)
-#     author_id = meme.author_id
-#     if user.id != author_id:
-#         raise HTTPException(
-#             status_code=403,
-#             detail="You don't have permissions to delete this meme"
-#         )
-#     meme = await meme_repo.del_meme(meme_id, db)
-#     await storage_repo.delete_image(meme.name)
-#     return meme
+@router.delete("/{meme_id}")
+async def del_meme(
+    meme_id: str,
+    db: Session = Depends(get_db),
+    meme_repo: MemesRepository = Depends(get_memes_repository),
+    storage_repo: BaseStorageRepo = Depends(get_storage_repo),
+) -> MemeDbSchema | str:
+    """
+    delete meme from db and S3 storage
+    """
+    meme = await meme_repo.del_meme(meme_id, db)
+    await storage_repo.delete_image(meme.name)
+    return meme
 
 
 # @router.put("/{meme_id}", dependencies=[Depends(get_current_user)])

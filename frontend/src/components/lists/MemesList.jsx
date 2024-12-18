@@ -2,27 +2,47 @@
 import ImageCard from '../cards/ImageCard.jsx'
 import { useSelector } from "react-redux";
 import Col from 'react-bootstrap/Col';
+import { useDispatch } from "react-redux";
 import Card from 'react-bootstrap/Card';
 import Button from 'react-bootstrap/Button';
 import Modal from 'react-bootstrap/Modal';
 import Image from 'react-bootstrap/Image';
 import Container from 'react-bootstrap/Container';
 import Row from 'react-bootstrap/Row';
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import ImageModal from '../modals/ImageModal';
 import Carousel from 'react-bootstrap/Carousel';
 import CommentPostForm from "../forms/CommetPostForm";
 import CommentsList from "../lists/CommentsList";
 import LikeButton from "../LikeButton";
+import { setMemes } from "../../slices/memesSlice";
 import LabelPostForm from "../forms/LabelPostForm";
-import { getUsernameFromStorage } from '../../utils/utils.js';
+import { getUsernameFromStorage, getUserIdFromStorage } from '../../utils/utils.js';
+import { getUser, deleteMeme, getMemes } from '../../utils/requests';
 
 
 const MemesList = () => {
+  const [userIsAdmin, setUserIsAdmin] = useState(false);
   const [modalShow, setModalShow] = useState(false);
   const [currentMeme, setCurrentMeme] = useState({});
   const [currentIndex, setCurrentIndex] = useState(0);
   const username = getUsernameFromStorage()
+  const dispatch = useDispatch();
+  const access_token = localStorage.getItem('user')
+  
+  useEffect(() => {
+    const inner = async () => {
+      const userId = getUserIdFromStorage();
+      if (userId) {
+        const user = await getUser(userId, access_token);
+        if (user.is_admin) {
+          setUserIsAdmin(true)
+      }
+      }
+    }
+    inner();
+  }, [])
+
   let memes = useSelector((state) => state.memes.memes);
   if (memes.length === 0) {
         return "мемов пока нет"
@@ -40,6 +60,12 @@ const MemesList = () => {
   const handleSelect = (selectedIndex) => {
     setCurrentIndex(selectedIndex);
   };
+
+  const handleDelete = async (id, token) => {
+    await deleteMeme(id, token)
+    const getMemesResponse = await getMemes(token);
+    dispatch(setMemes(getMemesResponse.data))    
+  }
 
   return Object.keys(grouped).map((date, index) => {
     return <>
@@ -90,6 +116,13 @@ const MemesList = () => {
                 <Row className="my-3">
                   <Col className="my-1" sm={6}><LikeButton meme={currentMeme}/></Col>
                   <Col className="my-1">
+                    {
+                      userIsAdmin &&
+                        <Button variant="outline-danger"
+                                onClick={() => handleDelete(currentMeme.id, access_token)}>
+                            Удалить
+                        </Button>            
+                    }
 
                   </Col>
                   <Col className="my-1">

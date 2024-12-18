@@ -1,9 +1,11 @@
+import os
 import aiohttp
 import httpx
 from aiohttp import FormData, StreamReader
 from abc import abstractmethod, ABC
 from tempfile import SpooledTemporaryFile
 from typing import BinaryIO
+from ..config import app_config as config
 
 from ..config.logger_config import get_logger
 
@@ -92,3 +94,13 @@ class StorageRepository(BaseStorageRepo):
                 data={"file": (new_name, new_file, "multipart/form-data")},
             )
             return new_name
+
+class FSStorageRepository(ABC):
+    def __init__(self, static_path):
+        self.static_path = static_path
+
+    async def delete_image(self, filename: str) -> str:
+        filepath = f"{self.static_path}/{filename}"
+        if os.path.exists(filepath):
+            os.remove(filepath)
+        return f"file {filepath} deleted"

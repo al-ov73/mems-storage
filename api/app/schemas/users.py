@@ -6,11 +6,8 @@ class UserSchema(BaseModel):
     username: str
     first_name: str | None
     last_name: str | None
+    is_admin: bool
 
 
 class UserDbSchema(UserSchema):
     hashed_password: str
-
-
-class UserWithPhoto(UserSchema):
-    photo: str | None

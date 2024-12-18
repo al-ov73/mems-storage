@@ -1,5 +1,5 @@
 from sqlalchemy.orm import Mapped, mapped_column, relationship
-from sqlalchemy import func
+from sqlalchemy import func, Boolean
 from typing import Annotated, Optional
 
 import datetime
@@ -14,9 +14,11 @@ class User(Base):
     __tablename__ = "users"
 
     id: Mapped[intpk]
+
     username: Mapped[str] = mapped_column(nullable=False, unique=True)
     first_name: Mapped[Optional[str]]
     last_name: Mapped[Optional[str]]
     registered_at: Mapped[created_at]
     hashed_password: Mapped[str] = mapped_column(nullable=False)
     messages: Mapped["Message"] = relationship(back_populates="author")
+    is_admin: Mapped[bool] = mapped_column(Boolean, default=False, nullable=False)

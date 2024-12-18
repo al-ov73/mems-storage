@@ -8,7 +8,7 @@ import Col from 'react-bootstrap/Col';
 import { useSelector } from "react-redux";
 import Carousel from 'react-bootstrap/Carousel';
 import { useDispatch } from "react-redux";
-import { getMemes, deleteMeme } from '../../utils/requests';
+import { getMemes, deleteMeme, getUser } from '../../utils/requests';
 import { setMemes } from "../../slices/memesSlice";
 import CommentPostForm from "../forms/CommetPostForm";
 import CommentsList from "../lists/CommentsList";
@@ -20,17 +20,16 @@ const ImageModal = ({ meme, index, show, onHide }) => {
   const access_token = localStorage.getItem('user')
   const dispatch = useDispatch();
   const userId = getUserIdFromStorage();
+
   let memes = useSelector((state) => state.memes.memes);
 
   const handleDelete = async (id, token) => {
     const deleteResponse = await deleteMeme(id, token)
-    console.log('deleteResponse', deleteResponse);
     const getMemesResponse = await getMemes(token);
-    console.log('getMemesResponse', getMemesResponse)
     dispatch(setMemes(getMemesResponse.data))    
   }
 
-  const dateFormat = convertDateTime(meme.created_at)
+  // const dateFormat = convertDateTime(meme.created_at)
 
   return (
     <Modal
