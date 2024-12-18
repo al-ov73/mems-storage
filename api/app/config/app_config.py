@@ -5,6 +5,7 @@ from dotenv import load_dotenv
 load_dotenv()
 
 ENV = os.getenv("ENV")
+START_BOT = os.getenv("START_BOT")
 
 # Postgress config
 DB_HOST = os.getenv("DB_HOST")
@@ -34,7 +35,9 @@ ACCESS_TOKEN_EXPIRE_MINUTES = 120
 
 # Static files directory
 STATIC_DIR = "app/static"
+PHOTOS_DIR = f"{STATIC_DIR}/photos",
 STATIC_URL = "static"
+PHOTOS_URL = f"{STATIC_URL}/photos"
 
 # parser config
 API_ID = os.getenv("API_ID")

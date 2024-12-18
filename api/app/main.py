@@ -5,9 +5,7 @@ from fastapi.staticfiles import StaticFiles
 from fastapi.middleware.cors import CORSMiddleware
 
 from .aiogram_bot.main import start_bot
-
-
-from .parsers.telegram_parser import parse_telegram_channels
+from .config import app_config as config
 
 from .config.app_config import STATIC_DIR, STATIC_URL
 
@@ -17,7 +15,7 @@ from .routers.labels import router as router_labels
 from .routers.comments import router as router_comments
 from .routers.likes import router as router_likes
 from .routers.users import router as router_users
-from .routers.aichat import router as router_aichat
+# from .routers.aichat import router as router_aichat
 
 
 app = FastAPI()
@@ -38,10 +36,10 @@ app.add_middleware(
 
 app.mount("/static", StaticFiles(directory=STATIC_DIR), STATIC_URL)
 
-
-@app.on_event("startup")
-async def on_startup():
-    asyncio.create_task(start_bot())
+if bool(config.START_BOT):
+    @app.on_event("startup")
+    async def on_startup():
+        asyncio.create_task(start_bot())
 
 
 app.include_router(router_auth, prefix="/auth/jwt", tags=["auth"])
@@ -50,4 +48,4 @@ app.include_router(router_labels, prefix="/labels", tags=["labels"])
 app.include_router(router_comments, prefix="/comments", tags=["comments"])
 app.include_router(router_likes, prefix="/likes", tags=["likes"])
 app.include_router(router_users, prefix="/users", tags=["users"])
-app.include_router(router_aichat, prefix="/question", tags=["aichat"])
+# app.include_router(router_aichat, prefix="/question", tags=["aichat"])
