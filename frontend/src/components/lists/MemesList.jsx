@@ -29,6 +29,7 @@ const MemesList = () => {
   const username = getUsernameFromStorage()
   const dispatch = useDispatch();
   const access_token = localStorage.getItem('user')
+  const userId = getUserIdFromStorage();
   
   useEffect(() => {
     const inner = async () => {
