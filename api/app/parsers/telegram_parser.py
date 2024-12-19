@@ -25,19 +25,18 @@ async def parse_telegram_channels() -> None:
             except ValueError:
                 continue
             for message in messages:
-                if message.photo:
-                    filename = f"{message.photo.id}"
-                    filepath = f"{config.PHOTOS_DIR}/{filename}"
+                 if message.photo:
+                    filename = f"tg_{message._chat.username}_{message.photo.id}"
+                    filepath = f"{config.STATIC_DIR}/photos/{filename}"
                     if not os.path.exists(f"{filepath}.jpg"):
 
                         new_meme = Meme(
                             name=f"{filename}.jpg",
                             source_type="tg",
                             source_name=message._chat.username,
-                            link=f"{config.API_URL}/{config.PHOTOS_URL}/{filename}.jpg",
+                            link=f"{config.API_URL}/{config.STATIC_URL}/photos/{filename}.jpg",
                         )
                         meme_in_db = await meme_repo.add_meme(new_meme, db)
                         print(f"meme {meme_in_db} added to db")
-                        
                         await client.download_media(message.photo, filepath)
                         print(f"file {filepath} downloaded")

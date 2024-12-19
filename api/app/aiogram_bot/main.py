@@ -41,7 +41,7 @@ async def parse_periodically():
     )
     folder_size_after = get_folder_size(f"{config.STATIC_DIR}/photos")
     await bot.send_message(
-        config.MY_API_ID, f"Общий объем директории с мемами: {folder_size_before}МБ -> {folder_size_after / 10^6}МБ"
+        config.MY_API_ID, f"Общий объем директории с мемами: {folder_size_before}МБ -> {folder_size_after}МБ"
     )
 
 
@@ -57,19 +57,21 @@ async def command_start_handler(message: Message) -> None:
 @dp.message(Command("parse"))
 async def parse_command(message: Message):
     count_before = len(os.listdir(path=f"{config.STATIC_DIR}/photos"))
+    folder_size_before = get_folder_size(f"{config.STATIC_DIR}/photos")
     await message.answer("Скачиваем картинки")
     await parse()
     count_after = len(os.listdir(path=f"{config.STATIC_DIR}/photos"))
-    await message.answer(f"Скачалось {count_after - count_before} картинок")
-    folder_size = get_folder_size(f"{config.STATIC_DIR}/photos") / 10**6
-    await message.answer(f"Общий объем директории с мемами: {round(folder_size, 1)}МБ")
+    await message.answer(f"Скачалось {count_after - count_before} картинок ({count_before}->{count_after})")
+    folder_size_after = get_folder_size(f"{config.STATIC_DIR}/photos")
+    await message.answer(f"Общий объем директории с мемами: {folder_size_before}МБ -> {folder_size_after}МБ")
 
 
 @dp.message(Command("stat"))
 async def parse_command(message: Message):
     image_count = len(os.listdir(path=f"{config.STATIC_DIR}/photos"))
     await message.answer(f"картинок сейчас: {image_count}")
-
+    folder_size = get_folder_size(f"{config.STATIC_DIR}/photos")
+    await message.answer(f"Общий объем директории с мемами: {folder_size}МБ")
 
 async def start_bot():
     if config.ENV == "prod":

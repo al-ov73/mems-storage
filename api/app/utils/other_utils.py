@@ -15,6 +15,7 @@ def clean_dir(dir_path: str) -> None:
 
 
 def get_folder_size(path: str) -> int:
+    """return folder size im MB"""
     total_size = 0
     for dirpath, dirnames, filenames in os.walk(path):
         for filename in filenames:
@@ -23,4 +24,4 @@ def get_folder_size(path: str) -> int:
                 total_size += os.path.getsize(file_path)
             except OSError as e:
                 print(f"Ошибка при получении размера файла {file_path}: {e}")
-    return total_size
+    return total_size / 10 ** 6
