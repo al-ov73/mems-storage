@@ -1,4 +1,5 @@
 from sqlalchemy.orm import Mapped, mapped_column, relationship
+from sqlalchemy import Boolean
 
 from ..config.db_config import Base
 from .user import intpk
@@ -14,6 +15,7 @@ class Meme(Base):
     source_type: Mapped[str] = mapped_column(nullable=True)
     link: Mapped[str] = mapped_column(unique=True, nullable=False)
     created_at: Mapped[created_at]
+    published: Mapped[bool] = mapped_column(Boolean, default=False, nullable=False)
 
     meme_labels: Mapped[list["Label"]] = relationship(
         secondary="labels_meme", back_populates="label_memes"

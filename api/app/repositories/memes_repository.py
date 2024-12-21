@@ -2,15 +2,15 @@ from ..models.like import Like
 from ..models.meme import Meme
 from ..models.comment import Comment
 from ..schemas.memes import MemeDbSchema
-from sqlalchemy import func
+from sqlalchemy import func, false
 from sqlalchemy.orm import Session, joinedload, selectinload, contains_eager
 
 
 class MemesRepository:
 
+    @staticmethod
     async def get_memes(
-        self,
-        skip: int,
+            skip: int,
         limit: int,
         db: Session,
     ) -> list[MemeDbSchema]:
@@ -32,9 +32,22 @@ class MemesRepository:
         )
         return memes
 
+    @staticmethod
+    async def get_random_meme(
+            db: Session,
+    ) -> MemeDbSchema:
+        """
+        return random memes from db
+        """
+        random_meme = db.query(Meme) \
+            .filter_by(published=False) \
+            .order_by(func.random()) \
+            .first()
+        return random_meme
+
+    @staticmethod
     async def get_meme(
-        self,
-        meme_id: str,
+            meme_id: str,
         db: Session,
     ) -> MemeDbSchema:
         """
@@ -54,9 +67,9 @@ class MemesRepository:
             return "meme not exist"
         return meme
 
+    @staticmethod
     async def add_meme(
-        self,
-        new_meme: MemeDbSchema,
+            new_meme: MemeDbSchema,
         db: Session,
     ) -> MemeDbSchema:
         """
@@ -67,9 +80,9 @@ class MemesRepository:
         db.refresh(new_meme)
         return new_meme
 
+    @staticmethod
     async def del_meme(
-        self,
-        meme_id: str,
+            meme_id: str,
         db: Session,
     ) -> MemeDbSchema:
         """
@@ -80,9 +93,22 @@ class MemesRepository:
         db.commit()
         return meme
 
+    @staticmethod
+    async def make_meme_published(
+            meme_id: int,
+        db: Session,
+    ) -> MemeDbSchema:
+        """
+        delete meme from db
+        """
+        meme = db.get(Meme, meme_id)
+        meme.published = True
+        db.commit()
+        return meme
+
+    @staticmethod
     async def update_name(
-        self,
-        meme_id: str,
+            meme_id: str,
         filename: str,
         db: Session,
     ) -> MemeDbSchema:
@@ -98,9 +124,9 @@ class MemesRepository:
         except Exception:
             return f'error "{Exception}"'
 
+    @staticmethod
     async def get_top_liked_memes(
-        self,
-        limit: int,
+            limit: int,
         db: Session,
     ) -> list[MemeDbSchema]:
         """
