@@ -25,7 +25,7 @@ logger = get_logger(__name__)
 )
 async def get_memes(
     skip: int = 0,
-    limit: int = 100,
+    limit: int = 2000,
     db: Session = Depends(get_db),
     meme_repo: MemesRepository = Depends(get_memes_repository),
     storage_repo: BaseStorageRepo = Depends(get_storage_repo),
