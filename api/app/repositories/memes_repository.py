@@ -47,12 +47,12 @@ class MemesRepository:
     @staticmethod
     async def get_published_stat(
             db: Session,
-    ) -> MemeDbSchema:
+    ) -> tuple[int, int, int]:
         """
         return random memes from db
         """
         total = db.query(Meme).count()
-        published = db.query(Meme).filter_by(published=False).count()
+        published = db.query(Meme).filter_by(published=True).count()
         not_published = total - published
         return total, published, not_published
 
