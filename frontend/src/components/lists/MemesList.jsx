@@ -1,17 +1,7 @@
-
-import ImageCard from '../cards/ImageCard.jsx'
 import { useSelector } from "react-redux";
-import Col from 'react-bootstrap/Col';
 import { useDispatch } from "react-redux";
-import Card from 'react-bootstrap/Card';
-import Button from 'react-bootstrap/Button';
-import Modal from 'react-bootstrap/Modal';
-import Image from 'react-bootstrap/Image';
-import Container from 'react-bootstrap/Container';
-import Row from 'react-bootstrap/Row';
+import { Carousel, Row, Modal, Image, Button, Col, Container } from 'react-bootstrap';
 import React, { useState, useEffect } from "react";
-import ImageModal from '../modals/ImageModal';
-import Carousel from 'react-bootstrap/Carousel';
 import CommentPostForm from "../forms/CommetPostForm";
 import CommentsList from "../lists/CommentsList";
 import LikeButton from "../LikeButton";
@@ -33,7 +23,6 @@ const MemesList = () => {
   
   useEffect(() => {
     const inner = async () => {
-      const userId = getUserIdFromStorage();
       if (userId) {
         const user = await getUser(userId, access_token);
         if (user.is_admin) {
@@ -91,27 +80,35 @@ const MemesList = () => {
                   }
           )
         }
+
+      {/* MODAL */}
+
       {setModalShow && (
             <Modal
             show={modalShow}
             onHide={() => setModalShow(false)}
             size="lg"
-            aria-labelledby="contained-modal-title-vcenter"
             centered
-          >
-                  <Carousel activeIndex={currentIndex} onSelect={handleSelect} variant='dark' interval={null}>
+            >
+              <Modal.Body style={{ display: 'flex', height: '500px', alignItems: 'center', justifyContent: 'center' }}>
+                  <Carousel activeIndex={currentIndex} onSelect={handleSelect} variant='dark' interval={null} indicators={false}>
                     {memes.map(meme => (
-                        <Carousel.Item key={meme.id}>
+                      <Carousel.Item
+                      key={meme.id}>
                           <img
-                            height="80%"
+                            height="100%"
+                            style={{
+                              maxHeight: `500px`,
+                              width: 'auto',
+                            }}
                             src={meme.link}
-                            className="rounded mx-auto d-block"
+                            className="img-fluid rounded p-3"
                             alt='Картинка не загрузилась:('
                           />
                         </Carousel.Item>
                       ))}
-      
-              </Carousel>
+                  </Carousel>
+                </Modal.Body>
               <Modal.Footer>
                 <Container>
                 <Row className="my-3">
@@ -130,6 +127,8 @@ const MemesList = () => {
                   <Button onClick={() => setModalShow(false)}>Закрыть</Button> 
                   </Col>
                   </Row>
+
+                  {/* LABELS */}
                   <Row xs="auto" className="my-3">
                     {currentMeme.meme_labels && currentMeme.meme_labels.map((label) => {
                               return <Col key={label.id} className="my-1">
@@ -142,17 +141,23 @@ const MemesList = () => {
                                         </Button>  
                                       </Col>
                             })}
+                    {/* LABEL POST FORM */}
                       {username && (
                       <Col className="my-1">
                         <LabelPostForm meme={currentMeme}/>
                       </Col>  
                       )}
                   </Row>
+
+                  {/* COMMENTS */}
                   {username && <CommentPostForm memeId={currentMeme.id}/>}
+                  {!username && 'Зарегистрируйтесь, чтобы оставлять комментерии и ставить лайки'}
+                  
                   <CommentsList memeId={currentMeme.id}/>
                   </Container>
                 </Modal.Footer>
               </Modal>
+              // END MODAL
       )}
     </>
   })
