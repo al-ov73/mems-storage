@@ -17,7 +17,6 @@ class MemesRepository:
         """
         return list of memes from db
         """
-
         memes = (
             db.query(Meme)
             .outerjoin(Comment)
@@ -44,6 +43,18 @@ class MemesRepository:
             .order_by(func.random()) \
             .first()
         return random_meme
+
+    @staticmethod
+    async def get_published_stat(
+            db: Session,
+    ) -> MemeDbSchema:
+        """
+        return random memes from db
+        """
+        total = db.query(Meme).count()
+        published = db.query(Meme).filter_by(published=False).count()
+        not_published = total - published
+        return total, published, not_published
 
     @staticmethod
     async def get_meme(

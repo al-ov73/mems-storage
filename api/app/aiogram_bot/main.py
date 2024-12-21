@@ -64,8 +64,13 @@ async def image_send_command(message: Message):
 
 @dp.message(Command("stat"))
 async def parse_command(message: Message):
-    image_count = len(os.listdir(path=f"{config.STATIC_DIR}/photos"))
-    await message.answer(f"картинок сейчас: {image_count}")
+    # image_count = len(os.listdir(path=f"{config.STATIC_DIR}/photos"))
+
+    total, published, not_published = await meme_repo.get_published_stat(db=db)
+    await message.answer(f"Всего картинок: {total}")
+    await message.answer(f"Опубликовано картинок: {published}")
+    await message.answer(f"Не опубликовано: {not_published}")
+
     folder_size = get_folder_size(f"{config.STATIC_DIR}/photos")
     await message.answer(f"Общий объем директории с мемами: {folder_size}МБ")
 
