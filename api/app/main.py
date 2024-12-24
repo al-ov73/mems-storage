@@ -15,6 +15,7 @@ from .routers.labels import router as router_labels
 from .routers.comments import router as router_comments
 from .routers.likes import router as router_likes
 from .routers.users import router as router_users
+
 # from .routers.aichat import router as router_aichat
 
 
@@ -37,6 +38,7 @@ app.add_middleware(
 app.mount("/static", StaticFiles(directory=STATIC_DIR), STATIC_URL)
 
 if bool(config.START_BOT):
+
     @app.on_event("startup")
     async def on_startup():
         asyncio.create_task(start_bot())

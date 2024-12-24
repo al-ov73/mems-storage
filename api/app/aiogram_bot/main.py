@@ -17,26 +17,29 @@ from ..config.dependencies import get_memes_repository
 from ..utils.other_utils import get_folder_size
 from ...parse import parse
 
-bot = Bot(token=config.BOT_TOKEN, default=DefaultBotProperties(parse_mode=ParseMode.HTML))
+bot = Bot(
+    token=config.BOT_TOKEN, default=DefaultBotProperties(parse_mode=ParseMode.HTML)
+)
 dp = Dispatcher()
 
 meme_repo = get_memes_repository()
 db = next(get_db())
 
-keyboard = InlineKeyboardMarkup(inline_keyboard=[
-    [
-        InlineKeyboardButton(text="📝Статистика", callback_data="stat"),
-        InlineKeyboardButton(text="‼️Парсить‼️", callback_data="parse"),
-        InlineKeyboardButton(text="👥Отпр. мем", callback_data="send")
-    ]
-], )
+keyboard = InlineKeyboardMarkup(
+    inline_keyboard=[
+        [
+            InlineKeyboardButton(text="📝Статистика", callback_data="stat"),
+            InlineKeyboardButton(text="‼️Парсить‼️", callback_data="parse"),
+            InlineKeyboardButton(text="👥Отпр. мем", callback_data="send"),
+        ]
+    ],
+)
 
 
 async def send_photo_periodically():
     random_image = await meme_repo.get_random_meme(db=db)
     await bot.send_photo(config.CHAT_ID, URLInputFile(random_image.link))
     await meme_repo.make_meme_published(random_image.id, db)
-    await bot.send_message(config.MY_API_ID, "Мем отправлен", reply_markup=keyboard)
 
 
 async def parse_periodically():
@@ -46,13 +49,14 @@ async def parse_periodically():
     await parse()
     count_after = len(os.listdir(path=f"{config.STATIC_DIR}/photos"))
     await bot.send_message(
-        config.MY_API_ID, f"Скачалось картинок: {count_after - count_before} ({count_before}->{count_after})"
+        config.MY_API_ID,
+        f"Скачалось картинок: {count_after - count_before} ({count_before}->{count_after})",
     )
     folder_size_after = get_folder_size(f"{config.STATIC_DIR}/photos")
     await bot.send_message(
         config.MY_API_ID,
         f"Общий объем директории с мемами: {folder_size_before}МБ -> {folder_size_after}МБ",
-        reply_markup=keyboard
+        reply_markup=keyboard,
     )
 
 
@@ -61,37 +65,45 @@ async def command_start_handler(message: Message) -> None:
     await message.answer(f"Hello, {html.bold(message.from_user.full_name)}!")
 
 
-@dp.callback_query(F.data.startswith('parse'))
+@dp.callback_query(F.data.startswith("parse"))
 @dp.message(Command("parse"))
 async def parse_command(message: Message):
     await parse_periodically()
 
 
-@dp.callback_query(F.data.startswith('send'))
+@dp.callback_query(F.data.startswith("send"))
 @dp.message(Command("send"))
 async def image_send_command(message: Message):
     await send_photo_periodically()
+    await message.answer("Мем отправлен", reply_markup=keyboard)
 
 
-@dp.callback_query(F.data.startswith('stat'))
+@dp.callback_query(F.data.startswith("stat"))
 @dp.message(Command("stat"))
 async def parse_command(message: Message):
     total, published, not_published = await meme_repo.get_published_stat(db=db)
     folder_size = get_folder_size(f"{config.STATIC_DIR}/photos")
-
-    await bot.send_message(config.MY_API_ID,
-                           f"Всего картинок: {total}\n"
-                         f"Опубликовано картинок: {published}\n"
-                         f"Не опубликовано: {not_published}\n"
-                         f"Общий объем директории с мемами: {folder_size}МБ",
-                           reply_markup=keyboard)
+    days_remain = not_published * 24 * 60 / config.SEND_PHOTO_INTERVAL
+    
+    await bot.send_message(
+        config.MY_API_ID,
+        f"Всего картинок: {total}\n"
+        f"Опубликовано картинок: {published}\n"
+        f"Не опубликовано: {not_published} ({round(days_remain)} дн.)\n"
+        f"Общий объем директории с мемами: {folder_size}МБ",
+        reply_markup=keyboard,
+    )
 
 
 async def start_bot():
     if config.ENV == "prod":
         scheduler = AsyncIOScheduler()
-        scheduler.add_job(send_photo_periodically, "interval", minutes=int(config.SEND_PHOTO_INTERVAL))
-        scheduler.add_job(parse_periodically, "interval", hours=int(config.PARSE_INTERVAL))
+        scheduler.add_job(
+            send_photo_periodically, "interval", minutes=int(config.SEND_PHOTO_INTERVAL)
+        )
+        scheduler.add_job(
+            parse_periodically, "interval", hours=int(config.PARSE_INTERVAL)
+        )
         scheduler.start()
 
     loop = asyncio.get_event_loop()

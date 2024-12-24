@@ -24,4 +24,4 @@ def get_folder_size(path: str) -> int:
                 total_size += os.path.getsize(file_path)
             except OSError as e:
                 print(f"Ошибка при получении размера файла {file_path}: {e}")
-    return round(total_size / 10 ** 6, 1)
+    return round(total_size / 10**6, 1)
