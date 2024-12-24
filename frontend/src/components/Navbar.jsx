@@ -32,9 +32,6 @@ const NavbarPage = ({full}) => {
               О проекте
             </Button>
           <Nav>
-            <a className="navbar-brand" href="/">
-              Мемовоз всегда привозит свежие мемы
-            </a>
           </Nav>
         </Container>
         {full && (

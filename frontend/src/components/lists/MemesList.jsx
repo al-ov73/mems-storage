@@ -47,17 +47,15 @@ const MemesList = () => {
     }
     grouped[createdDate].push(meme);
   })
-  const handleSelect = (selectedIndex) => {
-    setCurrentIndex(selectedIndex);
-    setCurrentMeme(memes[currentIndex])
-  };
-
+  
   const handleDelete = async (id, token) => {
     await deleteMeme(id, token)
     const getMemesResponse = await getMemes(token);
     dispatch(setMemes(getMemesResponse.data))    
+    setCurrentMeme(memes[currentIndex + 1])
+    setCurrentIndex(currentIndex + 1);
   }
-  console.log('current meme', currentMeme)
+
   return Object.keys(grouped).map((date, index) => {
     return <>
       <div style={{ textAlign: "center" }}>
@@ -92,7 +90,7 @@ const MemesList = () => {
             centered
             >
               <Modal.Body style={{ display: 'flex', height: '500px', alignItems: 'center', justifyContent: 'center' }}>
-                  <Carousel activeIndex={currentIndex} onSelect={handleSelect} variant='dark' interval={null} indicators={false}>
+                  <Carousel activeIndex={currentIndex} variant='dark' interval={null} indicators={false}>
                     {memes.map(meme => (
                       <Carousel.Item
                       key={meme.id}>

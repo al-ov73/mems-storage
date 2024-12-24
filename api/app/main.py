@@ -40,7 +40,6 @@ app.add_middleware(
 app.mount("/static", StaticFiles(directory=STATIC_DIR), STATIC_URL)
 
 if bool(config.START_BOT):
-
     @app.on_event("startup")
     async def on_startup():
         asyncio.create_task(start_bot())
