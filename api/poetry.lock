@@ -2717,6 +2717,24 @@ docs = ["Sphinx (>=4.1.2,<4.2.0)", "sphinx-rtd-theme (>=0.5.2,<0.6.0)", "sphinxc
 test = ["Cython (>=0.29.36,<0.30.0)", "aiohttp (==3.9.0b0)", "aiohttp (>=3.8.1)", "flake8 (>=5.0,<6.0)", "mypy (>=0.800)", "psutil", "pyOpenSSL (>=23.0.0,<23.1.0)", "pycodestyle (>=2.9.0,<2.10.0)"]
 
 [[package]]
+name = "vk-api"
+version = "11.9.9"
+description = "Python модуль для создания скриптов для социальной сети Вконтакте (vk.com API wrapper)"
+optional = false
+python-versions = "*"
+files = [
+    {file = "vk_api-11.9.9-py3-none-any.whl", hash = "sha256:c71021506449afe5b9bbb1c4acb0d86b35a007ddc21678478e46fbbeabd1f3ef"},
+    {file = "vk_api-11.9.9.tar.gz", hash = "sha256:c7741e40bc05980c91ed94c84542e1e7e7370e101b5eaa74222958d4130fe3c2"},
+]
+
+[package.dependencies]
+requests = "*"
+
+[package.extras]
+vkaudio = ["beautifulsoup4"]
+vkstreaming = ["websocket-client"]
+
+[[package]]
 name = "watchfiles"
 version = "0.22.0"
 description = "Simple, modern and high performance file watching and code reload in python."
@@ -3004,4 +3022,4 @@ multidict = ">=4.0"
 [metadata]
 lock-version = "2.0"
 python-versions = "^3.10"
-content-hash = "4d1046a9826ea39e6a3abd212ec89f20f4fdb4b6fcc4e8f9ba61b6d1cbf9563d"
+content-hash = "9f70548c4b49536a26a31f5ea7d2b4c10e7b7eb06c1da97839c49fdc608e1638"
