@@ -49,6 +49,7 @@ const MemesList = () => {
   })
   const handleSelect = (selectedIndex) => {
     setCurrentIndex(selectedIndex);
+    setCurrentMeme(memes[currentIndex])
   };
 
   const handleDelete = async (id, token) => {
