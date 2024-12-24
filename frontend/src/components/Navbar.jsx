@@ -48,7 +48,7 @@ const NavbarPage = ({full}) => {
               </Nav>
             ) : (
               <Nav>
-                <a href="/signup">Регистрация</a>
+                {/* <a href="/signup">Регистрация</a> */}
                 <Button className="mx-4" type="submit" onClick={handleLogin}>
                   Войти
                 </Button>
