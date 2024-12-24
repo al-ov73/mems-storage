@@ -57,7 +57,7 @@ const MemesList = () => {
     const getMemesResponse = await getMemes(token);
     dispatch(setMemes(getMemesResponse.data))    
   }
-
+  console.log('current meme', currentMeme)
   return Object.keys(grouped).map((date, index) => {
     return <>
       <div style={{ textAlign: "center" }}>
