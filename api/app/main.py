@@ -15,6 +15,7 @@ from .routers.labels import router as router_labels
 from .routers.comments import router as router_comments
 from .routers.likes import router as router_likes
 from .routers.users import router as router_users
+
 # from .routers.aichat import router as router_aichat
 
 
@@ -24,6 +25,8 @@ origins = [
     "http://localhost:3000",
     "http://127.0.0.1:3000",
     "http://45.80.71.178:3000",
+    "http://45.80.71.178",
+    "http://45.80.71.178:80",
 ]
 
 app.add_middleware(

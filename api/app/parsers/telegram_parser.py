@@ -25,7 +25,7 @@ async def parse_telegram_channels() -> None:
             except ValueError:
                 continue
             for message in messages:
-                 if message.photo:
+                if message.photo:
                     filename = f"tg_{message._chat.username}_{message.photo.id}"
                     filepath = f"{config.STATIC_DIR}/photos/{filename}"
                     if not os.path.exists(f"{filepath}.jpg"):

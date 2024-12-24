@@ -95,6 +95,7 @@ class StorageRepository(BaseStorageRepo):
             )
             return new_name
 
+
 class FSStorageRepository(ABC):
     def __init__(self, static_path):
         self.static_path = static_path

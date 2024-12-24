@@ -35,7 +35,7 @@ ACCESS_TOKEN_EXPIRE_MINUTES = 120
 
 # Static files directory
 STATIC_DIR = "app/static"
-PHOTOS_DIR = f"{STATIC_DIR}/photos",
+PHOTOS_DIR = (f"{STATIC_DIR}/photos",)
 STATIC_URL = "static"
 PHOTOS_URL = f"{STATIC_URL}/photos"
 

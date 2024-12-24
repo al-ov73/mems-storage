@@ -10,7 +10,7 @@ class MemesRepository:
 
     @staticmethod
     async def get_memes(
-            skip: int,
+        skip: int,
         limit: int,
         db: Session,
     ) -> list[MemeDbSchema]:
@@ -33,20 +33,19 @@ class MemesRepository:
 
     @staticmethod
     async def get_random_meme(
-            db: Session,
+        db: Session,
     ) -> MemeDbSchema:
         """
         return random memes from db
         """
-        random_meme = db.query(Meme) \
-            .filter_by(published=False) \
-            .order_by(func.random()) \
-            .first()
+        random_meme = (
+            db.query(Meme).filter_by(published=False).order_by(func.random()).first()
+        )
         return random_meme
 
     @staticmethod
     async def get_published_stat(
-            db: Session,
+        db: Session,
     ) -> tuple[int, int, int]:
         """
         return random memes from db
@@ -58,7 +57,7 @@ class MemesRepository:
 
     @staticmethod
     async def get_meme(
-            meme_id: str,
+        meme_id: str,
         db: Session,
     ) -> MemeDbSchema:
         """
@@ -80,7 +79,7 @@ class MemesRepository:
 
     @staticmethod
     async def add_meme(
-            new_meme: MemeDbSchema,
+        new_meme: MemeDbSchema,
         db: Session,
     ) -> MemeDbSchema:
         """
@@ -93,7 +92,7 @@ class MemesRepository:
 
     @staticmethod
     async def del_meme(
-            meme_id: str,
+        meme_id: str,
         db: Session,
     ) -> MemeDbSchema:
         """
@@ -106,7 +105,7 @@ class MemesRepository:
 
     @staticmethod
     async def make_meme_published(
-            meme_id: int,
+        meme_id: int,
         db: Session,
     ) -> MemeDbSchema:
         """
@@ -119,7 +118,7 @@ class MemesRepository:
 
     @staticmethod
     async def update_name(
-            meme_id: str,
+        meme_id: str,
         filename: str,
         db: Session,
     ) -> MemeDbSchema:
@@ -137,7 +136,7 @@ class MemesRepository:
 
     @staticmethod
     async def get_top_liked_memes(
-            limit: int,
+        limit: int,
         db: Session,
     ) -> list[MemeDbSchema]:
         """
