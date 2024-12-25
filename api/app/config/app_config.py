@@ -58,3 +58,7 @@ VK_GROUPS = os.getenv("VK_GROUPS").split(" ")
 PARSE_INTERVAL = os.getenv("PARSE_INTERVAL")
 PARSE_LIMIT = os.getenv("PARSE_LIMIT")
 SEND_PHOTO_INTERVAL = os.getenv("SEND_PHOTO_INTERVAL")
+
+# gigachat config
+GIGACHAT_KEY = os.getenv("GIGACHAT_KEY")
+JOKE_INTERVAL = os.getenv("JOKE_INTERVAL")
