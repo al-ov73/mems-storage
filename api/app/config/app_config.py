@@ -44,12 +44,17 @@ API_ID = os.getenv("API_ID")
 API_HASH = os.getenv("API_HASH")
 CHANNEL = os.getenv("CHANNEL")
 YA_TOKEN = os.getenv("YA_TOKEN")
-CHANNELS = os.getenv("CHANNELS").split(" ")
-PARSE_LIMIT = os.getenv("PARSE_LIMIT")
 
 # telegram bot config
 BOT_TOKEN = os.getenv("BOT_TOKEN")
+CHANNELS = os.getenv("CHANNELS").split(" ")
 CHAT_ID = os.getenv("CHAT_ID")
 MY_API_ID = os.getenv("MY_API_ID")
-SEND_PHOTO_INTERVAL = os.getenv("SEND_PHOTO_INTERVAL")
+
+#vk parser config
+VK_TOKEN = os.getenv("VK_TOKEN")
+VK_GROUPS = os.getenv("VK_GROUPS").split(" ")
+
 PARSE_INTERVAL = os.getenv("PARSE_INTERVAL")
+PARSE_LIMIT = os.getenv("PARSE_LIMIT")
+SEND_PHOTO_INTERVAL = os.getenv("SEND_PHOTO_INTERVAL")
