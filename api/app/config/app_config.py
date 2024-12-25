@@ -51,7 +51,7 @@ CHANNELS = os.getenv("CHANNELS").split(" ")
 CHAT_ID = os.getenv("CHAT_ID")
 MY_API_ID = os.getenv("MY_API_ID")
 
-#vk parser config
+# vk parser config
 VK_TOKEN = os.getenv("VK_TOKEN")
 VK_GROUPS = os.getenv("VK_GROUPS").split(" ")
 

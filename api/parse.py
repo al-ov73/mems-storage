@@ -5,7 +5,7 @@ from .app.parsers.telegram_parser import parse_telegram_channels
 
 
 async def parse():
-    # await parse_telegram_channels()
+    await parse_telegram_channels()
     await parse_vk_groups()
 
 
