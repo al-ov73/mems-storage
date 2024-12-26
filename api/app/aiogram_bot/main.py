@@ -87,7 +87,7 @@ async def parse_command(message: Message):
     days_remain = (not_published * 60) / (int(config.SEND_PHOTO_INTERVAL) * 24)
 
     await bot.send_message(
-        message.chat.id,
+        config.MY_API_ID,
         f"Всего картинок: {total}\n"
         f"Опубликовано картинок: {published}\n"
         f"Не опубликовано: {not_published} ({round(days_remain)} дн.)\n"
