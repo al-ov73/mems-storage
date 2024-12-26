@@ -103,7 +103,7 @@ async def parse_command(message: Message):
 @dp.message()
 async def parse_command(message: Message):
     giga_reply = await get_response_from_gigachat(message.text)
-    await message.reply(giga_reply)
+    # await message.reply(giga_reply)
 
 
 async def start_bot():
