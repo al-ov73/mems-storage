@@ -5,11 +5,12 @@ from aiogram import Bot, Dispatcher, html, F
 from aiogram.client.default import DefaultBotProperties
 from aiogram.enums import ParseMode
 from aiogram.filters import CommandStart
-from aiogram.types import ChatActions
+
 from aiogram.filters.command import Command
 from aiogram.types import InlineKeyboardButton, InlineKeyboardMarkup, InputFile, BufferedInputFile
 from aiogram.types import Message
 from aiogram.types import URLInputFile
+from aiogram.utils.chat_action import ChatActionSender
 from apscheduler.schedulers.asyncio import AsyncIOScheduler
 
 from ..config import config
@@ -98,12 +99,12 @@ async def parse_command(message: Message):
 @dp.message()
 async def parse_command(message: Message) -> None:
     giga_reply = await get_response_from_gigachat(message.text)
-    await bot.send_chat_action(message.chat.id, ChatActions.TYPING)
-    if giga_reply.image:
-        image = BufferedInputFile(giga_reply.image, filename="giga.jpg")
-        await message.reply_photo(image)
-        return
-    await message.reply(giga_reply.text_reply)
+    async with ChatActionSender.typing(bot=bot, chat_id=message.chat.id):
+        if giga_reply.image:
+            image = BufferedInputFile(giga_reply.image, filename="giga.jpg")
+            await message.reply_photo(image)
+            return
+        await message.reply(giga_reply.text_reply)
 
 
 async def start_bot():
