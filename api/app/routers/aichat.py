@@ -15,8 +15,6 @@ AUTH_KEY = os.getenv("AUTH_KEY")
 @router.post("/")
 async def get_data_from_form(question: str = Form()) -> str:
     print("get question: ", question)
-    with GigaChat(
-        credentials=AUTH_KEY, scope="GIGACHAT_API_PERS", verify_ssl_certs=False
-    ) as giga:
+    with GigaChat(credentials=AUTH_KEY, scope="GIGACHAT_API_PERS", verify_ssl_certs=False) as giga:
         response = giga.chat(question)
     return response.choices[0].message.content

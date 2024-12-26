@@ -54,9 +54,7 @@ def get_user(
         return user
 
 
-def authenticate_user(
-    username: str, password: str, db: Session = Depends(get_db)
-) -> UserDbSchema | None:
+def authenticate_user(username: str, password: str, db: Session = Depends(get_db)) -> UserDbSchema | None:
     """
     return user if login and password match data in db
     """
@@ -97,9 +95,7 @@ async def register_user(
     return new_user
 
 
-def create_access_token(
-    user: UserDbSchema, expires_delta: timedelta | None = None
-) -> str:
+def create_access_token(user: UserDbSchema, expires_delta: timedelta | None = None) -> str:
     """
     return JWT token with expires time
     """
@@ -110,9 +106,7 @@ def create_access_token(
     if expires_delta:
         expire = datetime.now(timezone.utc) + expires_delta
     else:
-        expire = datetime.now(timezone.utc) + timedelta(
-            minutes=ACCESS_TOKEN_EXPIRE_MINUTES
-        )
+        expire = datetime.now(timezone.utc) + timedelta(minutes=ACCESS_TOKEN_EXPIRE_MINUTES)
     to_encode.update({"exp": expire})
     encoded_jwt = jwt.encode(to_encode, JWT_TOKEN_SECRET_KEY, algorithm=ALGORITHM)
     return encoded_jwt

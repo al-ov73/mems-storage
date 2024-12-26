@@ -20,9 +20,7 @@ limit = config.PARSE_LIMIT
 async def parse_vk_groups():
     for group in vk_groups:
         params = {"access_token": token, "v": 5.199, "domain": group, "count": limit}
-        response = requests.get(
-            "https://api.vk.com/method/wall.get", params=params
-        ).json()
+        response = requests.get("https://api.vk.com/method/wall.get", params=params).json()
         posts = response["response"]["items"]
         for post in posts:
             attachments = post.get("attachments")

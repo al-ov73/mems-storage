@@ -45,9 +45,7 @@ class CommentsRepository:
         """
         add comment to db
         """
-        new_comment = Comment(
-            text=text, author_id=author_id, author_name=author_name, meme_id=meme_id
-        )
+        new_comment = Comment(text=text, author_id=author_id, author_name=author_name, meme_id=meme_id)
         db.add(new_comment)
         db.commit()
         db.refresh(new_comment)

@@ -17,9 +17,7 @@ class Meme(Base):
     created_at: Mapped[created_at]
     published: Mapped[bool] = mapped_column(Boolean, default=False, nullable=False)
 
-    meme_labels: Mapped[list["Label"]] = relationship(
-        secondary="labels_meme", back_populates="label_memes"
-    )
+    meme_labels: Mapped[list["Label"]] = relationship(secondary="labels_meme", back_populates="label_memes")
     comments: Mapped[list["Comment"]] = relationship(back_populates="meme")
     likes: Mapped[list["Like"]] = relationship(back_populates="meme")
 

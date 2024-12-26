@@ -5,9 +5,7 @@ from sqlalchemy_utils import database_exists, create_database
 from .app_config import DB_USER, DB_PASSWORD, DB_HOST, DB_PORT, DB_NAME
 
 
-SQLALCHEMY_DATABASE_URL = (
-    f"postgresql://{DB_USER}:{DB_PASSWORD}@{DB_HOST}:{DB_PORT}/{DB_NAME}"
-)
+SQLALCHEMY_DATABASE_URL = f"postgresql://{DB_USER}:{DB_PASSWORD}@{DB_HOST}:{DB_PORT}/{DB_NAME}"
 
 engine = create_engine(
     SQLALCHEMY_DATABASE_URL,

@@ -48,9 +48,7 @@ def upgrade() -> None:
         "memes",
         sa.Column("id", sa.Integer(), autoincrement=True, nullable=False),
         sa.Column("name", sa.String(), nullable=False),
-        sa.Column(
-            "created_at", sa.DateTime(), server_default=sa.text("now()"), nullable=False
-        ),
+        sa.Column("created_at", sa.DateTime(), server_default=sa.text("now()"), nullable=False),
         sa.Column("author_id", sa.Integer(), nullable=False),
         sa.Column(
             "category",
@@ -65,9 +63,7 @@ def upgrade() -> None:
         "messages",
         sa.Column("id", sa.Integer(), autoincrement=True, nullable=False),
         sa.Column("text", sa.String(), nullable=False),
-        sa.Column(
-            "created_at", sa.DateTime(), server_default=sa.text("now()"), nullable=False
-        ),
+        sa.Column("created_at", sa.DateTime(), server_default=sa.text("now()"), nullable=False),
         sa.Column("author_id", sa.Integer(), nullable=False),
         sa.ForeignKeyConstraint(["author_id"], ["users.id"], ondelete="CASCADE"),
         sa.PrimaryKeyConstraint("id"),
@@ -78,14 +74,10 @@ def upgrade() -> None:
         sa.Column("text", sa.String(), nullable=False),
         sa.Column("author_name", sa.String(), nullable=False),
         sa.Column("author_id", sa.Integer(), nullable=False),
-        sa.Column(
-            "created_at", sa.DateTime(), server_default=sa.text("now()"), nullable=False
-        ),
+        sa.Column("created_at", sa.DateTime(), server_default=sa.text("now()"), nullable=False),
         sa.Column("meme_id", sa.Integer(), nullable=False),
         sa.ForeignKeyConstraint(["author_id"], ["users.id"], ondelete="CASCADE"),
-        sa.ForeignKeyConstraint(
-            ["author_name"], ["users.username"], ondelete="CASCADE"
-        ),
+        sa.ForeignKeyConstraint(["author_name"], ["users.username"], ondelete="CASCADE"),
         sa.ForeignKeyConstraint(["meme_id"], ["memes.id"], ondelete="CASCADE"),
         sa.PrimaryKeyConstraint("id"),
     )

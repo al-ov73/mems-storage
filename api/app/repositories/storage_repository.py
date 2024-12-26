@@ -28,9 +28,7 @@ class BaseStorageRepo(ABC):
         pass
 
     @abstractmethod
-    async def update_image(
-        self, old_name: str, new_name: str, new_file: BinaryIO
-    ) -> str:
+    async def update_image(self, old_name: str, new_name: str, new_file: BinaryIO) -> str:
         pass
 
 
@@ -68,9 +66,7 @@ class StorageRepository(BaseStorageRepo):
     async def add_image(self, filename: str, file: SpooledTemporaryFile) -> str:
         async with aiohttp.ClientSession() as session:
             data = FormData()
-            data.add_field(
-                "file", file, filename=filename, content_type="multipart/form-data"
-            )
+            data.add_field("file", file, filename=filename, content_type="multipart/form-data")
             logger.info("Send post request to S3 service")
             response = await session.post(f"{self.api_url}/images", data=data)
             text_response = await response.text()
@@ -84,9 +80,7 @@ class StorageRepository(BaseStorageRepo):
             text_response = await response.text()
             return text_response
 
-    async def update_image(
-        self, old_name: str, new_name: str, new_file: SpooledTemporaryFile
-    ) -> str:
+    async def update_image(self, old_name: str, new_name: str, new_file: SpooledTemporaryFile) -> str:
         async with aiohttp.ClientSession() as session:
             await session.delete(f"{self.api_url}/images/{old_name}")
             await session.post(

@@ -59,9 +59,7 @@ async def post_comment(
     """
     author_id = user.id
     author_username = user.username
-    new_comment = await comments_repo.add_comment(
-        text, author_id, author_username, meme_id, db
-    )
+    new_comment = await comments_repo.add_comment(text, author_id, author_username, meme_id, db)
     current_meme = await meme_repo.get_meme(meme_id, db)
     current_meme.comments.append(new_comment)
     db.commit()

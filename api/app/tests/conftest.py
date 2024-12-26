@@ -23,9 +23,7 @@ DB_PORT: str = os.getenv("DB_PORT", 5432)
 DB_NAME: str = os.getenv("TEST_DB_NAME")
 DB_ENDPOINT: str = os.getenv("DB_ENDPOINT")
 
-SQLALCHEMY_DATABASE_URL = (
-    f"postgresql://{DB_USER}:{DB_PASSWORD}@{DB_HOST}:{DB_PORT}/{DB_NAME}"
-)
+SQLALCHEMY_DATABASE_URL = f"postgresql://{DB_USER}:{DB_PASSWORD}@{DB_HOST}:{DB_PORT}/{DB_NAME}"
 
 
 engine = create_engine(SQLALCHEMY_DATABASE_URL)

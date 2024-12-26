@@ -38,9 +38,7 @@ class MemesRepository:
         """
         return random memes from db
         """
-        random_meme = (
-            db.query(Meme).filter_by(published=False).order_by(func.random()).first()
-        )
+        random_meme = db.query(Meme).filter_by(published=False).order_by(func.random()).first()
         return random_meme
 
     @staticmethod

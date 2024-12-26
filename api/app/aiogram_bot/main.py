@@ -18,9 +18,7 @@ from ..utils.gigachat import get_response_from_gigachat
 from ..utils.other_utils import get_folder_size
 from ...parse import parse
 
-bot = Bot(
-    token=config.BOT_TOKEN, default=DefaultBotProperties(parse_mode=ParseMode.HTML)
-)
+bot = Bot(token=config.BOT_TOKEN, default=DefaultBotProperties(parse_mode=ParseMode.HTML))
 dp = Dispatcher()
 
 meme_repo = get_memes_repository()
@@ -42,10 +40,12 @@ async def send_photo_periodically():
     await bot.send_photo(config.CHAT_ID, URLInputFile(random_image.link))
     await meme_repo.make_meme_published(random_image.id, db)
 
+
 async def send_joke_periodically():
     joke_request = "сгенерируй смешную шутку про IT"
     joke = await get_response_from_gigachat(joke_request)
     await bot.send_message(config.CHAT_ID, joke)
+
 
 async def parse_periodically():
     count_before = len(os.listdir(path=f"{config.STATIC_DIR}/photos"))
@@ -99,6 +99,7 @@ async def parse_command(message: Message):
         reply_markup=keyboard,
     )
 
+
 @dp.message()
 async def parse_command(message: Message):
     giga_reply = await get_response_from_gigachat(message.text)
@@ -108,15 +109,9 @@ async def parse_command(message: Message):
 async def start_bot():
     if config.ENV == "prod":
         scheduler = AsyncIOScheduler()
-        scheduler.add_job(
-            send_photo_periodically, "interval", minutes=int(config.SEND_PHOTO_INTERVAL)
-        )
-        scheduler.add_job(
-            parse_periodically, "interval", hours=int(config.PARSE_INTERVAL)
-        )
-        scheduler.add_job(
-            send_joke_periodically, "interval", minutes=int(config.PARSE_INTERVAL)
-        )
+        scheduler.add_job(send_photo_periodically, "interval", minutes=int(config.SEND_PHOTO_INTERVAL))
+        scheduler.add_job(parse_periodically, "interval", hours=int(config.PARSE_INTERVAL))
+        # scheduler.add_job(send_joke_periodically, "interval", minutes=int(config.PARSE_INTERVAL))
         scheduler.start()
 
     loop = asyncio.get_event_loop()
