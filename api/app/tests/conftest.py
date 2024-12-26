@@ -8,7 +8,7 @@ from sqlalchemy_utils import database_exists, create_database
 
 from ..schemas.memes import MemeSchema
 from .fake.fake_storage_repository import FakeStorageRepository
-from ..config.app_config import MINIO_API_URL
+from ..config.config import MINIO_API_URL
 from ..config.db_config import Base, get_db
 from ..config.dependencies import get_storage_repo
 from ..main import app

@@ -1,4 +1,4 @@
-from api.app.config.app_config import ALGORITHM, JWT_TOKEN_SECRET_KEY
+from api.app.config.config import ALGORITHM, JWT_TOKEN_SECRET_KEY
 import jwt
 import json
 from .fixtures.test_data import TEST_MESSAGE, TEST_USER

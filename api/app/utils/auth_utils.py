@@ -8,7 +8,7 @@ from jwt.exceptions import InvalidTokenError
 from passlib.context import CryptContext
 from sqlalchemy.orm import Session
 
-from ..config.app_config import (
+from ..config.config import (
     ALGORITHM,
     JWT_TOKEN_SECRET_KEY,
     ACCESS_TOKEN_EXPIRE_MINUTES,

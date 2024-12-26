@@ -2,7 +2,7 @@ import os
 from ..config.db_config import get_db
 from ..config.dependencies import get_memes_repository
 from ..models.meme import Meme
-from ..config import app_config as config
+from ..config import config as config
 from telethon import TelegramClient
 
 meme_repo = get_memes_repository()

@@ -5,7 +5,7 @@ from aiohttp import FormData, StreamReader
 from abc import abstractmethod, ABC
 from tempfile import SpooledTemporaryFile
 from typing import BinaryIO
-from ..config import app_config as config
+from ..config import config as config
 
 from ..config.logger_config import get_logger
 

@@ -1,5 +1,5 @@
 from ..repositories.users_repository import UsersRepository
-from ..config import app_config as config
+from ..config import config
 from ..repositories.comments_repository import CommentsRepository
 from ..repositories.memes_repository import MemesRepository
 from ..repositories.storage_repository import FSStorageRepository

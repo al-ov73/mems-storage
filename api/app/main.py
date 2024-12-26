@@ -1,13 +1,11 @@
 import asyncio
 from fastapi import FastAPI
-from fastapi import FastAPI
 from fastapi.staticfiles import StaticFiles
 from fastapi.middleware.cors import CORSMiddleware
 
 from .aiogram_bot.main import start_bot
-from .config import app_config as config
 
-from .config.app_config import STATIC_DIR, STATIC_URL
+from .config import config
 
 from .routers.auth import router as router_auth
 from .routers.memes import router as router_memes
@@ -37,7 +35,7 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-app.mount("/static", StaticFiles(directory=STATIC_DIR), STATIC_URL)
+app.mount("/static", StaticFiles(directory=config.STATIC_DIR), config.STATIC_URL)
 
 if bool(config.START_BOT):
 

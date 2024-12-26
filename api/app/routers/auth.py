@@ -7,7 +7,7 @@ from sqlalchemy.orm import Session
 
 from ..utils.auth_utils import authenticate_user, create_access_token, register_user
 from ..config.db_config import get_db
-from ..config.app_config import ACCESS_TOKEN_EXPIRE_MINUTES
+from ..config.config import ACCESS_TOKEN_EXPIRE_MINUTES
 from ..utils.auth_utils import get_current_user
 from ..schemas.tokens import TokenSchema
 from ..config.dependencies import get_storage_repo

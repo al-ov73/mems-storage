@@ -5,13 +5,14 @@ from aiogram import Bot, Dispatcher, html, F
 from aiogram.client.default import DefaultBotProperties
 from aiogram.enums import ParseMode
 from aiogram.filters import CommandStart
+from aiogram.types import ChatActions
 from aiogram.filters.command import Command
-from aiogram.types import InlineKeyboardButton, InlineKeyboardMarkup
+from aiogram.types import InlineKeyboardButton, InlineKeyboardMarkup, InputFile, BufferedInputFile
 from aiogram.types import Message
 from aiogram.types import URLInputFile
 from apscheduler.schedulers.asyncio import AsyncIOScheduler
 
-from ..config import app_config as config
+from ..config import config
 from ..config.db_config import get_db
 from ..config.dependencies import get_memes_repository
 from ..utils.gigachat import get_response_from_gigachat
@@ -39,12 +40,6 @@ async def send_photo_periodically():
     random_image = await meme_repo.get_random_meme(db=db)
     await bot.send_photo(config.CHAT_ID, URLInputFile(random_image.link))
     await meme_repo.make_meme_published(random_image.id, db)
-
-
-async def send_joke_periodically():
-    joke_request = "сгенерируй смешную шутку про IT"
-    joke = await get_response_from_gigachat(joke_request)
-    await bot.send_message(config.CHAT_ID, joke)
 
 
 async def parse_periodically():
@@ -91,7 +86,7 @@ async def parse_command(message: Message):
     days_remain = (not_published * 60) / (int(config.SEND_PHOTO_INTERVAL) * 24)
 
     await bot.send_message(
-        config.MY_API_ID,
+        message.chat.id,
         f"Всего картинок: {total}\n"
         f"Опубликовано картинок: {published}\n"
         f"Не опубликовано: {not_published} ({round(days_remain)} дн.)\n"
@@ -101,9 +96,14 @@ async def parse_command(message: Message):
 
 
 @dp.message()
-async def parse_command(message: Message):
+async def parse_command(message: Message) -> None:
     giga_reply = await get_response_from_gigachat(message.text)
-    # await message.reply(giga_reply)
+    await bot.send_chat_action(message.chat.id, ChatActions.TYPING)
+    if giga_reply.image:
+        image = BufferedInputFile(giga_reply.image, filename="giga.jpg")
+        await message.reply_photo(image)
+        return
+    await message.reply(giga_reply.text_reply)
 
 
 async def start_bot():
@@ -111,7 +111,6 @@ async def start_bot():
         scheduler = AsyncIOScheduler()
         scheduler.add_job(send_photo_periodically, "interval", minutes=int(config.SEND_PHOTO_INTERVAL))
         scheduler.add_job(parse_periodically, "interval", hours=int(config.PARSE_INTERVAL))
-        # scheduler.add_job(send_joke_periodically, "interval", minutes=int(config.PARSE_INTERVAL))
         scheduler.start()
 
     loop = asyncio.get_event_loop()

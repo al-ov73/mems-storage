@@ -1,29 +1,38 @@
 import requests
 import base64
 import shutil
+from dataclasses import dataclass
 from gigachat import GigaChat
 from gigachat.models import Chat, Messages, MessagesRole
-from ..config import app_config
+from ..config import config
 
-GIGACHAT_KEY = app_config.GIGACHAT_KEY
+GIGACHAT_KEY = config.GIGACHAT_KEY
 
 
-async def get_response_from_gigachat(question: str) -> str:
+@dataclass
+class GigaReply:
+    text_reply: str
+    image: bytes | None = None
+
+
+async def get_response_from_gigachat(question: str) -> GigaReply:
     payload = Chat(
         messages=[Messages(role=MessagesRole.USER, content=question)],
         temperature=0.7,
         max_tokens=100,
         function_call="auto",
     )
+    image = None
     with GigaChat(credentials=GIGACHAT_KEY, verify_ssl_certs=False) as giga:
         response = giga.chat(payload)
 
-        message_content = response.choices[0].message.content
-        if '<img' in message_content:
-            start_index = message_content.find('src="') + len('src="')
-            end_index = message_content.find('"', start_index)
-            image_id = message_content[start_index:end_index]
+        message = response.choices[0].message.content
+        text_msg = message
+        if "<img" in message:
+            start_index = message.find('src="') + len('src="')
+            end_index = message.find('"', start_index)
+            image_id = message[start_index:end_index]
             image = giga.get_image(image_id)
-            with open('./image.jpg', mode="wb") as fd:
-                fd.write(base64.b64decode(image.content))
-            print('file saved')
+            text_msg = message[end_index:]
+            image = base64.b64decode(image.content)
+        return GigaReply(text_reply=text_msg, image=image)
