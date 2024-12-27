@@ -43,6 +43,7 @@ async def parse_vk_groups():
                             name=f"{filename}.jpg",
                             source_type="vk",
                             source_name=group,
+                            checked=False,
                             link=f"{config.API_URL}/{config.STATIC_URL}/photos/{filename}.jpg",
                         )
                         meme_in_db = await meme_repo.add_meme(new_meme, db)

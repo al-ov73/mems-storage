@@ -34,6 +34,7 @@ async def parse_telegram_channels() -> None:
                             name=f"{filename}.jpg",
                             source_type="tg",
                             source_name=message._chat.username,
+                            checked=False,
                             link=f"{config.API_URL}/{config.STATIC_URL}/photos/{filename}.jpg",
                         )
                         meme_in_db = await meme_repo.add_meme(new_meme, db)
