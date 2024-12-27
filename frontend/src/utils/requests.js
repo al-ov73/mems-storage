@@ -1,7 +1,13 @@
 import axios from 'axios';
 import routes from './routes';
 
-const getMemes = async (accessToken) => axios.get(routes.memesPath, {
+const getMemes = async (accessToken) => axios.get(`${routes.memesPath}/checked`, {
+  headers: {
+    Authorization: `Bearer ${accessToken}`,
+  },
+});
+
+const getNotCheckedMemes = async (accessToken) => axios.get(`${routes.memesPath}/notchecked`, {
   headers: {
     Authorization: `Bearer ${accessToken}`,
   },
@@ -148,6 +154,7 @@ const postQuestion = async (form, accessToken) => {
 
 export {
   getMemes,
+  getNotCheckedMemes,
   getMessages,
   getCategories,
   loginUser,

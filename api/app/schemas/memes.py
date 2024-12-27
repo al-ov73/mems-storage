@@ -15,3 +15,5 @@ class MemeDbSchema(BaseModel):
     meme_labels: list[LabelSchema]
     likes: list[LikeSchema]
     comments: list[CommentSchema]
+    published: bool
+    checked: bool

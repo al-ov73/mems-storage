@@ -30,3 +30,6 @@ connect-frontend:
 
 serv:
 		ssh -R memes-storage:80:localhost:3000 serveo.net
+
+db:
+		docker compose run db

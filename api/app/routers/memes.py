@@ -35,9 +35,55 @@ async def get_memes(
     """
     logger.info("Got request for all memes")
     memes = await meme_repo.get_memes(skip, limit, db)
-    logger.debug(f"Got {len(memes)} memes from db")
     return memes
 
+@router.get(
+    "/checked",
+)
+async def get_checked_memes(
+    skip: int = 0,
+    limit: int = 2000,
+    db: Session = Depends(get_db),
+    meme_repo: MemesRepository = Depends(get_memes_repository),
+    storage_repo: BaseStorageRepo = Depends(get_storage_repo),
+):
+    """
+    return list of memes with links to download
+    """
+    memes = await meme_repo.get_checked_memes(skip, limit, db)
+    return memes
+
+@router.get(
+    "/notchecked",
+)
+async def get_not_checked_memes(
+    skip: int = 0,
+    limit: int = 2000,
+    db: Session = Depends(get_db),
+    meme_repo: MemesRepository = Depends(get_memes_repository),
+    storage_repo: BaseStorageRepo = Depends(get_storage_repo),
+):
+    """
+    return list of memes with links to download
+    """
+    memes = await meme_repo.get_not_checked_memes(skip, limit, db)
+    return memes
+
+@router.get(
+    "/check",
+)
+async def check_memes(
+    ids: str,
+    db: Session = Depends(get_db),
+    meme_repo: MemesRepository = Depends(get_memes_repository),
+):
+    """
+    return list of memes with links to download
+    """
+    logger.info(f"Checked ids: {ids}")
+    ids = list(map(lambda id: int(id), ids.split(" ")))
+    checked_ids = await meme_repo.check_memes(ids, db)
+    return checked_ids
 
 @router.get("/parse")
 async def parse_memes():

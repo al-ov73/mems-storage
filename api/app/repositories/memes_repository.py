@@ -32,6 +32,54 @@ class MemesRepository:
         return memes
 
     @staticmethod
+    async def get_checked_memes(
+        skip: int,
+        limit: int,
+        db: Session,
+    ) -> list[MemeDbSchema]:
+        """
+        return list of checked memes from db
+        """
+        memes = (
+            db.query(Meme)
+            .filter_by(checked=True)
+            .outerjoin(Comment)
+            .options(selectinload(Meme.meme_labels))
+            # .options(contains_eager(Meme.comments))
+            .options(selectinload(Meme.likes))
+            .order_by(Meme.id.desc())
+            # .order_by(Comment.id.desc())
+            .offset(skip)
+            .limit(limit)
+            .all()
+        )
+        return memes
+
+    @staticmethod
+    async def get_not_checked_memes(
+        skip: int,
+        limit: int,
+        db: Session,
+    ) -> list[MemeDbSchema]:
+        """
+        return list of not checked memes from db
+        """
+        memes = (
+            db.query(Meme)
+            .filter_by(checked=False)
+            .outerjoin(Comment)
+            .options(selectinload(Meme.meme_labels))
+            # .options(contains_eager(Meme.comments))
+            .options(selectinload(Meme.likes))
+            .order_by(Meme.id.desc())
+            # .order_by(Comment.id.desc())
+            .offset(skip)
+            .limit(limit)
+            .all()
+        )
+        return memes
+    
+    @staticmethod
     async def get_random_meme(
         db: Session,
     ) -> MemeDbSchema:
@@ -74,6 +122,28 @@ class MemesRepository:
         if not meme:
             return "meme not exist"
         return meme
+
+    @staticmethod
+    async def check_memes(
+        meme_ids: list[int],
+        db: Session,
+    ) -> MemeDbSchema:
+        """
+        return meme from db
+        """
+        changed_ids = []
+        for meme_id in meme_ids:
+            meme = (
+                db.query(Meme)
+                .filter(Meme.id == meme_id)
+                .first()
+            )
+            if meme:
+                meme.checked = True
+                db.commit()
+                db.refresh(meme)
+                changed_ids.append(meme_id)
+        return changed_ids
 
     @staticmethod
     async def add_meme(
