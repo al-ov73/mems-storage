@@ -69,11 +69,11 @@ async def get_not_checked_memes(
     memes = await meme_repo.get_not_checked_memes(skip, limit, db)
     return memes
 
-@router.get(
+@router.post(
     "/check",
 )
 async def check_memes(
-    ids: str,
+    ids: Annotated[str, Form()],
     db: Session = Depends(get_db),
     meme_repo: MemesRepository = Depends(get_memes_repository),
 ):

@@ -37,11 +37,11 @@ app.add_middleware(
 
 app.mount("/static", StaticFiles(directory=config.STATIC_DIR), config.STATIC_URL)
 
-if bool(config.START_BOT):
+# if bool(config.START_BOT):
 
-    @app.on_event("startup")
-    async def on_startup():
-        asyncio.create_task(start_bot())
+#     @app.on_event("startup")
+#     async def on_startup():
+#         asyncio.create_task(start_bot())
 
 
 app.include_router(router_auth, prefix="/auth/jwt", tags=["auth"])

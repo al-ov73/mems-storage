@@ -13,6 +13,18 @@ const getNotCheckedMemes = async (accessToken) => axios.get(`${routes.memesPath}
   },
 });
 
+
+const sendCheckedMemes = async (accessToken, ids) => {
+  const form = new FormData();
+  form.append('ids', ids.join(' '));
+  
+  return axios.post(`${routes.memesPath}/check`, form, {
+    headers: {
+      Authorization: `Bearer ${accessToken}`,
+    },
+  })
+};
+
 const getMessages = async (accessToken) => {
   const response = await axios.get(routes.messagesPath, {
     headers: {
@@ -155,6 +167,7 @@ const postQuestion = async (form, accessToken) => {
 export {
   getMemes,
   getNotCheckedMemes,
+  sendCheckedMemes,
   getMessages,
   getCategories,
   loginUser,
