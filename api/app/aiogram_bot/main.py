@@ -44,10 +44,21 @@ async def send_photo_periodically():
 
 
 async def parse_periodically():
+    await parse()
+
+
+@dp.message(CommandStart())
+async def command_start_handler(message: Message) -> None:
+    await message.answer(f"Hello, {html.bold(message.from_user.full_name)}!")
+
+
+@dp.callback_query(F.data.startswith("parse"))
+@dp.message(Command("parse"))
+async def parse_command(message: Message):
     count_before = len(os.listdir(path=f"{config.STATIC_DIR}/photos"))
     folder_size_before = get_folder_size(f"{config.STATIC_DIR}/photos")
     await bot.send_message(config.MY_API_ID, "Скачиваем картинки")
-    await parse()
+    await parse_periodically()
     count_after = len(os.listdir(path=f"{config.STATIC_DIR}/photos"))
     await bot.send_message(
         config.MY_API_ID,
@@ -59,17 +70,6 @@ async def parse_periodically():
         f"Общий объем директории с мемами: {folder_size_before}МБ -> {folder_size_after}МБ",
         reply_markup=keyboard,
     )
-
-
-@dp.message(CommandStart())
-async def command_start_handler(message: Message) -> None:
-    await message.answer(f"Hello, {html.bold(message.from_user.full_name)}!")
-
-
-@dp.callback_query(F.data.startswith("parse"))
-@dp.message(Command("parse"))
-async def parse_command(message: Message):
-    await parse_periodically()
 
 
 @dp.callback_query(F.data.startswith("send"))
@@ -84,7 +84,7 @@ async def image_send_command(message: Message):
 async def parse_command(message: Message):
     total, published, not_published = await meme_repo.get_published_stat(db=db)
     folder_size = get_folder_size(f"{config.STATIC_DIR}/photos")
-    days_remain = (not_published * 60) / (int(config.SEND_PHOTO_INTERVAL) * 24)
+    days_remain = (not_published * int(config.SEND_PHOTO_INTERVAL)) / (60 * 24)
 
     await bot.send_message(
         config.MY_API_ID,
