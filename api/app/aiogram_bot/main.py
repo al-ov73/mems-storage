@@ -62,8 +62,7 @@ async def parse_command(message: Message):
     count_after = len(os.listdir(path=f"{config.STATIC_DIR}/photos"))
     folder_size_after = get_folder_size(f"{config.STATIC_DIR}/photos")
     await reply.edit_message_text(
-        f"Общий объем директории с мемами: {folder_size_before}МБ -> {folder_size_after}МБ\n"
-        f"Скачалось картинок: {count_after - count_before} ({count_before}->{count_after})",
+        f"Общий объем директории с мемами: {folder_size_before}МБ -> {folder_size_after}МБ\nСкачалось картинок: {count_after - count_before} ({count_before}->{count_after})",
         reply_markup=keyboard,
     )
 
