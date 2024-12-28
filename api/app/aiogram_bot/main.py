@@ -79,15 +79,16 @@ async def image_send_command(message: Message):
 @dp.callback_query(F.data.startswith("stat"))
 @dp.message(Command("stat"))
 async def parse_command(message: Message):
-    total, published, not_published = await meme_repo.get_published_stat(db=db)
+    day_stat = await meme_repo.get_published_stat(db=db)
     folder_size = get_folder_size(f"{config.STATIC_DIR}/photos")
-    days_remain = (not_published * int(config.SEND_PHOTO_INTERVAL)) / (60 * 24)
+    days_remain = (day_stat.not_published * int(config.SEND_PHOTO_INTERVAL)) / (60 * 24)
 
     await bot.send_message(
         config.MY_API_ID,
-        f"Всего картинок: {total}\n"
-        f"Опубликовано картинок: {published}\n"
-        f"Не опубликовано: {not_published} ({round(days_remain)} дн.) [Проверить](http://45.80.71.178/temp)\n"
+        f"Всего картинок: {day_stat.total} шт.\n"
+        f"Опубликовано картинок: {day_stat.published} шт.\n"
+        f"Не опубликовано: {day_stat.not_published} шт. ({round(days_remain)} дн.)\n"
+        f"Ожидают проверки: {day_stat.not_checked} шт. [Проверить](http://45.80.71.178/temp)\n"
         f"Общий объем директории с мемами: {folder_size}МБ",
         reply_markup=keyboard,
     )

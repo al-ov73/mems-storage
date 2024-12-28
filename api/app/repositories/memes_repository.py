@@ -5,6 +5,8 @@ from ..schemas.memes import MemeDbSchema
 from sqlalchemy import func, false
 from sqlalchemy.orm import Session, joinedload, selectinload, contains_eager
 
+from ..schemas.stat import StatSchema
+
 
 class MemesRepository:
 
@@ -86,20 +88,26 @@ class MemesRepository:
         """
         return random memes from db
         """
-        random_meme = db.query(Meme).filter_by(published=False).order_by(func.random()).first()
+        random_meme = db.query(Meme).filter_by(published=False).filter_by(checked=True).order_by(func.random()).first()
         return random_meme
 
     @staticmethod
     async def get_published_stat(
         db: Session,
-    ) -> tuple[int, int, int]:
+    ) -> StatSchema:
         """
         return random memes from db
         """
         total = db.query(Meme).count()
         published = db.query(Meme).filter_by(published=True).count()
         not_published = total - published
-        return total, published, not_published
+        not_checked = db.query(Meme).filter_by(checked=False).count()
+        return StatSchema(
+            total=total,
+            published=published,
+            not_published=not_published,
+            not_checked=not_checked
+        )
 
     @staticmethod
     async def get_meme(

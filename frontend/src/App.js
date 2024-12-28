@@ -10,11 +10,9 @@ import React, { useState, useEffect } from 'react';
 import LoginPage from './components/LoginPage.jsx';
 import IndexPage from './components/IndexPage.jsx';
 import SignupPage from './components/SignupPage.jsx';
+import NotCheckedPage from './components/NotCheckedPage.jsx';
 
-import useAuth from './hooks/index.js';
 import { AuthContext } from './contexts/index.js';
-import { validateToken } from './utils/requests.js';
-import IndexPageSpinner from './components/spinners/IndexPageSpinner.jsx';
 
 
 function AuthProvider({ children }) {
@@ -31,29 +29,6 @@ function AuthProvider({ children }) {
   );
 }
 
-// function PrivateRoute({ children }) {
-//   const auth = useAuth();
-//   const location = useLocation();
-//   const [loading, setLoading] = useState(true);
-
-//   const access_token = localStorage.getItem('user');
-
-//   useEffect(() => {
-//     const inner = async () => {
-//       auth.loggedIn = await validateToken(access_token);
-//       setLoading(false);
-//     };
-//     inner();
-//   }, []);
-
-//   if (!access_token) {
-//     return <Navigate to="/login" state={{ from: location }} />;
-//   }
-
-//   const content = auth.loggedIn ? children : <Navigate to="/login" state={{ from: location }} />;
-//   return loading ? <IndexPageSpinner/> : content;
-// }
-
 function App() {
   return (
     <AuthProvider>
@@ -61,14 +36,8 @@ function App() {
         <Routes>
           <Route path="login/" element={<LoginPage />} />
           <Route path="signup/" element={<SignupPage />} />
-          <Route
-            path="/"
-            element={(
-              // <PrivateRoute>
-                <IndexPage />
-              // </PrivateRoute>
-                  )}
-          />
+          <Route path="/" element={(<IndexPage />)}/>
+          <Route path="/temp" element={(<NotCheckedPage />)}/>
         </Routes>
       </Router>
     </AuthProvider>

@@ -20,13 +20,16 @@ async def parse_telegram_channels() -> None:
         system_version="4.16.30-vxCUSTOM",
     ) as client:
         for channel in config.CHANNELS:
+            print(f"trying parse tg channel {channel}")
             try:
                 messages = await client.get_messages(channel, limit=CHANNEL_FILES_LIMIT)
             except ValueError:
                 continue
+            print(f"find {len(messages)} in tg channel {channel}")
             for message in messages:
                 if message.photo:
                     filename = f"tg_{message._chat.username}_{message.photo.id}"
+                    print(f"find photo {filename}")
                     filepath = f"{config.STATIC_DIR}/photos/{filename}"
                     if not os.path.exists(f"{filepath}.jpg"):
 
