@@ -64,7 +64,7 @@ async def parse_command(message: Message):
     await bot.edit_message_text(
         text = f"Общий объем директории с мемами: {folder_size_before}МБ -> {folder_size_after}МБ\nСкачалось картинок: {count_after - count_before} ({count_before}->{count_after})",
         chat_id=reply.chat.id,
-        message_id=reply.message_id
+        message_id=reply.message_id,
         reply_markup=keyboard,
     )
 
