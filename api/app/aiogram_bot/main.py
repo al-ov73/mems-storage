@@ -57,12 +57,11 @@ async def command_start_handler(message: Message) -> None:
 async def parse_command(message: Message):
     count_before = len(os.listdir(path=f"{config.STATIC_DIR}/photos"))
     folder_size_before = get_folder_size(f"{config.STATIC_DIR}/photos")
-    await bot.send_message(config.MY_API_ID, "Скачиваем картинки")
+    reply = await bot.send_message(config.MY_API_ID, "Скачиваем картинки")
     await parse_periodically()
     count_after = len(os.listdir(path=f"{config.STATIC_DIR}/photos"))
     folder_size_after = get_folder_size(f"{config.STATIC_DIR}/photos")
-    await bot.edit_message_text(
-        config.MY_API_ID,
+    await reply.edit_message_text(
         f"Общий объем директории с мемами: {folder_size_before}МБ -> {folder_size_after}МБ\n"
         f"Скачалось картинок: {count_after - count_before} ({count_before}->{count_after})",
         reply_markup=keyboard,
@@ -88,7 +87,7 @@ async def parse_command(message: Message):
         f"Всего картинок: {day_stat.total} шт.\n"
         f"Опубликовано картинок: {day_stat.published} шт.\n"
         f"Не опубликовано: {day_stat.not_published} шт. ({round(days_remain)} дн.)\n"
-        f"Ожидают проверки: {day_stat.not_checked} шт. [Проверить](http://45.80.71.178/temp)\n"
+        f"Ожидают проверки: {day_stat.not_checked} шт. <a href="http://45.80.71.178/temp/">Проверить</a>\n"
         f"Общий объем директории с мемами: {folder_size}МБ",
         reply_markup=keyboard,
     )
