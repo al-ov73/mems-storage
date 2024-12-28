@@ -86,7 +86,7 @@ async def parse_command(message: Message):
         f"Всего картинок: {day_stat.total} шт.\n"
         f"Опубликовано картинок: {day_stat.published} шт.\n"
         f"Не опубликовано: {day_stat.not_published} шт. ({round(days_remain)} дн.)\n"
-        f"Ожидают проверки: {day_stat.not_checked} шт. <a href="http://45.80.71.178/temp/">Проверить</a>\n"
+        f"Ожидают проверки: {day_stat.not_checked} шт. <a href='http://45.80.71.178/temp/'>Проверить</a>\n"
         f"Общий объем директории с мемами: {folder_size}МБ",
         reply_markup=keyboard,
     )
