@@ -60,14 +60,11 @@ async def parse_command(message: Message):
     await bot.send_message(config.MY_API_ID, "Скачиваем картинки")
     await parse_periodically()
     count_after = len(os.listdir(path=f"{config.STATIC_DIR}/photos"))
-    await bot.send_message(
-        config.MY_API_ID,
-        f"Скачалось картинок: {count_after - count_before} ({count_before}->{count_after})",
-    )
     folder_size_after = get_folder_size(f"{config.STATIC_DIR}/photos")
-    await bot.send_message(
+    await bot.edit_message_text(
         config.MY_API_ID,
-        f"Общий объем директории с мемами: {folder_size_before}МБ -> {folder_size_after}МБ",
+        f"Общий объем директории с мемами: {folder_size_before}МБ -> {folder_size_after}МБ\n"
+        f"Скачалось картинок: {count_after - count_before} ({count_before}->{count_after})",
         reply_markup=keyboard,
     )
 
@@ -90,7 +87,7 @@ async def parse_command(message: Message):
         config.MY_API_ID,
         f"Всего картинок: {total}\n"
         f"Опубликовано картинок: {published}\n"
-        f"Не опубликовано: {not_published} ({round(days_remain)} дн.)\n"
+        f"Не опубликовано: {not_published} ({round(days_remain)} дн.) [Проверить](http://45.80.71.178/temp)\n"
         f"Общий объем директории с мемами: {folder_size}МБ",
         reply_markup=keyboard,
     )
