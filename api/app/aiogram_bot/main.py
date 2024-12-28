@@ -61,8 +61,10 @@ async def parse_command(message: Message):
     await parse_periodically()
     count_after = len(os.listdir(path=f"{config.STATIC_DIR}/photos"))
     folder_size_after = get_folder_size(f"{config.STATIC_DIR}/photos")
-    await reply.edit_message_text(
-        f"Общий объем директории с мемами: {folder_size_before}МБ -> {folder_size_after}МБ\nСкачалось картинок: {count_after - count_before} ({count_before}->{count_after})",
+    await bot.edit_message_text(
+        text = f"Общий объем директории с мемами: {folder_size_before}МБ -> {folder_size_after}МБ\nСкачалось картинок: {count_after - count_before} ({count_before}->{count_after})",
+        chat_id=reply.chat.id,
+        message_id=reply.message_id
         reply_markup=keyboard,
     )
 
