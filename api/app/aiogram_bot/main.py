@@ -17,7 +17,8 @@ from ..config import config
 from ..config.db_config import get_db
 from ..config.dependencies import get_memes_repository
 from ..utils.gigachat import get_response_from_gigachat
-from ..utils.other_utils import get_folder_size
+from ..utils.os_utils import get_folder_size
+from ..utils.stat_utils import format_day_stat
 from ...parse import parse
 
 bot = Bot(token=config.BOT_TOKEN, default=DefaultBotProperties(parse_mode=ParseMode.HTML))
@@ -82,14 +83,16 @@ async def parse_command(message: Message):
     day_stat = await meme_repo.get_published_stat(db=db)
     folder_size = get_folder_size(f"{config.STATIC_DIR}/photos")
     days_remain = (day_stat.not_published * int(config.SEND_PHOTO_INTERVAL)) / (60 * 24)
-
+    day_stats = await meme_repo.get_memes_count_by_day(db=db)
+    formated_day_stat = format_day_stat(day_stats)
     await bot.send_message(
         config.MY_API_ID,
         f"Всего картинок: {day_stat.total} шт.\n"
         f"Опубликовано картинок: {day_stat.published} шт.\n"
         f"Не опубликовано: {day_stat.not_published} шт. ({round(days_remain)} дн.)\n"
         f"Ожидают проверки: {day_stat.not_checked} шт. <a href='http://45.80.71.178/temp/'>Проверить</a>\n"
-        f"Общий объем директории с мемами: {folder_size}МБ",
+        f"Общий объем директории с мемами: {folder_size}МБ\n"
+        f"{formated_day_stat}",
         reply_markup=keyboard,
     )
 
