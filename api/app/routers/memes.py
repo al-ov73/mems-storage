@@ -2,6 +2,7 @@ from typing import Annotated
 from fastapi import Depends, UploadFile, File, Form, APIRouter, HTTPException
 from sqlalchemy import text
 from sqlalchemy.orm import Session
+from starlette.responses import JSONResponse
 
 from ..config.logger_config import get_logger
 from ..config.db_config import get_db
@@ -11,6 +12,7 @@ from ..parsers.telegram_parser import parse_telegram_channels
 from ..repositories.memes_repository import MemesRepository
 from ..repositories.storage_repository import BaseStorageRepo
 from ..schemas.memes import MemeDbSchema
+from ..schemas.stat import DayStatSchema
 from ..schemas.users import UserDbSchema
 from ..utils.auth_utils import get_current_user
 
@@ -37,6 +39,7 @@ async def get_memes(
     memes = await meme_repo.get_memes(skip, limit, db)
     return memes
 
+
 @router.get(
     "/checked",
 )
@@ -52,6 +55,7 @@ async def get_checked_memes(
     """
     memes = await meme_repo.get_checked_memes(skip, limit, db)
     return memes
+
 
 @router.get(
     "/notchecked",
@@ -69,6 +73,7 @@ async def get_not_checked_memes(
     memes = await meme_repo.get_not_checked_memes(skip, limit, db)
     return memes
 
+
 @router.post(
     "/check",
 )
@@ -84,6 +89,7 @@ async def check_memes(
     ids = list(map(lambda id: int(id), ids.split(" ")))
     checked_ids = await meme_repo.check_memes(ids, db)
     return checked_ids
+
 
 @router.get("/parse")
 async def parse_memes():
@@ -141,3 +147,18 @@ async def del_meme(
 #         old_name=meme.name, new_name=filename, new_file=file.file
 #     )
 #     return meme
+
+
+@router.get(
+    "/stat",
+)
+async def get_checked_memes(
+    db: Session = Depends(get_db),
+    meme_repo: MemesRepository = Depends(get_memes_repository),
+) -> list[DayStatSchema]:
+    """
+    return day stat
+    """
+    memes = await meme_repo.get_memes_count_by_day(db)
+    print(memes)
+    return memes

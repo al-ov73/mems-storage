@@ -1,10 +1,10 @@
+from sqlalchemy import func
+from sqlalchemy.orm import Session, selectinload, contains_eager
+
+from ..models.comment import Comment
 from ..models.like import Like
 from ..models.meme import Meme
-from ..models.comment import Comment
 from ..schemas.memes import MemeDbSchema
-from sqlalchemy import func, false
-from sqlalchemy.orm import Session, joinedload, selectinload, contains_eager
-
 from ..schemas.stat import StatSchema
 
 
@@ -80,7 +80,7 @@ class MemesRepository:
             .all()
         )
         return memes
-    
+
     @staticmethod
     async def get_random_meme(
         db: Session,
@@ -102,12 +102,7 @@ class MemesRepository:
         published = db.query(Meme).filter_by(published=True).count()
         not_published = total - published
         not_checked = db.query(Meme).filter_by(checked=False).count()
-        return StatSchema(
-            total=total,
-            published=published,
-            not_published=not_published,
-            not_checked=not_checked
-        )
+        return StatSchema(total=total, published=published, not_published=not_published, not_checked=not_checked)
 
     @staticmethod
     async def get_meme(
@@ -141,11 +136,7 @@ class MemesRepository:
         """
         changed_ids = []
         for meme_id in meme_ids:
-            meme = (
-                db.query(Meme)
-                .filter(Meme.id == meme_id)
-                .first()
-            )
+            meme = db.query(Meme).filter(Meme.id == meme_id).first()
             if meme:
                 meme.checked = True
                 db.commit()
@@ -224,6 +215,23 @@ class MemesRepository:
             .group_by(Meme.id, Meme.name)
             .order_by(func.count(Like.id).desc())
             .limit(limit)
+            .all()
+        )
+        return memes
+
+    @staticmethod
+    async def get_memes_count_by_day(
+        db: Session,
+    ):
+        """
+        return list of top liked memes from db
+        """
+        days_count = 5
+        memes = (
+            db.query(func.date(Meme.created_at).label("date"), func.count(Meme.id).label("count"))
+            .group_by(func.date(Meme.created_at))
+            .order_by(func.date(Meme.created_at).label("date").desc())
+            .limit(days_count)
             .all()
         )
         return memes

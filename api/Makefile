@@ -1,5 +1,5 @@
 start:
-		poetry run fastapi run app/main.py
+		poetry run fastapi run app/main.py --reload
 
 test:
 		pytest
@@ -18,3 +18,6 @@ migrate:
 
 parse:
 		poetry run python3 parse.py
+
+black:
+		black -l 120 .
