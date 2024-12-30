@@ -1,4 +1,4 @@
-from api.app.schemas.stat import DayStatSchema
+from ..schemas.stat import DayStatSchema
 
 
 async def format_day_stat(stat: list[DayStatSchema]) -> str:
