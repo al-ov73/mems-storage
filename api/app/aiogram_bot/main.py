@@ -84,7 +84,7 @@ async def parse_command(message: Message):
     folder_size = get_folder_size(f"{config.STATIC_DIR}/photos")
     days_remain = (day_stat.not_published * int(config.SEND_PHOTO_INTERVAL)) / (60 * 24)
     day_stats = await meme_repo.get_memes_count_by_day(db=db)
-    formated_day_stat = format_day_stat(day_stats)
+    formated_day_stat = await format_day_stat(day_stats)
     await bot.send_message(
         config.MY_API_ID,
         f"Всего картинок: {day_stat.total} шт.\n"
