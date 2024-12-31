@@ -38,7 +38,7 @@ const NotCheckedPage = () => {
   const handleCheck = async () => {
     const ids = tempMemes.map((meme) => meme.id)
     await sendCheckedMemes(access_token, ids)
-    return navigate('/temp');
+    window.location.reload();
   }
 
   return <>
