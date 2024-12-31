@@ -25,7 +25,13 @@ const NotCheckedPage = () => {
   }, []);
 
   if (tempMemes.length === 0) {
-        return "мемов пока нет"
+        return <>
+          <Button variant="outline-success"
+            onClick={() => navigate('/')}>
+            На главную
+        </Button>
+        "мемов пока нет"
+        </>
   }
 
   
