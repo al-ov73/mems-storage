@@ -1,10 +1,11 @@
 import { Carousel, Row, Modal, Image, Button, Col, Container } from 'react-bootstrap';
 import React, { useState, useEffect } from "react";
 import { deleteMeme, getNotCheckedMemes, sendCheckedMemes } from '../utils/requests.js';
+import { useNavigate } from "react-router-dom";
 
 
 const NotCheckedPage = () => {
-
+  const navigate = useNavigate();
   const [tempMemes, setTempMemes] = useState([]);
   const access_token = localStorage.getItem('user')
   
@@ -36,8 +37,8 @@ const NotCheckedPage = () => {
   
   const handleCheck = async () => {
     const ids = tempMemes.map((meme) => meme.id)
-    const response = await sendCheckedMemes(access_token, ids)
-    console.log(response)
+    await sendCheckedMemes(access_token, ids)
+    return navigate('/temp');
   }
 
   return <>
@@ -45,7 +46,10 @@ const NotCheckedPage = () => {
             onClick={handleCheck}>
         ПРОВЕРЕНО!
     </Button>
-  
+    <Button variant="outline-success"
+            onClick={() => navigate('/')}>
+        На главную
+    </Button>
   <Row>
     {
       tempMemes.map((meme) => {
