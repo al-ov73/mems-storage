@@ -1,3 +1,5 @@
+from datetime import datetime, timedelta
+
 from sqlalchemy import func
 from sqlalchemy.orm import Session, selectinload, contains_eager
 
@@ -5,16 +7,16 @@ from ..models.comment import Comment
 from ..models.like import Like
 from ..models.meme import Meme
 from ..schemas.memes import MemeDbSchema
-from ..schemas.stat import StatSchema
+from ..schemas.stat import StatSchema, SourceStatSchema
 
 
 class MemesRepository:
 
     @staticmethod
     async def get_memes(
-        skip: int,
-        limit: int,
-        db: Session,
+            skip: int,
+            limit: int,
+            db: Session,
     ) -> list[MemeDbSchema]:
         """
         return list of memes from db
@@ -35,9 +37,9 @@ class MemesRepository:
 
     @staticmethod
     async def get_checked_memes(
-        skip: int,
-        limit: int,
-        db: Session,
+            skip: int,
+            limit: int,
+            db: Session,
     ) -> list[MemeDbSchema]:
         """
         return list of checked memes from db
@@ -59,9 +61,9 @@ class MemesRepository:
 
     @staticmethod
     async def get_not_checked_memes(
-        skip: int,
-        limit: int,
-        db: Session,
+            skip: int,
+            limit: int,
+            db: Session,
     ) -> list[MemeDbSchema]:
         """
         return list of not checked memes from db
@@ -83,7 +85,7 @@ class MemesRepository:
 
     @staticmethod
     async def get_random_meme(
-        db: Session,
+            db: Session,
     ) -> MemeDbSchema:
         """
         return random memes from db
@@ -93,7 +95,7 @@ class MemesRepository:
 
     @staticmethod
     async def get_published_stat(
-        db: Session,
+            db: Session,
     ) -> StatSchema:
         """
         return random memes from db
@@ -105,9 +107,28 @@ class MemesRepository:
         return StatSchema(total=total, published=published, not_published=not_published, not_checked=not_checked)
 
     @staticmethod
+    async def get_sources_stat(
+            db: Session,
+            limit: int = 3,
+    ) -> list[SourceStatSchema]:
+        """
+        return sources stat from db
+        """
+        ago_condition = datetime.now() - timedelta(days=limit)
+
+        memes = (
+            db.query(Meme.source_name.label("source_name"), Meme.source_type.label("source_type"),
+                     func.count(Meme.id).label("count"))
+            .filter(Meme.created_at >= ago_condition)
+            .group_by(Meme.source_name, Meme.source_type)
+            .all()
+        )
+        return memes
+
+    @staticmethod
     async def get_meme(
-        meme_id: str,
-        db: Session,
+            meme_id: str,
+            db: Session,
     ) -> MemeDbSchema:
         """
         return meme from db
@@ -128,8 +149,8 @@ class MemesRepository:
 
     @staticmethod
     async def check_memes(
-        meme_ids: list[int],
-        db: Session,
+            meme_ids: list[int],
+            db: Session,
     ) -> MemeDbSchema:
         """
         return meme from db
@@ -146,8 +167,8 @@ class MemesRepository:
 
     @staticmethod
     async def add_meme(
-        new_meme: MemeDbSchema,
-        db: Session,
+            new_meme: MemeDbSchema,
+            db: Session,
     ) -> MemeDbSchema:
         """
         add meme to db
@@ -159,8 +180,8 @@ class MemesRepository:
 
     @staticmethod
     async def del_meme(
-        meme_id: str,
-        db: Session,
+            meme_id: str,
+            db: Session,
     ) -> MemeDbSchema:
         """
         delete meme from db
@@ -172,8 +193,8 @@ class MemesRepository:
 
     @staticmethod
     async def make_meme_published(
-        meme_id: int,
-        db: Session,
+            meme_id: int,
+            db: Session,
     ) -> MemeDbSchema:
         """
         delete meme from db
@@ -185,9 +206,9 @@ class MemesRepository:
 
     @staticmethod
     async def update_name(
-        meme_id: str,
-        filename: str,
-        db: Session,
+            meme_id: str,
+            filename: str,
+            db: Session,
     ) -> MemeDbSchema:
         """
         update meme in db
@@ -203,8 +224,8 @@ class MemesRepository:
 
     @staticmethod
     async def get_top_liked_memes(
-        limit: int,
-        db: Session,
+            limit: int,
+            db: Session,
     ) -> list[MemeDbSchema]:
         """
         return list of top liked memes from db
@@ -221,8 +242,8 @@ class MemesRepository:
 
     @staticmethod
     async def get_memes_count_by_day(
-        db: Session,
-        limit: int = 5
+            db: Session,
+            limit: int = 5
     ):
         """
         return list of top liked memes from db

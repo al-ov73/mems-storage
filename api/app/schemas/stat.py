@@ -13,3 +13,9 @@ class StatSchema(BaseModel):
 class DayStatSchema(BaseModel):
     date: datetime
     count: int
+
+
+class SourceStatSchema(BaseModel):
+    source_name: str
+    source_type: str
+    count: int
