@@ -121,6 +121,7 @@ class MemesRepository:
                      func.count(Meme.id).label("count"))
             .filter(Meme.created_at >= ago_condition)
             .group_by(Meme.source_name, Meme.source_type)
+            .order_by(Meme.source_type)
             .all()
         )
         return memes
