@@ -48,30 +48,28 @@ const NotCheckedPage = () => {
   }
 
   return <>
-    <Button variant="outline-success"
+  <Row>
+    <Col className="text-center my-2"><Button variant="outline-success"
             onClick={handleCheck}>
-        ПРОВЕРЕНО!
-    </Button>
-    <Button variant="outline-success"
+            ПРОВЕРЕНО!
+        </Button></Col>
+    <Col className="text-center my-2"><Button variant="outline-primary"
             onClick={() => navigate('/')}>
         На главную
-    </Button>
-  <Row>
-    {
-      tempMemes.map((meme) => {
-        return <Col className="mx-1 my-1" key={meme.id}>
-                    <Image 
-                          height="150rem"
-                          src={meme.link}
-                          className="rounded mx-auto mt-3 d-block "
-                          alt='Картинка не загрузилась:('
-                          onClick={() => {
-                            handleDelete(meme.id)
-                          }}
-                  />
-                </Col>
-          })}
-  </Row></>
+    </Button></Col>
+  </Row>
+
+    {tempMemes.map((meme) => {
+        return <Image
+                  key={meme.id}
+                  width="90%"
+                  src={meme.link}
+                  className="rounded mx-auto mt-3 d-block "
+                  alt='Картинка не загрузилась:('
+                  onClick={() => {
+                    handleDelete(meme.id)
+                  }}/>
+          })}</>
   }
 
 export default NotCheckedPage;
