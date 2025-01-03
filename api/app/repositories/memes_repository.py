@@ -100,8 +100,8 @@ class MemesRepository:
         """
         return random memes from db
         """
-        total = db.query(Meme).count()
-        published = db.query(Meme).filter_by(published=True).count()
+        total = db.query(Meme).filter_by(checked=True).count()
+        published = db.query(Meme).filter_by(checked=True).filter_by(published=True).count()
         not_published = total - published
         not_checked = db.query(Meme).filter_by(checked=False).count()
         return StatSchema(total=total, published=published, not_published=not_published, not_checked=not_checked)

@@ -77,7 +77,7 @@ async def sources_command(message: Message):
     sources_stat = await meme_repo.get_sources_stat(db=db, limit=days_limit)
     formated_stat = [f"({stat.source_type}) {stat.source_name} - {stat.count} шт.\n" for stat in sources_stat]
     await message.reply(
-        f"Статистика за последние {days_limit} дней\n"
+        f"Статистика за последние {days_limit} дн.\n"
         f"{''.join(formated_stat)}"
     )
 
