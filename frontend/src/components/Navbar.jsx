@@ -27,26 +27,32 @@ const NavbarPage = ({full}) => {
 
   return <>
       <Navbar bg="white" data-bs-theme="light" className="shadow-lg justify-content-between">
-        <Container>
-          <Button variant="outline-success" onClick={() => setModalAboutShow(true)}>
+
+          <Button variant="outline-primary" className='mx-4 shadow-lg' onClick={() => setModalAboutShow(true)}>
               О проекте
             </Button>
-          <Nav>
-          </Nav>
-        </Container>
+          <Button variant="primary" className='mx-4 shadow-lg'
+              onClick={(e) => {
+                  e.preventDefault();
+                  window.location.href='https://t.me/it_memovoz';
+                  }
+                }>
+              ПЕРЕЙТИ В ТЕЛЕГРАМ-КАНАЛ
+          </Button>
+
         {full && (
           <>
             {username ? (
               <Nav>
                 <Navbar.Brand>Здравствуйте, {username}</Navbar.Brand>
-                <Button className="mx-4" type="submit" onClick={handleLogout}>
+                <Button variant="outline-primary" className="mx-4 shadow-lg" type="submit" onClick={handleLogout}>
                   Выйти
                 </Button>
               </Nav>
             ) : (
               <Nav>
                 {/* <a href="/signup">Регистрация</a> */}
-                <Button className="mx-4" type="submit" onClick={handleLogin}>
+                <Button variant="outline-primary"  className="mx-4 shadow-lg" type="submit" onClick={handleLogin}>
                   Войти
                 </Button>
               </Nav>
