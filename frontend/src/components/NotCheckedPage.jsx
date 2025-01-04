@@ -34,7 +34,6 @@ const NotCheckedPage = () => {
         </>
   }
 
-  
   const handleDelete = async (id, token) => {
     await deleteMeme(id, token)
     const response = await getNotCheckedMemes(access_token)
@@ -69,7 +68,15 @@ const NotCheckedPage = () => {
                   onClick={() => {
                     handleDelete(meme.id)
                   }}/>
-          })}</>
+          })}
+  <Row>
+    <Col className="text-center my-2"><Button variant="outline-success"
+            onClick={handleCheck}>
+            ПРОВЕРЕНО!
+        </Button></Col>
+  </Row>
+          
+          </>
   }
 
 export default NotCheckedPage;
