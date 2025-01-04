@@ -6,6 +6,7 @@ import { setMemes } from "../slices/memesSlice";
 import { getMemes } from "../utils/requests.js";
 import NavbarPage from "./Navbar.jsx";
 import MemesList from "./lists/MemesList.jsx";
+import DescriptionComponent from "./Description.jsx";
 
 
 const IndexPage = () => {
