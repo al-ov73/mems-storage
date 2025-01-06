@@ -9,7 +9,7 @@ import AboutModal from './modals/AboutModal';
 import { getUsernameFromStorage } from '../utils/utils.js';
 
 
-const NavbarPage = ({full}) => {
+const NavbarPage = ({ full }) => {
   const auth = useAuth();
   const navigate = useNavigate();
   const [modalAboutShow, setModalAboutShow] = useState(false);
@@ -26,45 +26,45 @@ const NavbarPage = ({full}) => {
   }
 
   return <>
-      <Navbar bg="white" data-bs-theme="light" className="shadow-lg justify-content-between">
+    <Navbar bg="white" data-bs-theme="light" className="shadow-lg justify-content-between">
 
-          <Button variant="outline-primary" className='mx-4 shadow-lg' onClick={() => setModalAboutShow(true)}>
-              О проекте
-            </Button>
-          <Button variant="primary" className='mx-4 shadow-lg'
-              onClick={(e) => {
-                  e.preventDefault();
-                  window.location.href='https://t.me/it_memovoz';
-                  }
-                }>
-              ПЕРЕЙТИ В ТЕЛЕГРАМ-КАНАЛ
-          </Button>
+      <Button variant="outline-primary" className='mx-4 shadow-lg' onClick={() => setModalAboutShow(true)}>
+        О проекте
+      </Button>
+      <Button variant="primary" className='mx-4 shadow-lg'
+        onClick={(e) => {
+          e.preventDefault();
+          window.location.href = 'https://t.me/it_memovoz';
+        }
+        }>
+        ПЕРЕЙТИ В ТЕЛЕГРАМ-КАНАЛ
+      </Button>
 
-        {full && (
-          <>
-            {username ? (
-              <Nav>
-                <Navbar.Brand>Здравствуйте, {username}</Navbar.Brand>
-                <Button variant="outline-primary" className="mx-4 shadow-lg" type="submit" onClick={handleLogout}>
-                  Выйти
-                </Button>
-              </Nav>
-            ) : (
-              <Nav>
-                {/* <a href="/signup">Регистрация</a> */}
-                <Button variant="outline-primary"  className="mx-4 shadow-lg" type="submit" onClick={handleLogin}>
-                  Войти
-                </Button>
-              </Nav>
-            )}
-          </>
-        )}
-      </Navbar>
-      <AboutModal
-        show={modalAboutShow}
-        onHide={() => setModalAboutShow(false)}
-      />
-    </>
+      {full && (
+        <>
+          {username ? (
+            <Nav>
+              <Navbar.Brand>Здравствуйте, {username}</Navbar.Brand>
+              <Button variant="outline-primary" className="mx-4 shadow-lg" type="submit" onClick={handleLogout}>
+                Выйти
+              </Button>
+            </Nav>
+          ) : (
+            <Nav>
+              {/* <a href="/signup">Регистрация</a> */}
+              <Button variant="outline-primary" className="mx-4 shadow-lg" type="submit" onClick={handleLogin}>
+                Войти
+              </Button>
+            </Nav>
+          )}
+        </>
+      )}
+    </Navbar>
+    <AboutModal
+      show={modalAboutShow}
+      onHide={() => setModalAboutShow(false)}
+    />
+  </>
 }
 
 export default NavbarPage;

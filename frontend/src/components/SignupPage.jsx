@@ -64,7 +64,7 @@ const SignupPage = () => {
   });
 
   return <>
-    <NavbarPage full={false}/>
+    <NavbarPage full={false} />
     <div className='d-flex flex-column h-100'>
       <div className='container-fluid h-100'>
         <div className='row justify-content-center align-content-center h-100'>
@@ -76,41 +76,41 @@ const SignupPage = () => {
                 </div>
                 <FormikProvider value={formik}>
                   <Form onSubmit={formik.handleSubmit}>
-                      <h1 className="text-center mb-4">Зарегистрироваться</h1>
+                    <h1 className="text-center mb-4">Зарегистрироваться</h1>
 
-                      <Form.Group className="mb-3">
+                    <Form.Group className="mb-3">
                       <Form.Label htmlFor="username">Ваш ник</Form.Label>
-                        <Form.Control type="text"
-                          placeholder="Ваш ник"
-                          autoComplete="username"
-                          id="username"
-                          onChange={formik.handleChange}
-                          value={formik.values.username}
-                          />
+                      <Form.Control type="text"
+                        placeholder="Ваш ник"
+                        autoComplete="username"
+                        id="username"
+                        onChange={formik.handleChange}
+                        value={formik.values.username}
+                      />
                       <ErrorMessage name="username" />
                     </Form.Group>
 
                     <Form.Group className="mb-3">
                       <Form.Label htmlFor="first_name">Ваше имя</Form.Label>
-                        <Form.Control type="text"
-                          placeholder="Ваше имя"
-                          autoComplete="first_name"
-                          id="first_name"
-                          onChange={formik.handleChange}
-                          value={formik.values.first_name}
-                          />
+                      <Form.Control type="text"
+                        placeholder="Ваше имя"
+                        autoComplete="first_name"
+                        id="first_name"
+                        onChange={formik.handleChange}
+                        value={formik.values.first_name}
+                      />
                       <ErrorMessage name="username" />
                     </Form.Group>
 
                     <Form.Group className="mb-3">
                       <Form.Label htmlFor="last_name">Ваша фамилия</Form.Label>
-                        <Form.Control type="text"
-                          placeholder="Ваша фамилия"
-                          autoComplete="last_name"
-                          id="last_name"
-                          onChange={formik.handleChange}
-                          value={formik.values.last_name}
-                          />
+                      <Form.Control type="text"
+                        placeholder="Ваша фамилия"
+                        autoComplete="last_name"
+                        id="last_name"
+                        onChange={formik.handleChange}
+                        value={formik.values.last_name}
+                      />
                       <ErrorMessage name="last_name" />
                     </Form.Group>
 
@@ -138,7 +138,7 @@ const SignupPage = () => {
 
                     <Form.Label className="mt-1">Ваша фотография</Form.Label>
                     <Form.Control
-                    className="mb-3"
+                      className="mb-3"
                       type="file"
                       name="file"
                       onChange={(event) => {
@@ -151,7 +151,7 @@ const SignupPage = () => {
                   </Form>
                 </FormikProvider>
               </div>
-          </div>
+            </div>
             <div className="card-footer p-4">
               <div className="text-center">
                 <a href="/login">Залогиниться</a>
@@ -160,7 +160,7 @@ const SignupPage = () => {
           </div>
         </div>
       </div>
-  </div>
+    </div>
   </>
 };
 

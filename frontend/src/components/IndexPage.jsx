@@ -21,7 +21,7 @@ const IndexPage = () => {
         console.log('memes get error');
         console.log(e)
         dispatch(setMemes([]))
-      }      
+      }
     }
     inner();
   }, []);
@@ -30,15 +30,15 @@ const IndexPage = () => {
 
   return (
     <>
-    <NavbarPage full={true}/>
-    <Container className="d-flex">
-      <Container>
-        <Row>
-          <MemesList/>
-        </Row>
+      <NavbarPage full={true} />
+      <Container className="d-flex">
+        <Container>
+          <Row>
+            <MemesList />
+          </Row>
+        </Container>
       </Container>
-    </Container>
-  </>
+    </>
   );
 }
 
