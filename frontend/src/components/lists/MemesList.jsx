@@ -1,5 +1,6 @@
 import { useSelector } from "react-redux";
 import { useDispatch } from "react-redux";
+
 import { Carousel, Row, Modal, Image, Button, Col, Container } from 'react-bootstrap';
 import React, { useState, useEffect } from "react";
 import CommentPostForm from "../forms/CommetPostForm";
@@ -16,6 +17,8 @@ const MemesList = () => {
   const [modalShow, setModalShow] = useState(false);
   const [currentMeme, setCurrentMeme] = useState({});
   const [currentIndex, setCurrentIndex] = useState(0);
+
+
   const username = getUsernameFromStorage()
   const dispatch = useDispatch();
   const access_token = localStorage.getItem('user')
@@ -38,6 +41,8 @@ const MemesList = () => {
     return "мемов пока нет"
   }
 
+
+
   const grouped = {};
   memes.forEach(meme => {
     const parts = meme.created_at.split('T');
@@ -57,11 +62,15 @@ const MemesList = () => {
   }
 
   return Object.keys(grouped).map((date, index) => {
-    return <>
+    return <React.Fragment key={index}>
+      {/* DATE WITH <hr> */}
       <div style={{ textAlign: "center" }}>
         {index !== 0 && <hr style={{ width: "100%", margin: "20px auto" }} />}
         {date}
       </div>
+      {/* END DATE WITH <hr> */}
+
+      {/* IMAGE CARD */}
       {grouped[date].map((meme) => {
         return <Col className="mx-1 my-1" key={meme.id}>
           <Image
@@ -76,12 +85,10 @@ const MemesList = () => {
             }}
           />
         </Col>
-      }
-      )
-      }
+      })}
+      {/* END IMAGE CARD */}
 
       {/* MODAL */}
-
       {setModalShow && (
         <Modal
           show={modalShow}
@@ -156,13 +163,13 @@ const MemesList = () => {
               {username && <CommentPostForm memeId={currentMeme.id} />}
               {!username && 'Зарегистрируйтесь, чтобы оставлять комментерии и ставить лайки'}
 
-              {/* <CommentsList memeId={currentMeme.id} /> */}
+              <CommentsList memeId={currentMeme.id} />
             </Container>
           </Modal.Footer>
         </Modal>
         // END MODAL
       )}
-    </>
+    </React.Fragment>
   })
 
 }
