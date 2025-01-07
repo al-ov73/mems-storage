@@ -16,7 +16,7 @@ const IndexPage = () => {
   const [welcomeModalShow, setWelcomeModalShow] = useState(true);
   const [memesCount, setMemesCount] = useState(0);
 
-  const memesPerPage = process.env.REACT_APP_MEMES_PER_PAGE;
+  const memesPerPage = Number(process.env.REACT_APP_MEMES_PER_PAGE);
   const activePage = (memeOffset / memesPerPage) + 1;
   const maxPages = Math.ceil(memesCount / memesPerPage)
 
