@@ -1,7 +1,7 @@
 import { useSelector } from "react-redux";
 import { useDispatch } from "react-redux";
 
-import { Carousel, Row, Modal, Image, Button, Col, Container } from 'react-bootstrap';
+import { Row, Modal, Image, Button, Col, Container } from 'react-bootstrap';
 import React, { useState, useEffect } from "react";
 import CommentPostForm from "../forms/CommetPostForm";
 import CommentsList from "../lists/CommentsList";
@@ -97,23 +97,16 @@ const MemesList = () => {
           centered
         >
           <Modal.Body style={{ display: 'flex', height: '500px', alignItems: 'center', justifyContent: 'center' }}>
-            <Carousel activeIndex={currentIndex} variant='dark' interval={null} indicators={false}>
-              {memes.map(meme => (
-                <Carousel.Item
-                  key={meme.id}>
-                  <img
-                    height="100%"
-                    style={{
-                      maxHeight: `500px`,
-                      width: 'auto',
-                    }}
-                    src={meme.link}
-                    className="img-fluid rounded p-3"
-                    alt='Картинка не загрузилась:('
-                  />
-                </Carousel.Item>
-              ))}
-            </Carousel>
+            <img
+              height="100%"
+              style={{
+                maxHeight: `500px`,
+                width: 'auto',
+              }}
+              src={currentMeme.link}
+              className="img-fluid rounded p-3"
+              alt='Картинка не загрузилась:('
+            />
           </Modal.Body>
           <Modal.Footer>
             <Container>
