@@ -34,7 +34,7 @@ const NavbarPage = ({ full }) => {
       <Button variant="primary" className='mx-4 shadow-lg'
         onClick={(e) => {
           e.preventDefault();
-          window.location.href = 'https://t.me/it_memovoz';
+          window.location.href = process.env.REACT_APP_TG_LINK;
         }
         }>
         ПЕРЕЙТИ В ТЕЛЕГРАМ-КАНАЛ

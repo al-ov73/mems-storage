@@ -7,17 +7,19 @@ import { getMemes, getMemesCount } from "../utils/requests.js";
 import NavbarPage from "./Navbar.jsx";
 import MemesList from "./lists/MemesList.jsx";
 import Pagination from 'react-bootstrap/Pagination';
+import WelcomeModal from "./modals/WelcomeModal.jsx";
 
 
 const IndexPage = () => {
   const dispatch = useDispatch();
   const [memeOffset, setMemeOffset] = useState(0);
+  const [welcomeModalShow, setWelcomeModalShow] = useState(true);
   const [memesCount, setMemesCount] = useState(0);
 
   const memesPerPage = process.env.REACT_APP_MEMES_PER_PAGE;
   const activePage = (memeOffset / memesPerPage) + 1;
   const maxPages = Math.ceil(memesCount / memesPerPage)
-  
+
   // get memes
   useEffect(() => {
     const inner = async () => {
@@ -71,17 +73,24 @@ const IndexPage = () => {
 
   return (
     <>
+      <WelcomeModal
+        show={welcomeModalShow}
+        onHide={() => setWelcomeModalShow(false)}
+      />
+
       <NavbarPage full={true} />
 
+      {/* PAGINATION */}
       <Container>
-      <Pagination className="my-2 justify-content-center">
-        <Pagination.First onClick={() => setMemeOffset(0)}/>
-        <Pagination.Prev onClick={handlePrev}/>
-        {items}
-        <Pagination.Next onClick={handleNext}/>
-        <Pagination.Last onClick={handleLast}/>
-      </Pagination>
+        <Pagination className="my-2 justify-content-center">
+          <Pagination.First onClick={() => setMemeOffset(0)} />
+          <Pagination.Prev onClick={handlePrev} />
+          {items}
+          <Pagination.Next onClick={handleNext} />
+          <Pagination.Last onClick={handleLast} />
+        </Pagination>
       </Container>
+      {/* END PAGINATION */}
 
       <Container className="d-flex">
         <Container>
@@ -90,6 +99,18 @@ const IndexPage = () => {
           </Row>
         </Container>
       </Container>
+
+      {/* PAGINATION */}
+      <Container>
+        <Pagination className="my-2 justify-content-center">
+          <Pagination.First onClick={() => setMemeOffset(0)} />
+          <Pagination.Prev onClick={handlePrev} />
+          {items}
+          <Pagination.Next onClick={handleNext} />
+          <Pagination.Last onClick={handleLast} />
+        </Pagination>
+      </Container>
+      {/* END PAGINATION */}
 
     </>
   );
