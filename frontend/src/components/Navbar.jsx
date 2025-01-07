@@ -31,13 +31,12 @@ const NavbarPage = ({ full }) => {
       <Button variant="outline-primary" className='mx-4 shadow-lg' onClick={() => setModalAboutShow(true)}>
         О проекте
       </Button>
-      <Button variant="primary" className='mx-4 shadow-lg'
-        onClick={(e) => {
-          e.preventDefault();
-          window.location.href = process.env.REACT_APP_TG_LINK;
-        }
-        }>
-        ПЕРЕЙТИ В ТЕЛЕГРАМ-КАНАЛ
+
+      <Button className="telegram-button" onClick={(e) => {
+        e.preventDefault();
+        window.location.href = process.env.REACT_APP_TG_LINK;
+      }}>
+        Подписаться <i className="fab fa-telegram-plane"></i>
       </Button>
 
       {full && (
