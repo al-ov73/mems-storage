@@ -167,4 +167,4 @@ const MemesList = () => {
 
 }
 
-export default MemesList;
+export default React.memo(MemesList);

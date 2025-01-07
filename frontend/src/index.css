@@ -24,6 +24,5 @@ code {
 }
 
 .telegram-button:hover {
-  background-color: #eaf4ff;
   transform: scale(1.05);
 }
