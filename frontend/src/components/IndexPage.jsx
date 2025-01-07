@@ -9,6 +9,16 @@ import MemesList from "./lists/MemesList.jsx";
 import Pagination from 'react-bootstrap/Pagination';
 import WelcomeModal from "./modals/WelcomeModal.jsx";
 
+const paginationRangeLimit = 2;
+
+const createRange = (number) => {
+  const result = [];
+  for (let i = number - paginationRangeLimit; i <= number + paginationRangeLimit; i++) {
+    result.push(i);
+  }
+  return result;
+}
+
 
 const IndexPage = () => {
   const dispatch = useDispatch();
@@ -45,14 +55,31 @@ const IndexPage = () => {
     setMemeOffset(newOffset);
   }
 
-  let items = [];
-  for (let number = 1; number <= maxPages; number++) {
-    items.push(
-      <Pagination.Item key={number} active={number === activePage} onClick={handleChangePage}>
-        {number}
-      </Pagination.Item>,
-    );
+  const generatePagiantion = () => {
+    let items = [];
+    const paginationRange = createRange(activePage);
+
+    if ((activePage - paginationRangeLimit) > 1) {
+      items.push(<Pagination.Ellipsis disabled />)
+    }
+
+    for (let number = 1; number <= maxPages; number++) {
+      if (paginationRange.includes(number)) {
+        items.push(
+          <Pagination.Item key={number} active={number === activePage} onClick={handleChangePage}>
+            {number}
+          </Pagination.Item>,
+        );
+      }
+    }
+    if ((maxPages - activePage) > paginationRangeLimit) {
+      items.push(<Pagination.Ellipsis disabled />)
+    }
+
+    return items;
   }
+
+  const paginationItems = generatePagiantion();
 
   const handleNext = () => {
     if (activePage < maxPages) {
@@ -85,7 +112,7 @@ const IndexPage = () => {
         <Pagination className="my-2 justify-content-center">
           <Pagination.First onClick={() => setMemeOffset(0)} />
           <Pagination.Prev onClick={handlePrev} />
-          {items}
+          {paginationItems}
           <Pagination.Next onClick={handleNext} />
           <Pagination.Last onClick={handleLast} />
         </Pagination>
@@ -105,7 +132,7 @@ const IndexPage = () => {
         <Pagination className="my-2 justify-content-center">
           <Pagination.First onClick={() => setMemeOffset(0)} />
           <Pagination.Prev onClick={handlePrev} />
-          {items}
+          {paginationItems}
           <Pagination.Next onClick={handleNext} />
           <Pagination.Last onClick={handleLast} />
         </Pagination>
