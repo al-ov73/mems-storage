@@ -60,7 +60,7 @@ const IndexPage = () => {
     const paginationRange = createRange(activePage);
 
     if ((activePage - paginationRangeLimit) > 1) {
-      items.push(<Pagination.Ellipsis disabled />)
+      items.push(<Pagination.Ellipsis key={0} disabled />)
     }
 
     for (let number = 1; number <= maxPages; number++) {
@@ -73,7 +73,7 @@ const IndexPage = () => {
       }
     }
     if ((maxPages - activePage) > paginationRangeLimit) {
-      items.push(<Pagination.Ellipsis disabled />)
+      items.push(<Pagination.Ellipsis key={maxPages + 1} disabled />)
     }
 
     return items;
