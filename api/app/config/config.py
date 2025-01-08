@@ -7,6 +7,8 @@ load_dotenv()
 ENV = os.getenv("ENV")
 START_BOT = os.getenv("START_BOT")
 
+ORIGINS = os.getenv('ORIGINS', '').split(',')
+
 # Postgress config
 DB_HOST = os.getenv("DB_HOST")
 DB_PORT = os.getenv("DB_PORT")
