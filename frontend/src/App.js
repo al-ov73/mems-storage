@@ -36,8 +36,8 @@ function App() {
         <Routes>
           <Route path="login/" element={<LoginPage />} />
           <Route path="signup/" element={<SignupPage />} />
-          <Route path="/" element={(<IndexPage />)}/>
-          <Route path="/temp" element={(<NotCheckedPage />)}/>
+          <Route path="/" element={(<IndexPage />)} />
+          <Route path="/temp" element={(<NotCheckedPage />)} />
         </Routes>
       </Router>
     </AuthProvider>
