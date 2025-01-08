@@ -5,8 +5,11 @@ from aiogram import Bot, Dispatcher
 from aiogram.client.default import DefaultBotProperties
 from aiogram.enums import ParseMode
 from aiogram.filters import CommandStart, Command
-from aiogram.types import URLInputFile, Message, BufferedInputFile
+from aiogram.types import URLInputFile, Message, BufferedInputFile, ErrorEvent
+from aiogram.exceptions import TelegramConflictError
 from aiogram.utils.chat_action import ChatActionSender
+from filelock import FileLock, Timeout
+
 from apscheduler.schedulers.asyncio import AsyncIOScheduler
 
 from .commands import bot_commands
@@ -20,7 +23,7 @@ from ..utils.parse import parse
 
 bot = Bot(token=config.BOT_TOKEN, default=DefaultBotProperties(parse_mode=ParseMode.HTML))
 dp = Dispatcher()
-
+LOCK_FILE = "/tmp/bot.lock"  # Путь к файлу блокировки
 
 async def send_photo_periodically():
     random_image = await meme_repo.get_random_meme(db=db)
@@ -91,15 +94,29 @@ async def other_command(message: Message) -> None:
             return
         await message.reply(giga_reply.text_reply)
 
-
 async def start_bot():
-    if config.ENV == "prod":
-        scheduler = AsyncIOScheduler()
-        scheduler.add_job(send_photo_periodically, "interval", minutes=int(config.SEND_PHOTO_INTERVAL))
-        scheduler.add_job(parse, "interval", hours=int(config.PARSE_INTERVAL))
-        scheduler.start()
+    # Использование файловой блокировки для предотвращения запуска нескольких экземпляров бота
+    lock = FileLock(LOCK_FILE)
 
-    await bot.set_my_commands(bot_commands)
+    try:
+        # Попытка захватить блокировку
+        with lock.acquire(timeout=5):  # Устанавливаем таймаут для ожидания блокировки
+            if config.ENV == "prod":
+                scheduler = AsyncIOScheduler()
+                scheduler.add_job(send_photo_periodically, "interval", minutes=int(config.SEND_PHOTO_INTERVAL))
+                scheduler.add_job(parse, "interval", hours=int(config.PARSE_INTERVAL))
+                scheduler.start()
 
-    loop = asyncio.get_event_loop()
-    loop.create_task(dp.start_polling(bot))
+            await bot.set_my_commands(bot_commands)
+
+            try:
+                print("Запуск бота...")
+                await dp.start_polling(bot)
+            except TelegramConflictError:
+                print("Ошибка: Бот уже запущен в другом месте!")
+            except Exception as e:
+                print(f"Произошла ошибка: {e}")
+            finally:
+                print("Бот остановлен.")
+    except Timeout:
+        print("Не удалось захватить блокировку. Другой процесс уже запустил бота.")
