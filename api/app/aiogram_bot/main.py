@@ -16,7 +16,7 @@ from ..config.dependencies import meme_repo
 from ..utils.gigachat import get_response_from_gigachat
 from ..utils.os_utils import get_folder_size
 from ..utils.stat_utils import format_day_stat
-from ...parse import parse
+from ..utils.parse import parse
 
 bot = Bot(token=config.BOT_TOKEN, default=DefaultBotProperties(parse_mode=ParseMode.HTML))
 dp = Dispatcher()
