@@ -25,6 +25,7 @@ origins = [
     "http://45.80.71.178:3000",
     "http://45.80.71.178",
     "http://45.80.71.178:80",
+    "http://www.memovoz.ru"
 ]
 
 app.add_middleware(
