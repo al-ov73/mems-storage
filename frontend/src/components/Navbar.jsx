@@ -9,7 +9,7 @@ import AboutModal from './modals/AboutModal';
 import { getUsernameFromStorage } from '../utils/utils.js';
 
 
-const NavbarPage = ({full}) => {
+const NavbarPage = ({ full }) => {
   const auth = useAuth();
   const navigate = useNavigate();
   const [modalAboutShow, setModalAboutShow] = useState(false);
@@ -26,39 +26,44 @@ const NavbarPage = ({full}) => {
   }
 
   return <>
-      <Navbar bg="white" data-bs-theme="light" className="shadow-lg justify-content-between">
-        <Container>
-          <Button variant="outline-success" onClick={() => setModalAboutShow(true)}>
-              О проекте
-            </Button>
-          <Nav>
-          </Nav>
-        </Container>
-        {full && (
-          <>
-            {username ? (
-              <Nav>
-                <Navbar.Brand>Здравствуйте, {username}</Navbar.Brand>
-                <Button className="mx-4" type="submit" onClick={handleLogout}>
-                  Выйти
-                </Button>
-              </Nav>
-            ) : (
-              <Nav>
-                {/* <a href="/signup">Регистрация</a> */}
-                <Button className="mx-4" type="submit" onClick={handleLogin}>
-                  Войти
-                </Button>
-              </Nav>
-            )}
-          </>
-        )}
-      </Navbar>
-      <AboutModal
-        show={modalAboutShow}
-        onHide={() => setModalAboutShow(false)}
-      />
-    </>
+    <Navbar bg="white" data-bs-theme="light" className="shadow-lg justify-content-between">
+
+      <Button variant="outline-primary" className='mx-4 shadow-lg' onClick={() => setModalAboutShow(true)}>
+        О проекте
+      </Button>
+
+      <Button className="telegram-button" onClick={(e) => {
+        e.preventDefault();
+        window.location.href = process.env.REACT_APP_TG_LINK;
+      }}>
+        Подписаться <i className="fab fa-telegram-plane"></i>
+      </Button>
+
+      {full && (
+        <>
+          {username ? (
+            <Nav>
+              <Navbar.Brand>Здравствуйте, {username}</Navbar.Brand>
+              <Button variant="outline-primary" className="mx-4 shadow-lg" type="submit" onClick={handleLogout}>
+                Выйти
+              </Button>
+            </Nav>
+          ) : (
+            <Nav>
+              {/* <a href="/signup">Регистрация</a> */}
+              <Button variant="outline-primary" className="mx-4 shadow-lg" type="submit" onClick={handleLogin}>
+                Войти
+              </Button>
+            </Nav>
+          )}
+        </>
+      )}
+    </Navbar>
+    <AboutModal
+      show={modalAboutShow}
+      onHide={() => setModalAboutShow(false)}
+    />
+  </>
 }
 
 export default NavbarPage;

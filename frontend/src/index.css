@@ -5,9 +5,28 @@ body {
     sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  background-image: url("static/background.jpg");
+  background-position: 'center';
+  background-size: 'cover';
+  background-repeat: 'no-repeat';
 }
 
 code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
+}
+
+.telegram-button {
+  font-size: 24px;
+  color: #0088cc;
+  background-color: white;
+  border: none;
+  cursor: pointer;
+  padding: 10px;
+  border-radius: 50%;
+  transition: all 0.3s ease-in-out;
+}
+
+.telegram-button:hover {
+  transform: scale(1.05);
 }

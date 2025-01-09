@@ -26,3 +26,5 @@ def get_db():
         yield db
     finally:
         db.close()
+
+db = next(get_db())

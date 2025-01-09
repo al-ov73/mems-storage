@@ -1,7 +1,13 @@
 import axios from 'axios';
 import routes from './routes';
 
-const getMemes = async (accessToken) => axios.get(`${routes.memesPath}/checked`, {
+const getMemes = async (accessToken, skip, limit) => axios.get(`${routes.memesPath}/checked?skip=${skip}&limit=${limit}`, {
+  headers: {
+    Authorization: `Bearer ${accessToken}`,
+  },
+});
+
+const getMemesCount = async (accessToken, skip, limit) => axios.get(`${routes.memesPath}/count`, {
   headers: {
     Authorization: `Bearer ${accessToken}`,
   },
@@ -184,4 +190,5 @@ export {
   getUser,
   getTopLikedMemes,
   postQuestion,
+  getMemesCount,
 };

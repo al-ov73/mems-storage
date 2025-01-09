@@ -6,5 +6,6 @@ __pycache__/
 node_modules
 /.pytest_cache/
 .gitpod.yml
-static/
+
 *.session
+api/app/static/photos/

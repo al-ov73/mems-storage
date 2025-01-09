@@ -6,6 +6,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from .aiogram_bot.main import start_bot
 
 from .config import config
+from .config.config import ORIGINS
 
 from .routers.auth import router as router_auth
 from .routers.memes import router as router_memes
@@ -19,17 +20,9 @@ from .routers.users import router as router_users
 
 app = FastAPI()
 
-origins = [
-    "http://localhost:3000",
-    "http://127.0.0.1:3000",
-    "http://45.80.71.178:3000",
-    "http://45.80.71.178",
-    "http://45.80.71.178:80",
-]
-
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=origins,
+    allow_origins=ORIGINS,
     allow_credentials=True,
     allow_methods=["GET", "POST", "OPTIONS", "DELETE", "PATCH", "PUT"],
     allow_headers=["*"],

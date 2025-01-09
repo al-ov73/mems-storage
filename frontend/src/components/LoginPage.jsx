@@ -54,7 +54,7 @@ const LoginPage = () => {
   });
 
   return <>
-    <NavbarPage full={false}/>
+    <NavbarPage full={false} />
     <div className='d-flex flex-column h-100'>
       <div className='container-fluid h-100'>
         <div className='row justify-content-center align-content-center h-100'>
@@ -65,42 +65,42 @@ const LoginPage = () => {
                   <Form onSubmit={formik.handleSubmit} className="col">
                     <h1 className="text-center mb-4">Логин</h1>
                     <Form.Group className="form-floating mb-3">
-                    <Form.Control
-                      autoComplete="email"
-                      id="email"
-                      onChange={formik.handleChange}
-                      value={formik.values.email}
+                      <Form.Control
+                        autoComplete="email"
+                        id="email"
+                        onChange={formik.handleChange}
+                        value={formik.values.email}
                       />
-                    <Form.Label htmlFor='email' >Ваш ник</Form.Label>
-                    <ErrorMessage component="div" name="email" />
+                      <Form.Label htmlFor='email' >Ваш ник</Form.Label>
+                      <ErrorMessage component="div" name="email" />
                     </Form.Group>
 
                     <Form.Group className="form-floating mb-3" >
-                    <Form.Control type="password"
-                      id="password"
-                      autoComplete="password"
-                      onChange={formik.handleChange}
-                      value={formik.values.password} />
-                    <Form.Label htmlFor='password' >Пароль</Form.Label>
-                    <ErrorMessage component="div" name="password" />
+                      <Form.Control type="password"
+                        id="password"
+                        autoComplete="password"
+                        onChange={formik.handleChange}
+                        value={formik.values.password} />
+                      <Form.Label htmlFor='password' >Пароль</Form.Label>
+                      <ErrorMessage component="div" name="password" />
                     </Form.Group>
                     <Button type="submit" disabled={isLoading}>
-                      {isLoading ? <SpinnerEl/> : 'Войти'}
+                      {isLoading ? <SpinnerEl /> : 'Войти'}
                     </Button>
                   </Form>
-                  </FormikProvider>
+                </FormikProvider>
               </div>
-          </div>
+            </div>
             <div className="card-footer p-4">
               <div className="text-center">
                 <span>Нет аккаунта? </span>
-                  <a href="/signup">Регистрация</a>
+                <a href="/signup">Регистрация</a>
               </div>
             </div>
           </div>
         </div>
       </div>
-  </div>
+    </div>
   </>
 };
 
