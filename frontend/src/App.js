@@ -2,16 +2,13 @@ import {
   BrowserRouter as Router,
   Routes,
   Route,
-  Navigate,
-  useLocation,
 } from 'react-router-dom';
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 
 import LoginPage from './components/LoginPage.jsx';
 import IndexPage from './components/IndexPage.jsx';
 import SignupPage from './components/SignupPage.jsx';
 import NotCheckedPage from './components/NotCheckedPage.jsx';
-
 import { AuthContext } from './contexts/index.js';
 
 
