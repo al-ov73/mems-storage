@@ -61,7 +61,7 @@ async def image_send_command(message: Message):
 async def stat_command(message: Message):
     day_stat = await meme_repo.get_published_stat(db=db)
     folder_size = get_folder_size(f"{config.STATIC_DIR}/photos")
-    days_remain = (day_stat.not_published * int(config.SEND_PHOTO_INTERVAL)) / (60 * 24)
+    days_remain = day_stat.not_published /24
     day_stats = await meme_repo.get_memes_count_by_day(db=db)
     formated_day_stat = await format_day_stat(day_stats)
     await bot.send_message(
@@ -69,7 +69,8 @@ async def stat_command(message: Message):
         f"Всего картинок: {day_stat.total} шт.\n"
         f"Опубликовано картинок: {day_stat.published} шт.\n"
         f"Не опубликовано: {day_stat.not_published} шт. ({round(days_remain)} дн.)\n"
-        f"Ожидают проверки: {day_stat.not_checked} шт. <a href='http://45.80.71.178/temp'>Проверить</a>\n"
+        f"Отправляются каждые {config.SEND_PHOTO_INTERVAL / 60} ч.\n"
+        f"Ожидают проверки: {day_stat.not_checked} шт. <a href='http://memovoz.ru/temp'>Проверить</a>\n"
         f"Общий объем мемов: {folder_size}МБ\n\n"
         f"{formated_day_stat}",
     )
