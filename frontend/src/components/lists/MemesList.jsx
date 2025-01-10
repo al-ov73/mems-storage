@@ -37,6 +37,7 @@ const MemesList = () => {
   }, [])
 
   let memes = useSelector((state) => state.memes.memes);
+  console.log(memes)
   if (memes.length === 0) {
     return "мемов пока нет"
   }

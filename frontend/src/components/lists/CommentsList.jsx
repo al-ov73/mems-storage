@@ -8,12 +8,12 @@ const CommentsList = ({ memeComments }) => {
   return memeComments.map((comment) => {
     const dateFormat = convertDateTime(comment.created_at)
     
-    return <Row key={comment.id} className="mb-3">
+    return (memeComments && <Row key={comment.id} className="mb-3">
       <Col>
         <h5>{comment.author_name} <small className="fs-6 fst-italic fw-light">{dateFormat}</small></h5>
         <p className="overflow-hidden">{comment.text}</p>
       </Col>
-    </Row>
+    </Row>)
   })
 }
 
