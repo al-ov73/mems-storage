@@ -9,7 +9,7 @@ import HeartComponent from "./Heart";
 import { getUsernameFromStorage } from '../utils/utils.js';
 
 
-const LikeButton = ({meme}) => {
+const LikeButton = ({ meme, memeOffset, memesPerPage }) => {
   const dispatch = useDispatch();
   const access_token = localStorage.getItem('user');
   const userId = getUserIdFromStorage();
@@ -25,7 +25,7 @@ const LikeButton = ({meme}) => {
       form.append('meme_id', meme.id);
       await postLike(form, access_token);
     }
-    const getMemesResponse = await getMemes(access_token);
+    const getMemesResponse = await getMemes(access_token, memeOffset, memesPerPage);
     dispatch(setMemes(getMemesResponse.data))
   }
 

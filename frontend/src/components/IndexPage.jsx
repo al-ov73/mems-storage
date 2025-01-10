@@ -122,7 +122,7 @@ const IndexPage = () => {
       <Container className="d-flex">
         <Container>
           <Row>
-            <MemesList />
+            <MemesList memeOffset={memeOffset} memesPerPage={memesPerPage}/>
           </Row>
         </Container>
       </Container>

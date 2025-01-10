@@ -12,7 +12,7 @@ import { getUsernameFromStorage, getUserIdFromStorage } from '../../utils/utils.
 import { getUser, deleteMeme, getMemes } from '../../utils/requests';
 
 
-const MemesList = () => {
+const MemesList = ({ memeOffset, memesPerPage }) => {
   const [userIsAdmin, setUserIsAdmin] = useState(false);
   const [modalShow, setModalShow] = useState(false);
   const [currentMeme, setCurrentMeme] = useState({});
@@ -35,14 +35,12 @@ const MemesList = () => {
     }
     inner();
   }, [])
-  console.log('currentMeme.comments', typeof (currentMeme.comments), currentMeme.comments)
+
   let memes = useSelector((state) => state.memes.memes);
   console.log(memes)
   if (memes.length === 0) {
     return "мемов пока нет"
   }
-
-
 
   const grouped = {};
   memes.forEach(meme => {
@@ -56,7 +54,7 @@ const MemesList = () => {
 
   const handleDelete = async (id, token) => {
     await deleteMeme(id, token)
-    const getMemesResponse = await getMemes(token);
+    const getMemesResponse = await getMemes(access_token, memeOffset, memesPerPage);
     dispatch(setMemes(getMemesResponse.data))
     setCurrentMeme(memes[currentIndex + 1])
     setCurrentIndex(currentIndex + 1);
@@ -112,7 +110,7 @@ const MemesList = () => {
           <Modal.Footer>
             <Container>
               <Row className="my-3">
-                <Col className="my-1" sm={6}><LikeButton meme={currentMeme} /></Col>
+                <Col className="my-1" sm={6}><LikeButton meme={currentMeme} memeOffset={memeOffset} memesPerPage={memesPerPage} /></Col>
                 <Col className="my-1">
                   {
                     userIsAdmin &&
@@ -145,7 +143,7 @@ const MemesList = () => {
                 {/* LABEL POST FORM */}
                 {username && (
                   <Col className="my-1">
-                    <LabelPostForm meme={currentMeme} />
+                    <LabelPostForm meme={currentMeme} memeOffset={memeOffset} memesPerPage={memesPerPage} />
                   </Col>
                 )}
                 {/* END LABEL POST FORM */}
@@ -154,10 +152,10 @@ const MemesList = () => {
               {/* END LABELS */}
 
               {/* COMMENTS */}
-              {username && <CommentPostForm memeId={currentMeme.id} />}
+              {username && <CommentPostForm memeId={currentMeme.id} memeOffset={memeOffset} memesPerPage={memesPerPage} />}
               {!username && 'Зарегистрируйтесь, чтобы оставлять комментерии и ставить лайки'}
 
-              <CommentsList memeId={currentMeme.comments} />
+              <CommentsList memeComments={currentMeme.comments} />
             </Container>
           </Modal.Footer>
         </Modal>
@@ -168,4 +166,4 @@ const MemesList = () => {
 
 }
 
-export default React.memo(MemesList);
+export default MemesList;

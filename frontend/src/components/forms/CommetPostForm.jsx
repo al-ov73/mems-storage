@@ -9,7 +9,7 @@ import { getMemes, postComment } from '../../utils/requests';
 import { setMemes } from "../../slices/memesSlice";
 
 
-const CommentPostForm = ({ memeId }) => {
+const CommentPostForm = ({ memeId, memeOffset, memesPerPage }) => {
   const [comment, setComment] = useState('');
   const access_token = localStorage.getItem('user')
   const dispatch = useDispatch();
@@ -25,7 +25,7 @@ const CommentPostForm = ({ memeId }) => {
                   form.append('meme_id', memeId);
                   setComment('')
                   await postComment(form, access_token);
-                  const getMemesResponse = await getMemes(access_token);
+                  const getMemesResponse = await getMemes(access_token, memeOffset, memesPerPage);
                   dispatch(setMemes(getMemesResponse.data))
                 } catch (error) {
                   console.log('error->', error)

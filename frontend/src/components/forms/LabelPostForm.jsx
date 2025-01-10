@@ -5,7 +5,7 @@ import { getLabelsNames, getMemes, postLabel } from '../../utils/requests';
 import { setMemes } from '../../slices/memesSlice';
 import CreatableSelect from 'react-select/creatable';
 
-const LabelPostForm = ({ meme }) => {
+const LabelPostForm = ({ meme, memeOffset, memesPerPage }) => {
   const [labelNames, setLabelNames] = useState([]);
 
   const access_token = localStorage.getItem('user')
@@ -37,7 +37,7 @@ const LabelPostForm = ({ meme }) => {
       form.append('meme_id', meme.id);
 
       await postLabel(form, access_token);
-      const getMemesResponse = await getMemes(access_token);
+      const getMemesResponse = await getMemes(access_token, memeOffset, memesPerPage);
       dispatch(setMemes(getMemesResponse.data))      
     }
   }
