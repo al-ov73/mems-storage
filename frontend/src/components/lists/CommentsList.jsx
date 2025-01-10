@@ -1,26 +1,11 @@
 import React, { useState, useEffect } from "react";
 import { Col, Row } from "react-bootstrap"
-import { getComments } from "../../utils/requests";
-import SpinnerEl from "../spinners/SimpleSpinner";
 import { convertDateTime } from "../../utils/utils";
 
 
-const CommentsList = ({ memeId }) => {
-  const [loading, setLoading] = useState(true);
-  const [memeComments, setMemeComments] = useState([]);
-  const access_token = localStorage.getItem('user')
+const CommentsList = ({ memeComments }) => {
 
-  useEffect(() => {
-    const inner = async () => {
-      const comments = await getComments(memeId, access_token)
-      setMemeComments(comments)
-      setLoading(false)
-    }
-    inner();
-  }, [])
-
-  return loading ? <SpinnerEl /> 
-    : memeComments.map((comment) => {
+  return memeComments.map((comment) => {
     const dateFormat = convertDateTime(comment.created_at)
     
     return <Row key={comment.id} className="mb-3">

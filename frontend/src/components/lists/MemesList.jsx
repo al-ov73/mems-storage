@@ -156,7 +156,7 @@ const MemesList = () => {
               {username && <CommentPostForm memeId={currentMeme.id} />}
               {!username && 'Зарегистрируйтесь, чтобы оставлять комментерии и ставить лайки'}
 
-              <CommentsList memeId={currentMeme.id} />
+              <CommentsList memeId={currentMeme.comments} />
             </Container>
           </Modal.Footer>
         </Modal>
