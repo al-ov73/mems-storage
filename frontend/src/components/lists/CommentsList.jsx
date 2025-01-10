@@ -4,9 +4,10 @@ import { convertDateTime } from "../../utils/utils";
 
 
 const CommentsList = ({ memeComments }) => {
-  if (memeComments.length === 0) {
+  if (!memeComments) {
     return "комментариев пока нет"
   }
+  
   return memeComments.map((comment) => {
     const dateFormat = convertDateTime(comment.created_at)
     

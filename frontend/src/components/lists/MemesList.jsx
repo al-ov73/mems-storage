@@ -35,7 +35,7 @@ const MemesList = () => {
     }
     inner();
   }, [])
-
+  console.log('currentMeme.comments', typeof (currentMeme.comments), currentMeme.comments)
   let memes = useSelector((state) => state.memes.memes);
   console.log(memes)
   if (memes.length === 0) {
