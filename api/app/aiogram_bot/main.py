@@ -104,8 +104,8 @@ async def start_bot():
         with lock.acquire(timeout=5):  # Устанавливаем таймаут для ожидания блокировки
             if config.ENV == "prod":
                 scheduler = AsyncIOScheduler()
-                scheduler.add_job(send_photo_periodically, "interval", minutes=int(config.SEND_PHOTO_INTERVAL))
-                scheduler.add_job(parse, "interval", hours=int(config.PARSE_INTERVAL))
+                scheduler.add_job(send_photo_periodically, "interval", minutes=config.SEND_PHOTO_INTERVAL)
+                scheduler.add_job(parse, "interval", hours=config.PARSE_INTERVAL)
                 scheduler.start()
 
             await bot.set_my_commands(bot_commands)

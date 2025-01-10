@@ -5,7 +5,7 @@ from dotenv import load_dotenv
 load_dotenv()
 
 ENV = os.getenv("ENV")
-START_BOT = os.getenv("START_BOT")
+START_BOT = os.getenv("START_BOT") # 1 - start bot, '' - bot no need
 
 ORIGINS = os.getenv('ORIGINS', '').split(',')
 
@@ -47,6 +47,11 @@ API_HASH = os.getenv("API_HASH")
 CHANNEL = os.getenv("CHANNEL")
 YA_TOKEN = os.getenv("YA_TOKEN")
 
+# parser intervals
+PARSE_INTERVAL = int(os.getenv("PARSE_INTERVAL"))
+PARSE_LIMIT = int(os.getenv("PARSE_LIMIT"))
+SEND_PHOTO_INTERVAL = int(os.getenv("SEND_PHOTO_INTERVAL"))
+
 # telegram bot config
 BOT_TOKEN = os.getenv("BOT_TOKEN")
 CHANNELS = os.getenv("CHANNELS").split(" ")
@@ -56,10 +61,6 @@ MY_API_ID = os.getenv("MY_API_ID")
 # vk parser config
 VK_TOKEN = os.getenv("VK_TOKEN")
 VK_GROUPS = os.getenv("VK_GROUPS").split(" ")
-
-PARSE_INTERVAL = os.getenv("PARSE_INTERVAL")
-PARSE_LIMIT = os.getenv("PARSE_LIMIT")
-SEND_PHOTO_INTERVAL = os.getenv("SEND_PHOTO_INTERVAL")
 
 # gigachat config
 GIGACHAT_KEY = os.getenv("GIGACHAT_KEY")
