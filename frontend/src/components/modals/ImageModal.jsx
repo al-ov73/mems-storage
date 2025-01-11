@@ -20,7 +20,7 @@ const ImageModal = ({ memeId, memeOffset, memesPerPage, show, onHide }) => {
   const dispatch = useDispatch();
 
   const userId = getUserIdFromStorage();
-  const username = getUsernameFromStorage
+  const username = getUsernameFromStorage();
   const memes = useSelector((state) => state.memes.memes);
   const currentMeme = memes.find((meme) => meme.id === memeId)
 
