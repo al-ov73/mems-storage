@@ -34,6 +34,7 @@ const NavbarPage = ({ full }) => {
 
       <Button className="telegram-button" onClick={(e) => {
         e.preventDefault();
+        ym(99460360,'reachGoal','channel-redirect')
         window.location.href = process.env.REACT_APP_TG_LINK;
       }}>
         Подписаться <i className="fab fa-telegram-plane"></i>
