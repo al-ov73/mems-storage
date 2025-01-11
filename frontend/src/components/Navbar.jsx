@@ -1,7 +1,8 @@
 import Navbar from 'react-bootstrap/Navbar';
 import Nav from 'react-bootstrap/Nav';
 import Button from 'react-bootstrap/Button';
-import Container from 'react-bootstrap/Container';
+import YandexMetrika from 'yandex-metrika-api';
+
 import useAuth from '../hooks/index.js';
 import { useNavigate } from "react-router-dom";
 import React, { useState, } from "react";
@@ -34,7 +35,7 @@ const NavbarPage = ({ full }) => {
 
       <Button className="telegram-button" onClick={(e) => {
         e.preventDefault();
-        ym(99460360,'reachGoal','channel-redirect')
+        YandexMetrika.reachGoal('channel-redirect', '99460360');
         window.location.href = process.env.REACT_APP_TG_LINK;
       }}>
         Подписаться <i className="fab fa-telegram-plane"></i>
