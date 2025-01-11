@@ -13,6 +13,7 @@ import CommentsList from "../lists/CommentsList";
 import LikeButton from "../LikeButton";
 import LabelPostForm from "../forms/LabelPostForm";
 import { getUserIdFromStorage, getUsernameFromStorage } from "../../utils/utils";
+import LabelsList from "../lists/LabelsList";
 
 const ImageModal = ({ memeId, memeOffset, memesPerPage, show, onHide }) => {
   const [userIsAdmin, setUserIsAdmin] = useState(false);
@@ -47,76 +48,54 @@ const ImageModal = ({ memeId, memeOffset, memesPerPage, show, onHide }) => {
 
   return (
     <Modal
-    show={show}
-    onHide={onHide}
-    size="lg"
-    centered
-  >
-    <Modal.Body style={{ display: 'flex', height: '500px', alignItems: 'center', justifyContent: 'center' }}>
-      <img
-        height="100%"
-        style={{
-          maxHeight: `500px`,
-          width: 'auto',
-        }}
-        src={currentMeme.link}
-        className="img-fluid rounded p-3"
-        alt='Картинка не загрузилась:('
-      />
-    </Modal.Body>
-    <Modal.Footer>
-      <Container>
-        <Row className="my-3">
-          <Col className="my-1" sm={6}>
-            <LikeButton meme={currentMeme} memeOffset={memeOffset} memesPerPage={memesPerPage} />
-          </Col>
-          <Col className="my-1">
-            {
-              userIsAdmin &&
-              <Button variant="outline-danger"
+      show={show}
+      onHide={onHide}
+      size="lg"
+      centered
+    >
+      <Modal.Body style={{ display: 'flex', height: '500px', alignItems: 'center', justifyContent: 'center' }}>
+        <img
+          height="100%"
+          style={{
+            maxHeight: `500px`,
+            width: 'auto',
+          }}
+          src={currentMeme.link}
+          className="img-fluid rounded p-3"
+          alt='Картинка не загрузилась:('
+        />
+      </Modal.Body>
+      <Modal.Footer>
+        <Container>
+
+          <Row className="my-3">
+
+            <Col className="my-1" sm={6}>
+              <LikeButton meme={currentMeme} memeOffset={memeOffset} memesPerPage={memesPerPage} />
+            </Col>
+
+            <Col className="my-1">
+              {userIsAdmin && <Button variant="outline-danger"
                 onClick={() => handleDelete(currentMeme.id, access_token)}>
                 Удалить
-              </Button>
-            }
+              </Button>}
 
-          </Col>
-          <Col className="my-1">
-            <Button onClick={onHide}>Закрыть</Button>
-          </Col>
-        </Row>
-
-        {/* LABELS */}
-        <Row xs="auto" className="my-3">
-          {currentMeme.meme_labels && currentMeme.meme_labels.map((label) => {
-            return <Col key={label.id} className="my-1">
-              <Button className="rounded-pill"
-                disabled={!Boolean(username)}
-                variant="warning"
-                size="sm">
-                {label.title}
-              </Button>
             </Col>
-          })}
-
-          {/* LABEL POST FORM */}
-          {username && (
             <Col className="my-1">
-              <LabelPostForm meme={currentMeme} memeOffset={memeOffset} memesPerPage={memesPerPage} />
+              <Button onClick={onHide}>Закрыть</Button>
             </Col>
-          )}
-          {/* END LABEL POST FORM */}
+          </Row>
 
-        </Row>
-        {/* END LABELS */}
+          <LabelsList currentMeme={currentMeme} username={username} memeOffset={memeOffset} memesPerPage={memesPerPage} />
 
-        {/* COMMENTS */}
-        {username && <CommentPostForm memeId={currentMeme.id} memeOffset={memeOffset} memesPerPage={memesPerPage} />}
-        {!username && 'Зарегистрируйтесь, чтобы оставлять комментерии и ставить лайки'}
-
-        <CommentsList memeComments={currentMeme.comments} />
-      </Container>
-    </Modal.Footer>
-  </Modal>
+          {/* COMMENTS */}
+          {username && <CommentPostForm memeId={currentMeme.id} memeOffset={memeOffset} memesPerPage={memesPerPage} />}
+          {!username && 'Зарегистрируйтесь, чтобы оставлять комментерии и ставить лайки'}
+          <CommentsList memeComments={currentMeme.comments} />
+          
+        </Container>
+      </Modal.Footer>
+    </Modal>
   );
 }
 

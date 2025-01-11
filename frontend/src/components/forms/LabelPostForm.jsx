@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import FormData from 'form-data'
 import { useDispatch } from "react-redux";
+import Col from 'react-bootstrap/Col';
 import { getLabelsNames, getMemes, postLabel } from '../../utils/requests';
 import { setMemes } from '../../slices/memesSlice';
 import CreatableSelect from 'react-select/creatable';
@@ -20,11 +21,11 @@ const LabelPostForm = ({ meme, memeOffset, memesPerPage }) => {
           return { value: labelName, label: labelName }
         })
         setLabelNames(optionsList)
-        
+
       } catch (e) {
         console.log('labels get error');
         console.log(e)
-      }      
+      }
     }
     inner();
   }, []);
@@ -38,17 +39,19 @@ const LabelPostForm = ({ meme, memeOffset, memesPerPage }) => {
 
       await postLabel(form, access_token);
       const getMemesResponse = await getMemes(access_token, memeOffset, memesPerPage);
-      dispatch(setMemes(getMemesResponse.data))      
+      dispatch(setMemes(getMemesResponse.data))
     }
   }
 
-  return <CreatableSelect 
-          isClearable 
-          options={labelNames}
-          placeholder="Напишите смешной тег"
-          onChange={handleSelect}
-          isSearchable={true}
-        />
+  return <Col className="my-1">
+    <CreatableSelect
+      isClearable
+      options={labelNames}
+      placeholder="Напишите смешной тег"
+      onChange={handleSelect}
+      isSearchable={true}
+    />
+  </Col>
 }
 
 export default LabelPostForm;
