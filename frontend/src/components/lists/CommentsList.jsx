@@ -4,7 +4,7 @@ import { convertDateTime } from "../../utils/utils";
 
 
 const CommentsList = ({ memeComments }) => {
-  console.log(memeComments)
+
   if (!memeComments) {
     return "комментариев пока нет"
   }
