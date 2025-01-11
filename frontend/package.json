@@ -21,7 +21,6 @@
     "react-scripts": "^5.0.1",
     "react-select": "^5.8.1",
     "web-vitals": "^2.1.4",
-    "yandex-metrika-api": "^0.0.1",
     "yup": "^1.4.0"
   },
   "scripts": {
