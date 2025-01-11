@@ -100,10 +100,10 @@ const IndexPage = () => {
 
   return (
     <>
-      <WelcomeModal
+      {/* <WelcomeModal
         show={welcomeModalShow}
         onHide={() => setWelcomeModalShow(false)}
-      />
+      /> */}
 
       <NavbarPage full={true} />
 

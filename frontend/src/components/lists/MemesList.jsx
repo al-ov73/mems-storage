@@ -1,43 +1,23 @@
 import { useSelector } from "react-redux";
 import { useDispatch } from "react-redux";
 
-import { Row, Modal, Image, Button, Col, Container } from 'react-bootstrap';
-import React, { useState, useEffect } from "react";
-import CommentPostForm from "../forms/CommetPostForm";
-import CommentsList from "../lists/CommentsList";
-import LikeButton from "../LikeButton";
+import { Image, Col } from 'react-bootstrap';
+import React, { useState, } from "react";
 import { setMemes } from "../../slices/memesSlice";
-import LabelPostForm from "../forms/LabelPostForm";
-import { getUsernameFromStorage, getUserIdFromStorage } from '../../utils/utils.js';
-import { getUser, deleteMeme, getMemes } from '../../utils/requests';
+import { deleteMeme, getMemes } from '../../utils/requests';
+import ImageModal from "../modals/ImageModal.jsx";
 
 
 const MemesList = ({ memeOffset, memesPerPage }) => {
-  const [userIsAdmin, setUserIsAdmin] = useState(false);
   const [modalShow, setModalShow] = useState(false);
   const [currentMeme, setCurrentMeme] = useState({});
   const [currentIndex, setCurrentIndex] = useState(0);
 
-
-  const username = getUsernameFromStorage()
   const dispatch = useDispatch();
   const access_token = localStorage.getItem('user')
-  const userId = getUserIdFromStorage();
-
-  useEffect(() => {
-    const inner = async () => {
-      if (userId) {
-        const user = await getUser(userId, access_token);
-        if (user.is_admin) {
-          setUserIsAdmin(true)
-        }
-      }
-    }
-    inner();
-  }, [])
 
   let memes = useSelector((state) => state.memes.memes);
-  console.log(memes)
+
   if (memes.length === 0) {
     return "мемов пока нет"
   }
@@ -87,79 +67,14 @@ const MemesList = ({ memeOffset, memesPerPage }) => {
       })}
       {/* END IMAGE CARD */}
 
-      {/* MODAL */}
-      {setModalShow && (
-        <Modal
+      {modalShow && (
+        <ImageModal
+          memeId={currentMeme.id}
+          memeOffset={memeOffset}
+          memesPerPage={memesPerPage}
           show={modalShow}
           onHide={() => setModalShow(false)}
-          size="lg"
-          centered
-        >
-          <Modal.Body style={{ display: 'flex', height: '500px', alignItems: 'center', justifyContent: 'center' }}>
-            <img
-              height="100%"
-              style={{
-                maxHeight: `500px`,
-                width: 'auto',
-              }}
-              src={currentMeme.link}
-              className="img-fluid rounded p-3"
-              alt='Картинка не загрузилась:('
-            />
-          </Modal.Body>
-          <Modal.Footer>
-            <Container>
-              <Row className="my-3">
-                <Col className="my-1" sm={6}><LikeButton meme={currentMeme} memeOffset={memeOffset} memesPerPage={memesPerPage} /></Col>
-                <Col className="my-1">
-                  {
-                    userIsAdmin &&
-                    <Button variant="outline-danger"
-                      onClick={() => handleDelete(currentMeme.id, access_token)}>
-                      Удалить
-                    </Button>
-                  }
-
-                </Col>
-                <Col className="my-1">
-                  <Button onClick={() => setModalShow(false)}>Закрыть</Button>
-                </Col>
-              </Row>
-
-              {/* LABELS */}
-              <Row xs="auto" className="my-3">
-                {currentMeme.meme_labels && currentMeme.meme_labels.map((label) => {
-                  return <Col key={label.id} className="my-1">
-                    <Button className="rounded-pill"
-                      disabled={!Boolean(username)}
-                      variant="warning"
-                      size="sm"
-                      onClick={() => setModalShow(false)}>
-                      {label.title}
-                    </Button>
-                  </Col>
-                })}
-
-                {/* LABEL POST FORM */}
-                {username && (
-                  <Col className="my-1">
-                    <LabelPostForm meme={currentMeme} memeOffset={memeOffset} memesPerPage={memesPerPage} />
-                  </Col>
-                )}
-                {/* END LABEL POST FORM */}
-
-              </Row>
-              {/* END LABELS */}
-
-              {/* COMMENTS */}
-              {username && <CommentPostForm memeId={currentMeme.id} memeOffset={memeOffset} memesPerPage={memesPerPage} />}
-              {!username && 'Зарегистрируйтесь, чтобы оставлять комментерии и ставить лайки'}
-
-              <CommentsList memeComments={currentMeme.comments} />
-            </Container>
-          </Modal.Footer>
-        </Modal>
-        // END MODAL
+        />
       )}
     </React.Fragment>
   })

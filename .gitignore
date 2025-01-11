@@ -9,3 +9,5 @@ node_modules
 
 *.session
 api/app/static/photos/
+frontend/.env.production
+.env.production
