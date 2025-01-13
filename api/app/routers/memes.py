@@ -62,10 +62,10 @@ async def get_checked_memes(
         "client": f"{request.client.host}: {request.client.port}",
         }
     message = (f"{user_data["client"]} зашел на сайт\n\n"
-                f"host: {headers["host"]}\n"
-                f"browser: {headers["sec-ch-ua"]}\n"
-                f"platform: {headers["sec-ch-ua-platform"]}\n"
-                f"mobile: {headers["sec-ch-ua-mobile"]}\n"
+                f"host: {headers.get("host")}\n"
+                f"browser: {headers.get("sec-ch-ua")}\n"
+                f"platform: {headers.get("sec-ch-ua-platform")}\n"
+                f"mobile: {headers.get("sec-ch-ua-mobile")}\n"
                )
     telegram_api_url = f"https://api.telegram.org/bot{config.BOT_TOKEN}/sendMessage"
     payload = {
