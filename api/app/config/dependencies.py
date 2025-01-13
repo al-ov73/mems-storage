@@ -11,7 +11,9 @@ from ..repositories.likes_repository import LikesRepository
 def get_memes_repository():
     return MemesRepository()
 
+
 meme_repo = get_memes_repository()
+
 
 def get_storage_repo():
     return FSStorageRepository(config.PHOTOS_DIR)
@@ -36,4 +38,3 @@ def get_likes_repository():
 
 def get_users_repository():
     return UsersRepository()
-

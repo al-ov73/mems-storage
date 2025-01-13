@@ -5,9 +5,9 @@ from dotenv import load_dotenv
 load_dotenv()
 
 ENV = os.getenv("ENV")
-START_BOT = os.getenv("START_BOT") # 1 - start bot, '' - bot no need
+START_BOT = os.getenv("START_BOT")  # 1 - start bot, '' - bot no need
 
-ORIGINS = os.getenv('ORIGINS', '').split(',')
+ORIGINS = os.getenv("ORIGINS", "").split(",")
 
 # Postgress config
 DB_HOST = os.getenv("DB_HOST")
@@ -57,6 +57,7 @@ BOT_TOKEN = os.getenv("BOT_TOKEN")
 CHANNELS = os.getenv("CHANNELS").split(" ")
 CHAT_ID = os.getenv("CHAT_ID")
 MY_API_ID = os.getenv("MY_API_ID")
+SEND_BOT_URL = f"https://api.telegram.org/bot{BOT_TOKEN}/sendMessage"
 
 # vk parser config
 VK_TOKEN = os.getenv("VK_TOKEN")

@@ -25,6 +25,7 @@ bot = Bot(token=config.BOT_TOKEN, default=DefaultBotProperties(parse_mode=ParseM
 dp = Dispatcher()
 LOCK_FILE = "/tmp/bot.lock"  # Путь к файлу блокировки
 
+
 async def send_photo_periodically():
     random_image = await meme_repo.get_random_meme(db=db)
     await bot.send_photo(config.CHAT_ID, URLInputFile(random_image.link))
@@ -36,7 +37,7 @@ async def command_start_handler(message: Message) -> None:
     await message.answer(f"Hello, {message.from_user.full_name}!")
 
 
-@dp.message(Command(commands=['parse']))
+@dp.message(Command(commands=["parse"]))
 async def parse_command(message: Message):
     count_before = len(os.listdir(path=f"{config.STATIC_DIR}/photos"))
     folder_size_before = get_folder_size(f"{config.STATIC_DIR}/photos")
@@ -51,17 +52,17 @@ async def parse_command(message: Message):
     )
 
 
-@dp.message(Command(commands=['send']))
+@dp.message(Command(commands=["send"]))
 async def image_send_command(message: Message):
     await send_photo_periodically()
     await message.answer("Мем отправлен")
 
 
-@dp.message(Command(commands=['stat']))
+@dp.message(Command(commands=["stat"]))
 async def stat_command(message: Message):
     day_stat = await meme_repo.get_published_stat(db=db)
     folder_size = get_folder_size(f"{config.STATIC_DIR}/photos")
-    days_remain = day_stat.not_published /24
+    days_remain = day_stat.not_published / 24
     day_stats = await meme_repo.get_memes_count_by_day(db=db)
     formated_day_stat = await format_day_stat(day_stats)
     await bot.send_message(
@@ -75,24 +76,26 @@ async def stat_command(message: Message):
         f"{formated_day_stat}",
     )
 
-@dp.message(Command(commands=['sources']))
+
+@dp.message(Command(commands=["sources"]))
 async def sources_command(message: Message):
     days_limit = 5
     total_count = 0
     sources_stat = await meme_repo.get_sources_stat(db=db, limit=days_limit)
-    
+
     formated_stat = []
     for stat in sources_stat:
         day_stat = f"({stat.source_type}) {stat.source_name} - {stat.count} шт.\n"
         formated_stat.append(day_stat)
         total_count += stat.count
-    
+
     day_average_count = round(total_count / days_limit, 2)
     await message.reply(
         f"Статистика за последние {days_limit} дн.\n"
         f"Среднее за день: {day_average_count}\n"
         f"{''.join(formated_stat)}"
     )
+
 
 @dp.message()
 async def other_command(message: Message) -> None:
@@ -104,6 +107,7 @@ async def other_command(message: Message) -> None:
             return
         await message.reply(giga_reply.text_reply)
 
+
 async def start_bot():
     # Использование файловой блокировки для предотвращения запуска нескольких экземпляров бота
     lock = FileLock(LOCK_FILE)
@@ -113,7 +117,11 @@ async def start_bot():
         with lock.acquire(timeout=5):  # Устанавливаем таймаут для ожидания блокировки
             if config.ENV == "prod":
                 scheduler = AsyncIOScheduler()
-                scheduler.add_job(send_photo_periodically, "interval", minutes=config.SEND_PHOTO_INTERVAL)
+                scheduler.add_job(
+                    send_photo_periodically,
+                    "interval",
+                    minutes=config.SEND_PHOTO_INTERVAL,
+                )
                 scheduler.add_job(parse, "interval", hours=config.PARSE_INTERVAL)
                 scheduler.start()
 

@@ -27,4 +27,5 @@ def get_db():
     finally:
         db.close()
 
+
 db = next(get_db())

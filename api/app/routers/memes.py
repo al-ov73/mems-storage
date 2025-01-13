@@ -1,53 +1,30 @@
 from typing import Annotated
-from fastapi import Depends, Form, APIRouter, Request
+from fastapi import Depends, Form, APIRouter, Request, BackgroundTasks
 from sqlalchemy.orm import Session
-import httpx
-import requests
-from ..config import config
 
 from ..config.logger_config import get_logger
 from ..config.db_config import get_db
 from ..config.dependencies import get_storage_repo, get_memes_repository
-from ..models.meme import Meme
 from ..parsers.telegram_parser import parse_telegram_channels
 from ..repositories.memes_repository import MemesRepository
 from ..repositories.storage_repository import BaseStorageRepo
 from ..schemas.memes import MemeDbSchema
 from ..schemas.stat import DayStatSchema, StatSchema
+from ..utils.tasks import send_telegram_message
 
 router = APIRouter()
 
 logger = get_logger(__name__)
 
-def get_info_by_ip(ip: str) -> dict:
-    try:
-        response = requests.get(url=f'http://ip-api.com/json/{ip}').json()
-
-        data = [
-            f"[IP]: {response.get('query')}",#ip
-            f"[Int prov]: {response.get('isp')}",#интернет провайдер
-            f"[Org]: {response.get('org')}",#организация
-            f"[Country]: {response.get('country')}",#страна
-            f"[Region Name]: {response.get('regionName')}",#регион
-            f"[City]: {response.get('city')}",#город
-            f"[ZIP]: {response.get('zip')}",#почт код
-            f"[Lat]: {response.get('lat')}",#широта
-            f"[Lon]: {response.get('lon')}",#долгота
-        ]     
-    except requests.exceptions.ConnectionError:
-        print('[!] Please check your connection!')
-    return "\n".join(data)
 
 @router.get(
     "",
-    # dependencies=[Depends(get_current_user)],
 )
 async def get_memes(
     skip: int = 0,
     limit: int = 2000,
     db: Session = Depends(get_db),
     meme_repo: MemesRepository = Depends(get_memes_repository),
-    storage_repo: BaseStorageRepo = Depends(get_storage_repo),
 ):
     """
     return list of memes with links to download
@@ -62,29 +39,17 @@ async def get_memes(
 )
 async def get_checked_memes(
     request: Request,
+    background_tasks: BackgroundTasks,
     skip: int = 0,
     limit: int = 2000,
     db: Session = Depends(get_db),
     meme_repo: MemesRepository = Depends(get_memes_repository),
-    storage_repo: BaseStorageRepo = Depends(get_storage_repo),
 ):
     """
     return list of memes with links to download
     """
     memes = await meme_repo.get_checked_memes(skip, limit, db)
-    headers = request.headers
-    user_ip = request.client.host
-    user_data = get_info_by_ip(user_ip)
-
-    telegram_api_url = f"https://api.telegram.org/bot{config.BOT_TOKEN}/sendMessage"
-    payload = {
-        "chat_id": config.MY_API_ID,
-        "text": user_data,
-    }
-
-    async with httpx.AsyncClient() as client:
-        response = await client.post(telegram_api_url, json=payload)
-        
+    background_tasks.add_task(send_telegram_message, request)
     return memes
 
 
@@ -96,7 +61,6 @@ async def get_not_checked_memes(
     limit: int = 2000,
     db: Session = Depends(get_db),
     meme_repo: MemesRepository = Depends(get_memes_repository),
-    storage_repo: BaseStorageRepo = Depends(get_storage_repo),
 ):
     """
     return list of memes with links to download
@@ -192,6 +156,7 @@ async def get_checked_memes(
     """
     memes = await meme_repo.get_memes_count_by_day(db)
     return memes
+
 
 @router.get(
     "/count",
