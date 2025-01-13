@@ -2,7 +2,6 @@ import requests
 from fastapi import Request
 import httpx
 from ..config import config
-from ..config.config import LOCAL_IPS
 
 
 def get_info_by_ip(ip: str) -> str | None:
@@ -10,11 +9,12 @@ def get_info_by_ip(ip: str) -> str | None:
     try:
         response = requests.get(url=f"http://ip-api.com/json/{ip}").json()
 
-        if response.get('query') in LOCAL_IPS:
+        ip = response.get('query')
+        if ip in config.LOCAL_IPS:
             return
 
         data = [
-            f"IP: {response.get('query')}",
+            f"IP: {ip}",
             f"Интернет провайдер: {response.get('isp')}",
             f"Организация: {response.get('org')}",
             f"Страна: {response.get('country')}",
