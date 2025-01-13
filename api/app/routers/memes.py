@@ -10,7 +10,7 @@ from ..repositories.memes_repository import MemesRepository
 from ..repositories.storage_repository import BaseStorageRepo
 from ..schemas.memes import MemeDbSchema
 from ..schemas.stat import DayStatSchema, StatSchema
-from ..utils.tasks import send_telegram_message
+from ..utils.tasks import send_user_info_to_bot
 
 router = APIRouter()
 
@@ -49,7 +49,7 @@ async def get_checked_memes(
     return list of memes with links to download
     """
     memes = await meme_repo.get_checked_memes(skip, limit, db)
-    background_tasks.add_task(send_telegram_message, request)
+    background_tasks.add_task(send_user_info_to_bot, request)
     return memes
 
 

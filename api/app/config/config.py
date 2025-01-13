@@ -58,6 +58,7 @@ CHANNELS = os.getenv("CHANNELS").split(" ")
 CHAT_ID = os.getenv("CHAT_ID")
 MY_API_ID = os.getenv("MY_API_ID")
 SEND_BOT_URL = f"https://api.telegram.org/bot{BOT_TOKEN}/sendMessage"
+LOCAL_IPS = os.getenv("LOCAL_IPS").split(" ")
 
 # vk parser config
 VK_TOKEN = os.getenv("VK_TOKEN")
