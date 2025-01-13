@@ -1,6 +1,8 @@
 from typing import Annotated
-from fastapi import Depends, Form, APIRouter
+from fastapi import Depends, Form, APIRouter, Request
 from sqlalchemy.orm import Session
+import httpx
+from ..config import config
 
 from ..config.logger_config import get_logger
 from ..config.db_config import get_db
@@ -40,6 +42,7 @@ async def get_memes(
     "/checked",
 )
 async def get_checked_memes(
+    request: Request,
     skip: int = 0,
     limit: int = 2000,
     db: Session = Depends(get_db),
@@ -50,6 +53,29 @@ async def get_checked_memes(
     return list of memes with links to download
     """
     memes = await meme_repo.get_checked_memes(skip, limit, db)
+    headers = request.headers
+    user_data = {
+        "host": headers["host"],
+        "browser": headers["sec-ch-ua"],
+        "platform": headers["sec-ch-ua-platform"],
+        "mobile": headers["sec-ch-ua-mobile"],
+        "client": f"{request.client.host}: {request.client.port}",
+        }
+    message = (f"{user_data["client"]} зашел на сайт\n\n"
+                f"host: {headers["host"]}\n"
+                f"browser: {headers["sec-ch-ua"]}\n"
+                f"platform: {headers["sec-ch-ua-platform"]}\n"
+                f"mobile: {headers["sec-ch-ua-mobile"]}\n"
+               )
+    telegram_api_url = f"https://api.telegram.org/bot{config.BOT_TOKEN}/sendMessage"
+    payload = {
+        "chat_id": config.MY_API_ID,
+        "text": message,
+    }
+
+    async with httpx.AsyncClient() as client:
+        response = await client.post(telegram_api_url, json=payload)
+        
     return memes
 
 
