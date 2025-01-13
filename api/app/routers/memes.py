@@ -54,14 +54,7 @@ async def get_checked_memes(
     """
     memes = await meme_repo.get_checked_memes(skip, limit, db)
     headers = request.headers
-    user_data = {
-        "host": headers["host"],
-        "browser": headers["sec-ch-ua"],
-        "platform": headers["sec-ch-ua-platform"],
-        "mobile": headers["sec-ch-ua-mobile"],
-        "client": f"{request.client.host}: {request.client.port}",
-        }
-    message = (f"{user_data["client"]} зашел на сайт\n\n"
+    message = (f"{request.client.host}: {request.client.port} зашел на сайт\n\n"
                 f"host: {headers.get("host")}\n"
                 f"browser: {headers.get("sec-ch-ua")}\n"
                 f"platform: {headers.get("sec-ch-ua-platform")}\n"
