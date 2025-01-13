@@ -2,6 +2,7 @@ from typing import Annotated
 from fastapi import Depends, Form, APIRouter, Request
 from sqlalchemy.orm import Session
 import httpx
+import requests
 from ..config import config
 
 from ..config.logger_config import get_logger
@@ -18,6 +19,24 @@ router = APIRouter()
 
 logger = get_logger(__name__)
 
+def get_info_by_ip(ip: str) -> dict:
+    try:
+        response = requests.get(url=f'http://ip-api.com/json/{ip}').json()
+
+        data = [
+            f"[IP]: {response.get('query')}",#ip
+            f"[Int prov]: {response.get('isp')}",#интернет провайдер
+            f"[Org]: {response.get('org')}",#организация
+            f"[Country]: {response.get('country')}",#страна
+            f"[Region Name]: {response.get('regionName')}",#регион
+            f"[City]: {response.get('city')}",#город
+            f"[ZIP]: {response.get('zip')}",#почт код
+            f"[Lat]: {response.get('lat')}",#широта
+            f"[Lon]: {response.get('lon')}",#долгота
+        ]     
+    except requests.exceptions.ConnectionError:
+        print('[!] Please check your connection!')
+    return "\n".join(data)
 
 @router.get(
     "",
@@ -54,16 +73,13 @@ async def get_checked_memes(
     """
     memes = await meme_repo.get_checked_memes(skip, limit, db)
     headers = request.headers
-    message = (f"{request.client.host}: {request.client.port} зашел на сайт\n\n"
-                f"host: {headers.get("host")}\n"
-                f"browser: {headers.get("sec-ch-ua")}\n"
-                f"platform: {headers.get("sec-ch-ua-platform")}\n"
-                f"mobile: {headers.get("sec-ch-ua-mobile")}\n"
-               )
+    user_ip = request.client.host
+    user_data = get_info_by_ip(user_ip)
+
     telegram_api_url = f"https://api.telegram.org/bot{config.BOT_TOKEN}/sendMessage"
     payload = {
         "chat_id": config.MY_API_ID,
-        "text": message,
+        "text": user_data,
     }
 
     async with httpx.AsyncClient() as client:
