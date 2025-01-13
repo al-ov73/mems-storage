@@ -78,10 +78,20 @@ async def stat_command(message: Message):
 @dp.message(Command(commands=['sources']))
 async def sources_command(message: Message):
     days_limit = 5
+    total_count = 0
     sources_stat = await meme_repo.get_sources_stat(db=db, limit=days_limit)
-    formated_stat = [f"({stat.source_type}) {stat.source_name} - {stat.count} шт.\n" for stat in sources_stat]
+    
+    formated_stat = []
+    for stat in sources_stat:
+        aver_count = round(stat.count / days_limit, 2)
+        day_stat = f"({stat.source_type}) {stat.source_name} - {stat.count} шт. (ср. {aver_count} шт.)\n"
+        formated_stat.append(day_stat)
+        total_count += stat.count
+    
+    day_average_count = round(total_count / days_limit, 2)
     await message.reply(
         f"Статистика за последние {days_limit} дн.\n"
+        f"Среднее за день: {day_average_count}\n"
         f"{''.join(formated_stat)}"
     )
 
