@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react'; 
 import { Button } from "react-bootstrap"
 import { getMemes, postLike, delLike } from "../utils/requests";
 import FormData from 'form-data'
@@ -10,6 +10,7 @@ import { getUsernameFromStorage } from '../utils/utils.js';
 
 
 const LikeButton = ({ meme, memeOffset, memesPerPage }) => {
+  const [isLoading, setLoading] = useState(false);
   const dispatch = useDispatch();
   const access_token = localStorage.getItem('user');
   const userId = getUserIdFromStorage();
@@ -18,6 +19,7 @@ const LikeButton = ({ meme, memeOffset, memesPerPage }) => {
   const buttonVariant = userLike ? "danger" : "outline-danger"
 
   const likeHandler = async () => {
+    setLoading(true)
     if (userLike) {
       await delLike(userLike.id, access_token);
     } else {
@@ -27,13 +29,14 @@ const LikeButton = ({ meme, memeOffset, memesPerPage }) => {
     }
     const getMemesResponse = await getMemes(access_token, memeOffset, memesPerPage);
     dispatch(setMemes(getMemesResponse.data))
+    setLoading(false);
   }
 
   return <>
     <Button 
           variant={buttonVariant}
           onClick={likeHandler}
-          disabled={!Boolean(username)}>
+          disabled={isLoading}>
     {meme.likes.length > 0 && meme.likes.length} <HeartComponent/> Нравится
     </Button>
   </>

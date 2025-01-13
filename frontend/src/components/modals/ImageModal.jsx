@@ -90,7 +90,7 @@ const ImageModal = ({ memeId, memeOffset, memesPerPage, show, onHide }) => {
 
           {/* COMMENTS */}
           {username && <CommentPostForm memeId={currentMeme.id} memeOffset={memeOffset} memesPerPage={memesPerPage} />}
-          {!username && 'Зарегистрируйтесь, чтобы оставлять комментерии и ставить лайки'}
+          {!username && 'Зарегистрируйтесь, чтобы оставлять комментарии и ставить лайки'}
           <CommentsList memeComments={currentMeme.comments} />
           
         </Container>
