@@ -30,3 +30,7 @@ code {
 .telegram-button:hover {
   transform: scale(1.05);
 }
+
+.hover-target {
+  cursor: pointer;
+}

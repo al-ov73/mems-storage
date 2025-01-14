@@ -19,7 +19,7 @@ const MemesList = ({ memeOffset, memesPerPage }) => {
   let memes = useSelector((state) => state.memes.memes);
 
   if (memes.length === 0) {
-    return "мемов пока нет"
+    return <p>мемов пока нет</p>
   }
 
   const grouped = {};
@@ -55,7 +55,7 @@ const MemesList = ({ memeOffset, memesPerPage }) => {
           <Image
             height="150rem"
             src={meme.link}
-            className="rounded mx-auto mt-3 d-block "
+            className="hover-target rounded mx-auto mt-3 d-block "
             alt='Картинка не загрузилась:('
             onClick={() => {
               setCurrentMeme(meme)

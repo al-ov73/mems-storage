@@ -6,6 +6,7 @@ import { useNavigate } from "react-router-dom";
 import React, { useState, } from "react";
 import AboutModal from './modals/AboutModal';
 import { getUsernameFromStorage } from '../utils/utils.js';
+import { sendButtonMsgToBot } from '../utils/requests.js';
 
 
 const NavbarPage = ({ full }) => {
@@ -33,6 +34,7 @@ const NavbarPage = ({ full }) => {
 
       <Button className="telegram-button" onClick={(e) => {
         e.preventDefault();
+        sendButtonMsgToBot()
         window.location.href = process.env.REACT_APP_TG_LINK;
       }}>
         Подписаться <i className="fab fa-telegram-plane"></i>

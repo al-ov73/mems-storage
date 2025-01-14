@@ -169,6 +169,14 @@ const postQuestion = async (form, accessToken) => {
   })
 };
 
+const sendButtonMsgToBot = async () => {
+  const botUrl = process.env.REACT_APP_SEND_BOT_URL;
+  const chatId = process.env.REACT_APP_MY_API_ID;
+  await axios.post(botUrl, {
+    chat_id: chatId,
+    text: "Нажата кнопка перехода на канал",
+  });
+};
 
 export {
   getMemes,
@@ -191,4 +199,5 @@ export {
   getTopLikedMemes,
   postQuestion,
   getMemesCount,
+  sendButtonMsgToBot,
 };
