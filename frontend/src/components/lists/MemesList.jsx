@@ -55,7 +55,7 @@ const MemesList = ({ memeOffset, memesPerPage }) => {
           <Image
             height="150rem"
             src={meme.link}
-            className="hover-target rounded mx-auto mt-3 d-block "
+            className="hover-target rounded mx-auto mt-3 d-block img-card"
             alt='Картинка не загрузилась:('
             onClick={() => {
               setCurrentMeme(meme)

@@ -20,8 +20,9 @@ code {
   cursor: pointer;
 }
 
-.animated-button {
+.animated-button, .nav-button{
   background: linear-gradient(45deg, #ffffff, #f10b0b);
+  box-shadow: 20px 20px 40px rgba(0, 0, 0, 0.25); /* Настройки тени */
   display: inline-block;
   border: none;
   border-radius: 50px;
@@ -37,19 +38,18 @@ code {
 }
 
 .animated-button::before {
-  content: '';
+  content: "";
   position: absolute;
-  top: -50%;
-  left: -50%;
-  width: 200%;
-  height: 200%;
-  background: radial-gradient(circle, rgba(255, 255, 255, 0.3), rgba(255, 255, 255, 0) 70%);
-  animation: pulse 3s infinite;
-  z-index: 1;
-  transition: opacity 0.3s ease;
+  top: -120%;
+  left: -220%;
+  width: 300%;
+  height: 100%;
+  background: radial-gradient(circle at 30% 107%, rgba(255, 255, 255, 0.9), rgba(255, 255, 255, 0));
+  transform: rotateZ(30deg);
+  animation: sunshine 3s linear infinite;
 }
 
-.animated-button:hover {
+.animated-button:hover, .nav-button:hover {
   transform: scale(1.05);
   box-shadow: 0 4px 15px rgba(101, 101, 255, 0.4);
 }
@@ -58,18 +58,10 @@ code {
   transform: scale(0.95);
 }
 
-@keyframes pulse {
-
-  0%,
+@keyframes sunshine {
   100% {
-    transform: scale(0.8);
-    opacity: 0.7;
-  }
-
-  50% {
-    transform: scale(1.2);
-    opacity: 1;
-  }
+    transform: translateX(250%) rotateZ(30deg);
+}
 }
 
 .navbar {
@@ -77,9 +69,39 @@ code {
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
   color: white;
   margin: 10px;
-  width: 100%;
   z-index: 1000;
   align-items: center;
   border: none;
   border-radius: 50px;
+}
+
+.img-card {
+  display: block;
+  transition: transform 0.3s ease; /* Плавный переход при увеличении */
+  border: 2px solid #8a7d7d; /* Черная рамка толщиной 2 пикселя */
+  border-radius: 12px;     /* Закругление углов рамки */
+}
+
+/* Эффект тени */
+.img-card {
+  box-shadow: 20px 20px 40px rgba(0, 0, 0, 0.25); /* Настройки тени */
+}
+
+/* Увеличение тени при наведении */
+.img-card:hover {
+  transform: scale(1.1); /* Увеличение размера изображения */
+  box-shadow: 15px 15px 30px rgba(0, 0, 0, 0.35); /* Увеличенная тень */
+}
+
+.page-link{
+  background-color: #797777;
+  color: #000000;
+}
+
+.page-link:hover{
+  color: #f10b0b;
+}
+.active>.page-link, .page-link.active {
+  background-color: #f10b0b;
+  border-color: #f10b0b;
 }
