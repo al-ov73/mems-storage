@@ -265,3 +265,18 @@ class MemesRepository:
             .all()
         )
         return memes
+
+    @staticmethod
+    async def add_preview_if_not_exist(
+        db: Session,
+    ) -> list[MemeDbSchema]:
+        """
+        return list of memes from db
+        """
+        memes = db.query(Meme).all()
+        for meme in memes:
+            if not meme.preview:
+                preview = meme.link.replace("photos", "previews").replace("jpg", "jpeg")
+                meme.preview = preview
+        db.commit()
+        return memes

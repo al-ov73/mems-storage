@@ -5,6 +5,8 @@ from ..models.meme import Meme
 from ..config import config as config
 from telethon import TelegramClient
 
+from ..utils.os_utils import compress_image
+
 meme_repo = get_memes_repository()
 db = next(get_db())
 
@@ -32,15 +34,18 @@ async def parse_telegram_channels() -> None:
                     print(f"find photo {filename}")
                     filepath = f"{config.STATIC_DIR}/photos/{filename}"
                     if not os.path.exists(f"{filepath}.jpg"):
-
+                        image_link = f"{config.API_URL}/{config.STATIC_URL}/photos/{filename}.jpg"
+                        preview_link = f"{config.API_URL}/{config.STATIC_URL}/previews/{filename}.jpeg"
                         new_meme = Meme(
                             name=f"{filename}.jpg",
                             source_type="tg",
                             source_name=message._chat.username,
                             checked=False,
-                            link=f"{config.API_URL}/{config.STATIC_URL}/photos/{filename}.jpg",
+                            link=image_link,
+                            preview=preview_link,
                         )
                         meme_in_db = await meme_repo.add_meme(new_meme, db)
-                        print(f"meme {meme_in_db} added to db")
                         await client.download_media(message.photo, filepath)
-                        print(f"file {filepath} downloaded")
+                        preview_path = f"{config.STATIC_DIR}/previews/{filename}.jpeg"
+                        compress_image(f"{filepath}.jpg", preview_path)
+

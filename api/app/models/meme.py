@@ -14,6 +14,7 @@ class Meme(Base):
     source_name: Mapped[str] = mapped_column(nullable=True)
     source_type: Mapped[str] = mapped_column(nullable=True)
     link: Mapped[str] = mapped_column(unique=True, nullable=False)
+    preview: Mapped[str] = mapped_column(nullable=True)
     created_at: Mapped[created_at]
     published: Mapped[bool] = mapped_column(Boolean, default=False, nullable=False)
     checked: Mapped[bool] = mapped_column(Boolean, default=False, nullable=False)

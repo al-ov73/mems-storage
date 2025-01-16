@@ -22,7 +22,7 @@ code {
 
 .animated-button, .nav-button{
   background: linear-gradient(45deg, #ffffff, #f10b0b);
-  box-shadow: 20px 20px 40px rgba(0, 0, 0, 0.25); /* Настройки тени */
+  box-shadow: 0 4px 6px black;
   display: inline-block;
   border: none;
   border-radius: 50px;
@@ -34,7 +34,7 @@ code {
   outline: none;
   position: relative;
   overflow: hidden;
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  transition: transform 0.3s ease;
 }
 
 .animated-button::before {
@@ -66,31 +66,27 @@ code {
 
 .navbar {
   background: linear-gradient(45deg, #797777, #8a7d7d);
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+  box-shadow: 0 6px 20px black;
   color: white;
   margin: 10px;
   z-index: 1000;
   align-items: center;
   border: none;
-  border-radius: 50px;
+  border-radius: 10px;
 }
 
 .img-card {
   display: block;
-  transition: transform 0.3s ease; /* Плавный переход при увеличении */
-  border: 2px solid #8a7d7d; /* Черная рамка толщиной 2 пикселя */
-  border-radius: 12px;     /* Закругление углов рамки */
+  transition: transform 0.3s ease;
+  border: 2px solid #8a7d7d;
+  border-radius: 12px;
+  box-shadow: 20px 20px 10px rgba(0, 0, 0, 0.25); /* Настройки тени */
 }
 
-/* Эффект тени */
-.img-card {
-  box-shadow: 20px 20px 40px rgba(0, 0, 0, 0.25); /* Настройки тени */
-}
 
-/* Увеличение тени при наведении */
 .img-card:hover {
-  transform: scale(1.1); /* Увеличение размера изображения */
-  box-shadow: 15px 15px 30px rgba(0, 0, 0, 0.35); /* Увеличенная тень */
+  transform: scale(1.2); /* Увеличение размера изображения */
+  box-shadow: 15px 15px 10px rgba(0, 0, 0, 0.35); /* Увеличенная тень */
 }
 
 .page-link{
@@ -104,4 +100,8 @@ code {
 .active>.page-link, .page-link.active {
   background-color: #f10b0b;
   border-color: #f10b0b;
+}
+
+.footer {
+  background-color: #919191;
 }

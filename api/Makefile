@@ -11,10 +11,10 @@ lint:
 		poetry run flake8 ./app
 
 migration:
-		alembic revision --autogenerate -m "$(n)"
+		poetry run alembic revision --autogenerate -m "$(n)"
 
 migrate:
-		alembic upgrade head
+		poetry run alembic upgrade head
 
 parse:
 		poetry run python3 parse.py

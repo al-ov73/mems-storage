@@ -8,6 +8,7 @@ import NavbarPage from "./Navbar.jsx";
 import MemesList from "./lists/MemesList.jsx";
 import Pagination from 'react-bootstrap/Pagination';
 import WelcomeModal from "./modals/WelcomeModal.jsx";
+import Footer from "../Footer.jsx";
 
 const paginationRangeLimit = 2;
 
@@ -122,7 +123,7 @@ const IndexPage = () => {
       <Container className="d-flex">
         <Container>
           <Row>
-            <MemesList memeOffset={memeOffset} memesPerPage={memesPerPage}/>
+            <MemesList memeOffset={memeOffset} memesPerPage={memesPerPage} />
           </Row>
         </Container>
       </Container>
@@ -138,7 +139,9 @@ const IndexPage = () => {
         </Pagination>
       </Container>
       {/* END PAGINATION */}
-
+      
+      <Footer />
+      
     </>
   );
 }

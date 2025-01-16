@@ -170,3 +170,17 @@ async def get_memes_count(
     """
     stat = await meme_repo.get_published_stat(db)
     return stat
+
+@router.get(
+    "/add_preview",
+)
+async def add_preview   (
+    db: Session = Depends(get_db),
+    meme_repo: MemesRepository = Depends(get_memes_repository),
+):
+    """
+    return list of memes with links to download
+    """
+    logger.info("Got request for all memes")
+    memes = await meme_repo.add_preview_if_not_exist(db)
+    return memes

@@ -1,4 +1,6 @@
 import os
+
+from ..utils.os_utils import compress_image
 from ..config.db_config import get_db
 from ..config.dependencies import get_memes_repository
 from ..models.meme import Meme
@@ -36,18 +38,20 @@ async def parse_vk_groups():
                         r = requests.get(img_url)
                         with open(f"{filepath}.jpg", "wb") as f:
                             f.write(r.content)
-                        print(f"file {filepath} downloaded")
-
                         # save meme in database
+                        image_link = f"{config.API_URL}/{config.STATIC_URL}/photos/{filename}.jpg"
+                        preview_link = f"{config.API_URL}/{config.STATIC_URL}/previews/{filename}.jpeg"
                         new_meme = Meme(
                             name=f"{filename}.jpg",
                             source_type="vk",
                             source_name=group,
                             checked=False,
-                            link=f"{config.API_URL}/{config.STATIC_URL}/photos/{filename}.jpg",
+                            link=image_link,
+                            preview=preview_link,
                         )
                         meme_in_db = await meme_repo.add_meme(new_meme, db)
-                        print(f"meme {meme_in_db} added to db")
+                        preview_path = f"{config.STATIC_DIR}/previews/{filename}.jpeg"
+                        compress_image(f"{filepath}.jpg", preview_path)
 
 
 if __name__ == "__main__":

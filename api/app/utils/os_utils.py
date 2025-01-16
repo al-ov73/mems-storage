@@ -1,6 +1,6 @@
 import os
 import shutil
-
+from PIL import Image
 
 def clean_dir(dir_path: str) -> None:
     for filename in os.listdir(dir_path):
@@ -25,3 +25,19 @@ def get_folder_size(path: str) -> int:
             except OSError as e:
                 print(f"Ошибка при получении размера файла {file_path}: {e}")
     return round(total_size / 10**6, 1)
+
+
+def compress_image(input_path, output_path, quality=20, resize_factor=None):
+    """
+    :param input_path: Путь к исходному изображению.
+    :param output_path: Путь для сохранения сжатого изображения.
+    :param quality: Качество сохранения (от 1 до 95, чем меньше, тем сильнее сжатие).
+    :param resize_factor: Коэффициент уменьшения размеров (например, 0.5 для уменьшения в 2 раза).
+    """
+    with Image.open(input_path) as img:
+        if resize_factor:
+            new_width = int(img.width * resize_factor)
+            new_height = int(img.height * resize_factor)
+            img = img.resize((new_width, new_height), Image.LANCZOS)
+
+        img.save(output_path, "JPEG", quality=quality, optimize=True)
