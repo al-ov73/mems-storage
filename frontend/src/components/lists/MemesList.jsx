@@ -54,7 +54,7 @@ const MemesList = ({ memeOffset, memesPerPage }) => {
         return <Col className="mx-1 my-1" key={meme.id}>
           <Image
             height="150rem"
-            src={meme.preview}
+            src={meme.preview || meme.link}
             className="hover-target rounded mx-auto mt-3 d-block img-card"
             alt='Картинка не загрузилась:('
             onClick={() => {
