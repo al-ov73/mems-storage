@@ -34,9 +34,10 @@ const LikeButton = ({ meme, memeOffset, memesPerPage }) => {
 
   return <>
     <Button 
+          className="like-button"
           variant={buttonVariant}
           onClick={likeHandler}
-          disabled={isLoading}>
+          disabled={isLoading || !username}>
     {meme.likes.length > 0 && meme.likes.length} <HeartComponent/> Нравится
     </Button>
   </>

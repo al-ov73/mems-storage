@@ -20,7 +20,23 @@ code {
   cursor: pointer;
 }
 
-.animated-button, .nav-button{
+.like-button {
+  box-shadow: 0 4px 6px black;
+  display: inline-block;
+  border: linear-gradient(45deg, #ffffff, #f10b0b);
+  border-radius: 50px;
+  color: linear-gradient(45deg, #ffffff, #f10b0b);
+  cursor: pointer;
+  font-size: 16px;
+  font-weight: bold;
+  padding: 10px 20px;
+  outline: none;
+  position: relative;
+  overflow: hidden;
+  transition: transform 0.3s ease;
+}
+
+.animated-button, .nav-button, .modal-button{
   background: linear-gradient(45deg, #ffffff, #f10b0b);
   box-shadow: 0 4px 6px black;
   display: inline-block;
@@ -49,9 +65,9 @@ code {
   animation: sunshine 3s linear infinite;
 }
 
-.animated-button:hover, .nav-button:hover {
+.animated-button:hover, .nav-button:hover, .like-button:hover, .modal-button:hover {
   transform: scale(1.05);
-  box-shadow: 0 4px 15px rgba(101, 101, 255, 0.4);
+  box-shadow: 0 6px 15px black;
 }
 
 .animated-button:active {
@@ -64,11 +80,17 @@ code {
 }
 }
 
+.content {
+  margin-top: 100px;
+}
+
 .navbar {
+  position: fixed;
+  top: 0;
+  width: 100%;
   background: linear-gradient(45deg, #797777, #8a7d7d);
   box-shadow: 0 6px 20px black;
   color: white;
-  margin: 10px;
   z-index: 1000;
   align-items: center;
   border: none;
@@ -104,4 +126,19 @@ code {
 
 .footer {
   background-color: #919191;
+}
+
+.modal-content {
+  border-radius: 21px;
+}
+
+.modal-body {
+  background-image: url("static/background.jpg");
+  border-top-left-radius: 20px;
+  border-top-right-radius: 20px;
+}
+
+.modal-footer {
+  background-image: url("static/background.jpg");
+  border-top: solid #000000;
 }

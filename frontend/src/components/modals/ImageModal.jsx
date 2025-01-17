@@ -75,14 +75,14 @@ const ImageModal = ({ memeId, memeOffset, memesPerPage, show, onHide }) => {
             </Col>
 
             <Col className="my-1">
-              {userIsAdmin && <Button variant="outline-danger"
+              {userIsAdmin && <Button variant="outline-danger" className="modal-button"
                 onClick={() => handleDelete(currentMeme.id, access_token)}>
                 Удалить
               </Button>}
 
             </Col>
             <Col className="my-1">
-              <Button onClick={onHide}>Закрыть</Button>
+              <Button className="modal-button" onClick={onHide}>Закрыть</Button>
             </Col>
           </Row>
 

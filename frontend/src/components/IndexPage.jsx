@@ -107,7 +107,7 @@ const IndexPage = () => {
       /> */}
 
       <NavbarPage full={true} />
-
+      <Container className="content">
       {/* PAGINATION */}
       <Container>
         <Pagination className="my-2 justify-content-center">
@@ -139,7 +139,7 @@ const IndexPage = () => {
         </Pagination>
       </Container>
       {/* END PAGINATION */}
-      
+      </Container>
       <Footer />
       
     </>

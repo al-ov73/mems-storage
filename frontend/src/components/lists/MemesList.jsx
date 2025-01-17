@@ -6,6 +6,7 @@ import React, { useState, } from "react";
 import { setMemes } from "../../slices/memesSlice";
 import { deleteMeme, getMemes } from '../../utils/requests';
 import ImageModal from "../modals/ImageModal.jsx";
+import WelcomeImage from "../WelcomeImage.jsx";
 
 
 const MemesList = ({ memeOffset, memesPerPage }) => {
@@ -42,6 +43,7 @@ const MemesList = ({ memeOffset, memesPerPage }) => {
 
   return Object.keys(grouped).map((date, index) => {
     return <React.Fragment key={index}>
+    <WelcomeImage/>
       {/* DATE WITH <hr> */}
       <div style={{ textAlign: "center" }}>
         {index !== 0 && <hr style={{ width: "100%", margin: "20px auto" }} />}
