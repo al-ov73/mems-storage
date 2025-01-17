@@ -47,7 +47,7 @@ def compress_image(input_path, output_path, quality=20, resize_factor=None):
                 new_width = int(img.width * resize_factor)
                 new_height = int(img.height * resize_factor)
                 img = img.resize((new_width, new_height), Image.LANCZOS)
-
+                
             img.save(output_path, "JPEG", quality=quality, optimize=True)
             print(f"Файл {output_path} сохранен")
     except UnidentifiedImageError as e:
