@@ -1,4 +1,5 @@
 import os
+import logging
 from urllib.parse import urljoin
 
 from telethon import TelegramClient
@@ -8,6 +9,9 @@ from ..config.db_config import get_db
 from ..config.dependencies import get_memes_repository
 from ..models.meme import Meme
 from ..utils.os_utils import compress_image
+
+
+logger = logging.getLogger(__name__)
 
 meme_repo = get_memes_repository()
 db = next(get_db())
@@ -25,6 +29,7 @@ async def parse_telegram_channels() -> None:
     ) as client:
         for channel in config.CHANNELS:
             try:
+                logger.info(f"Parsing channel {channel}")
                 messages = await client.get_messages(channel, limit=CHANNEL_FILES_LIMIT)
             except ValueError:
                 continue

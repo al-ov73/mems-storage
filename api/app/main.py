@@ -1,4 +1,5 @@
 import asyncio
+import logging
 from fastapi import FastAPI
 from fastapi.staticfiles import StaticFiles
 from fastapi.middleware.cors import CORSMiddleware
@@ -15,7 +16,9 @@ from .routers.comments import router as router_comments
 from .routers.likes import router as router_likes
 from .routers.users import router as router_users
 
-# from .routers.aichat import router as router_aichat
+logger = logging.getLogger()
+logger.setLevel(logging.INFO)
+logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(name)s - %(levelname)s - %(message)s')
 
 
 app = FastAPI()
