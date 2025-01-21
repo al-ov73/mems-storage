@@ -18,7 +18,7 @@ from .routers.users import router as router_users
 
 logger = logging.getLogger()
 logger.setLevel(logging.INFO)
-logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(name)s - %(levelname)s - %(message)s')
+logging.basicConfig(level=logging.INFO, format="%(asctime)s - %(name)s - %(levelname)s - %(message)s")
 
 
 app = FastAPI()

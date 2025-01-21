@@ -29,7 +29,7 @@ async def parse_telegram_channels() -> None:
     ) as client:
         for channel in config.CHANNELS:
             try:
-                logger.info(f"Parsing channel {channel}")
+                logger.info(f"Parsing tg channel '{channel}'")
                 messages = await client.get_messages(channel, limit=CHANNEL_FILES_LIMIT)
             except ValueError:
                 continue
@@ -39,6 +39,7 @@ async def parse_telegram_channels() -> None:
                     filename = f"tg_{message._chat.username}_{message.photo.id}"
                     filepath = os.path.join(config.STATIC_DIR, "photos", filename)
                     if not os.path.exists(f"{filepath}.jpg"):
+                        logger.info(f"Downloading tg photo '{filename}.jpg'")
                         await save_meme(client, filepath, message)
 
 
