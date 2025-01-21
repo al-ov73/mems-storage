@@ -11,5 +11,6 @@ def make_preview_for_existing_images():
         if file_path.is_file():
             compress_image(file_path, out_path)
 
+
 if __name__ == "__main__":
     make_preview_for_existing_images()

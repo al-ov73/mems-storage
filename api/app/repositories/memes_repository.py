@@ -178,13 +178,15 @@ class MemesRepository:
     async def add_meme(
         new_meme: MemeDbSchema,
         db: Session,
+        commit: bool = True,
     ) -> MemeDbSchema:
         """
         add meme to db
         """
         db.add(new_meme)
-        db.commit()
-        db.refresh(new_meme)
+        if commit:
+            db.commit()
+            db.refresh(new_meme)
         return new_meme
 
     @staticmethod

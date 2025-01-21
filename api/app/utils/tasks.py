@@ -9,7 +9,7 @@ def get_info_by_ip(ip: str) -> str | None:
     try:
         response = requests.get(url=f"http://ip-api.com/json/{ip}").json()
 
-        ip = response.get('query')
+        ip = response.get("query")
         if ip in config.LOCAL_IPS:
             return
 

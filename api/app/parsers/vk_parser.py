@@ -33,6 +33,7 @@ async def parse_vk_groups():
                     filepath = f"{config.STATIC_DIR}/photos/{filename}"
 
                     if not os.path.exists(f"{filepath}.jpg"):
+
                         # save meme in filesystem
                         img_url = attachment.get("photo").get("orig_photo").get("url")
                         r = requests.get(img_url)
