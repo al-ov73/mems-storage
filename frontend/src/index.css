@@ -142,3 +142,23 @@ code {
   background-image: url("static/background.jpg");
   border-top: solid #000000;
 }
+
+.welcome-go {
+  text-align: center;
+  font-size: 2em;
+  margin: 10px;
+  background: linear-gradient(45deg, #ffa3a3, #c40101);
+  background-clip: text;
+  -webkit-background-clip: text;
+  color: transparent;
+  font-weight: 900;
+}
+
+.about-modal-header {
+  background: linear-gradient(45deg, #797777, #8a7d7d);
+}
+
+.about-modal-body {
+  border-top-left-radius: 0;
+  border-top-right-radius: 0;
+}
