@@ -161,6 +161,11 @@ const getTopLikedMemes = async (accessToken, limit) => {
   return response.data
 };
 
+const getStat = async () => {
+  const response = await axios.get(`${routes.memesPath}/count`)
+  return response.data
+};
+
 const postQuestion = async (form, accessToken) => {
   return axios.post(routes.questionPath, form, {
     headers: {
@@ -200,4 +205,5 @@ export {
   postQuestion,
   getMemesCount,
   sendButtonMsgToBot,
+  getStat,
 };

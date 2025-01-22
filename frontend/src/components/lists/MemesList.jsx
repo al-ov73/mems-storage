@@ -21,7 +21,7 @@ const MemesList = ({ memeOffset, memesPerPage }) => {
   if (memes.length === 0) {
     return <p>мемов пока нет</p>
   }
-  console.log(memes[0])
+
   const grouped = {};
   memes.forEach(meme => {
     const parts = meme.created_at.split('T');
