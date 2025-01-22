@@ -13,3 +13,4 @@ api/app/static/previews/
 frontend/.env.production
 .env.production
 api/session_name.session
+logfile.txt
