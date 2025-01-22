@@ -71,7 +71,7 @@ async def stat_command(message: Message):
         f"Опубликовано картинок: {day_stat.published} шт.\n"
         f"Не опубликовано: {day_stat.not_published} шт. ({round(days_remain)} дн.)\n"
         f"Отправляются каждые {config.SEND_PHOTO_INTERVAL / 60} ч.\n"
-        f"Ожидают проверки: {day_stat.not_checked} шт. <a href='http://memovoz.ru/temp'>Проверить</a>\n"
+        f"Ожидают проверки: {day_stat.not_checked} шт. <a href='https://memovoz.ru/temp'>Проверить</a>\n"
         f"Общий объем мемов: {folder_size}МБ\n\n"
         f"{formated_day_stat}",
     )
