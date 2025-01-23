@@ -35,7 +35,11 @@ async def parse_vk_groups():
                 if attachment.get("type") == "photo":
                     img_id = attachment.get("photo").get("id")
                     filename = f"vk_{group}_{img_id}"
-                    filepath = os.path.join(config.STATIC_DIR, "photos", filename)
+                    filepath = os.path.join(
+                        config.STATIC_DIR,
+                        "photos",
+                        filename
+                    )
 
                     if not os.path.exists(f"{filepath}.jpg"):
                         logger.info(f"Downloading {filepath}.jpg from vk group '{group}'")
@@ -44,13 +48,17 @@ async def parse_vk_groups():
 
 async def save_meme(attachment, filename, filepath, group):
     with db.begin():
-        await save_meme_to_fs(attachment, filepath)
-        await save_meme_to_db(filename, group)
+        preview_link = await save_meme_to_fs(attachment, filepath)
+        await save_meme_to_db(filename, preview_link, group)
 
 
-async def save_meme_to_db(filename, group):
-    image_link = urljoin(config.API_URL, f"{config.STATIC_URL}/photos/{filename}.jpg")
-    preview_link = urljoin(config.API_URL, f"{config.STATIC_URL}/previews/{filename}.jpeg")
+async def save_meme_to_db(filename, preview_link, group):
+    image_link = urljoin(
+        config.API_URL,
+        config.STATIC_URL,
+        photos,
+        f"{filename}.jpg"
+    )
     new_meme = Meme(
         name=f"{filename}.jpg",
         source_type="vk",
