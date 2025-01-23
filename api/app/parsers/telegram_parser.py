@@ -21,7 +21,6 @@ os.makedirs(config.STATIC_DIR, exist_ok=True)
 
 
 async def parse_telegram_channels() -> None:
-    return
     async with TelegramClient(
         "session_name",
         config.API_ID,
@@ -44,7 +43,7 @@ async def parse_telegram_channels() -> None:
                         filename
                     )
                     if not os.path.exists(f"{filepath}.jpg"):
-                        logger.info(f"Downloading tg photo '{filename}.jpg'")
+                        logger.info(f"Downloading '{filename}.jpg' from tg channel {channel}")
                         await save_meme(client, filepath, message)
 
 
