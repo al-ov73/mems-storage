@@ -21,6 +21,7 @@ os.makedirs(config.STATIC_DIR, exist_ok=True)
 
 
 async def parse_telegram_channels() -> None:
+    return
     async with TelegramClient(
         "session_name",
         config.API_ID,
@@ -45,19 +46,18 @@ async def parse_telegram_channels() -> None:
 
 async def save_meme(client, filepath, message):
     image_link = urljoin(config.API_URL, f"{config.STATIC_URL}/photos/{os.path.basename(filepath)}.jpg")
-    preview_link = urljoin(config.API_URL, f"{config.STATIC_URL}/previews/{os.path.basename(filepath)}.jpeg")
 
-    new_meme = Meme(
-        name=f"{os.path.basename(filepath)}.jpg",
-        source_type="tg",
-        source_name=message._chat.username,
-        checked=False,
-        link=image_link,
-        preview=preview_link,
-    )
 
     with db.begin():
-        await meme_repo.add_meme(new_meme, db, commit=False)
         await client.download_media(message.photo, filepath)
-        preview_path = os.path.join(config.STATIC_DIR, "previews", f"{os.path.basename(filepath)}.jpeg")
-        compress_image(f"{filepath}.jpg", preview_path)
+        preview_link = compress_image(filepath)
+        
+        new_meme = Meme(
+            name=f"{os.path.basename(filepath)}.jpg",
+            source_type="tg",
+            source_name=message._chat.username,
+            checked=False,
+            link=image_link,
+            preview=preview_link,
+        )
+        await meme_repo.add_meme(new_meme, db, commit=False)

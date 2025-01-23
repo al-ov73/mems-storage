@@ -45,10 +45,10 @@ async def parse_vk_groups():
 async def save_meme(attachment, filename, filepath, group):
     with db.begin():
         await save_meme_to_fs(attachment, filepath)
-        await save_meme_to_db(filename, filepath, group)
+        await save_meme_to_db(filename, group)
 
 
-async def save_meme_to_db(filename, filepath, group):
+async def save_meme_to_db(filename, group):
     image_link = urljoin(config.API_URL, f"{config.STATIC_URL}/photos/{filename}.jpg")
     preview_link = urljoin(config.API_URL, f"{config.STATIC_URL}/previews/{filename}.jpeg")
     new_meme = Meme(
@@ -60,8 +60,6 @@ async def save_meme_to_db(filename, filepath, group):
         preview=preview_link,
     )
     await meme_repo.add_meme(new_meme, db, commit=False)
-    preview_path = os.path.join(config.STATIC_DIR, "previews", f"{filename}.jpeg")
-    compress_image(f"{filepath}.jpg", preview_path)
 
 
 async def save_meme_to_fs(attachment, filepath):
@@ -69,6 +67,7 @@ async def save_meme_to_fs(attachment, filepath):
     r = requests.get(img_url)
     with open(f"{filepath}.jpg", "wb") as f:
         f.write(r.content)
+    compress_image(filepath)
 
 
 if __name__ == "__main__":

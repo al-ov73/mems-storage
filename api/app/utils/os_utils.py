@@ -1,7 +1,12 @@
 import os
 import shutil
+from urllib.parse import urljoin
+import logging
 
+from ..config import config
 from PIL import Image, UnidentifiedImageError
+
+logger = logging.getLogger(__name__)
 
 
 def clean_dir(dir_path: str) -> None:
@@ -29,21 +34,30 @@ def get_folder_size(path: str) -> int:
     return round(total_size / 10**6, 1)
 
 
-def compress_image(input_path, output_path, quality=20, resize_factor=None):
+def compress_image(
+    input_path: str,
+    quality: int = 20,
+    resize_factor: bool = None,
+) -> str:
     """
     :param input_path: Путь к исходному изображению.
     :param output_path: Путь для сохранения сжатого изображения.
     :param quality: Качество сохранения (от 1 до 95, чем меньше, тем сильнее сжатие).
     :param resize_factor: Коэффициент уменьшения размеров (например, 0.5 для уменьшения в 2 раза).
     """
+    img_path = f"{input_path}.jpg"
+    preview_path = os.path.join(config.STATIC_DIR, "previews", f"{os.path.basename(input_path)}.jpeg")
     try:
-        with Image.open(input_path) as img:
+        with Image.open(img_path) as img:
             if resize_factor:
                 new_width = int(img.width * resize_factor)
                 new_height = int(img.height * resize_factor)
                 img = img.resize((new_width, new_height), Image.LANCZOS)
 
-            img.save(output_path, "JPEG", quality=quality, optimize=True)
-            print(f"Файл {output_path} сохранен")
+            img.save(preview_path, "JPEG", quality=quality, optimize=True)
+            logger.info(f"Файл {preview_path} сохранен")
+            preview_link = urljoin(config.API_URL, f"{config.STATIC_URL}/previews/{os.path.basename(input_path)}.jpeg")
+            return preview_link
     except UnidentifiedImageError as e:
-        print(f"Ошибка обработки файла {input_path}: {e}")
+        logger.info(f"Ошибка обработки файла {img_path}: {e}")
+        return urljoin(config.API_URL, f"{config.STATIC_URL}/photos/{os.path.basename(img_path)}.jpg")
