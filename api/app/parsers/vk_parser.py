@@ -59,7 +59,7 @@ async def save_meme_to_db(filename, filepath, group):
         link=image_link,
         preview=preview_link,
     )
-    await meme_repo.add_meme(new_meme, db)
+    await meme_repo.add_meme(new_meme, db, commit=False)
     preview_path = os.path.join(config.STATIC_DIR, "previews", f"{filename}.jpeg")
     compress_image(f"{filepath}.jpg", preview_path)
 
