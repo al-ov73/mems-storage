@@ -65,8 +65,9 @@ const IndexPage = () => {
 
     for (let number = 1; number <= maxPages; number++) {
       if (paginationRange.includes(number)) {
+        const isActiveItem = number === activePage;
         items.push(
-          <Pagination.Item key={number} active={number === activePage} onClick={handleChangePage}>
+          <Pagination.Item key={number} active={isActiveItem} disabled={isActiveItem} onClick={handleChangePage}>
             {number}
           </Pagination.Item>,
         );
