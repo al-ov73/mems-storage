@@ -52,7 +52,7 @@ async def save_meme(client, filepath, message):
         config.API_URL,
         config.STATIC_URL,
         "photos",
-        f"{filename}.jpg"
+        f"{os.path.basename(filepath)}.jpg",
     )
 
     with db.begin():
