@@ -24,7 +24,6 @@ const createRange = (number) => {
 const IndexPage = () => {
   const dispatch = useDispatch();
   const [memeOffset, setMemeOffset] = useState(0);
-  const [welcomeModalShow, setWelcomeModalShow] = useState(true);
   const [memesCount, setMemesCount] = useState(0);
 
   const memesPerPage = Number(process.env.REACT_APP_MEMES_PER_PAGE);
@@ -118,7 +117,7 @@ const IndexPage = () => {
       <Container className="d-flex">
         <Container>
           <Row>
-            <WelcomeImage/>
+            {activePage === 1 && <WelcomeImage/>}
             <MemesList memeOffset={memeOffset} memesPerPage={memesPerPage} />
           </Row>
         </Container>
