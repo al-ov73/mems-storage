@@ -55,9 +55,7 @@ async def save_meme(attachment, filename, filepath, group):
 async def save_meme_to_db(filename, preview_link, group):
     image_link = urljoin(
         config.API_URL,
-        config.STATIC_URL,
-        "photos",
-        f"{filename}.jpg"
+        f"{config.STATIC_URL}/photos/{filename}.jpg"
     )
     new_meme = Meme(
         name=f"{filename}.jpg",

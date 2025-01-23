@@ -49,11 +49,9 @@ async def parse_telegram_channels() -> None:
 
 async def save_meme(client, filepath, message):
     image_link = urljoin(
-        config.API_URL,
-        config.STATIC_URL,
-        "photos",
-        f"{os.path.basename(filepath)}.jpg",
-    )
+    config.API_URL,
+    f"{config.STATIC_URL}/photos/{filename}.jpg"
+)
 
     with db.begin():
         await client.download_media(message.photo, filepath)
