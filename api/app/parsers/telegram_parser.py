@@ -51,7 +51,7 @@ async def save_meme(client, filepath, message):
     image_link = urljoin(
         config.API_URL,
         config.STATIC_URL,
-        photos,
+        "photos",
         f"{filename}.jpg"
     )
 
