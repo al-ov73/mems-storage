@@ -48,6 +48,7 @@ async def get_checked_memes(
     """
     return list of memes with links to download
     """
+    logger.info("api request '/checked'")
     memes = await meme_repo.get_checked_memes(skip, limit, db)
     background_tasks.add_task(send_user_info_to_bot, request)
     return memes
@@ -65,6 +66,7 @@ async def get_not_checked_memes(
     """
     return list of memes with links to download
     """
+    logger.info("api request '/notchecked'")
     memes = await meme_repo.get_not_checked_memes(skip, limit, db)
     return memes
 
@@ -80,9 +82,11 @@ async def check_memes(
     """
     return list of memes with links to download
     """
-    logger.info(f"Checked ids: {ids}")
+    logger.info("api request '/check'")
+    logger.info(f"Checked ids from client: {ids}")
     ids = list(map(lambda id: int(id), ids.split(" ")))
     checked_ids = await meme_repo.check_memes(ids, db)
+    logger.info(f"Response from db: Checked ids {' '.join(checked_ids)}")
     return checked_ids
 
 
@@ -182,6 +186,6 @@ async def add_preview(
     """
     return list of memes with links to download
     """
-    logger.info("Got request for all memes")
+    logger.info("api request '/add_preview'")
     memes = await meme_repo.add_preview_if_not_exist(db)
     return memes
