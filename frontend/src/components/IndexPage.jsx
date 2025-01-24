@@ -24,7 +24,6 @@ const createRange = (number) => {
 const IndexPage = () => {
   const dispatch = useDispatch();
   const [memeOffset, setMemeOffset] = useState(0);
-  const [welcomeModalShow, setWelcomeModalShow] = useState(true);
   const [memesCount, setMemesCount] = useState(0);
 
   const memesPerPage = Number(process.env.REACT_APP_MEMES_PER_PAGE);
@@ -66,8 +65,9 @@ const IndexPage = () => {
 
     for (let number = 1; number <= maxPages; number++) {
       if (paginationRange.includes(number)) {
+        const isActiveItem = number === activePage;
         items.push(
-          <Pagination.Item key={number} active={number === activePage} onClick={handleChangePage}>
+          <Pagination.Item key={number} active={isActiveItem} disabled={isActiveItem} onClick={handleChangePage}>
             {number}
           </Pagination.Item>,
         );
@@ -118,7 +118,7 @@ const IndexPage = () => {
       <Container className="d-flex">
         <Container>
           <Row>
-            <WelcomeImage/>
+            {activePage === 1 && <WelcomeImage/>}
             <MemesList memeOffset={memeOffset} memesPerPage={memesPerPage} />
           </Row>
         </Container>
