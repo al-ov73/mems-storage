@@ -72,5 +72,8 @@ async def send_visit_info_to_db(request: Request) -> None:
     user_ip = request.client.host
     logger.info(f"New visit from ip: {user_ip}")
     user_data = get_info_by_ip(user_ip)
-    new_visit = await visit_repo.add_visit(user_data, db)
-    logger.info(f"New visit registered. Id: {new_visit.id}")
+    if user_data:
+        new_visit = await visit_repo.add_visit(user_data, db)
+        logger.info(f"New visit registered. Id: {new_visit.id}")
+    else:
+        logger.info(f"New visit from config.LOCAL_IPS. Id: {user_ip}")
