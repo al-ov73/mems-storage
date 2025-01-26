@@ -6,6 +6,7 @@ from ..repositories.storage_repository import FSStorageRepository
 from ..repositories.messages_repository import MessagesRepository
 from ..repositories.labels_repository import LabelsRepository
 from ..repositories.likes_repository import LikesRepository
+from ..repositories.visit_repository import VisitRepository
 
 
 def get_memes_repository():
@@ -38,3 +39,7 @@ def get_likes_repository():
 
 def get_users_repository():
     return UsersRepository()
+
+
+def get_visit_repository():
+    return VisitRepository()

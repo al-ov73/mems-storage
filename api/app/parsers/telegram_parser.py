@@ -37,11 +37,7 @@ async def parse_telegram_channels() -> None:
             for message in messages:
                 if message.photo:
                     filename = f"tg_{message._chat.username}_{message.photo.id}"
-                    filepath = os.path.join(
-                        config.STATIC_DIR, 
-                        "photos", 
-                        filename
-                    )
+                    filepath = os.path.join(config.STATIC_DIR, "photos", filename)
                     if not os.path.exists(f"{filepath}.jpg"):
                         logger.info(f"Downloading '{filename}.jpg' from tg channel {channel}")
                         await save_meme(client, filepath, message)
@@ -53,7 +49,7 @@ async def save_meme(client, filepath, message):
     with db.begin():
         await client.download_media(message.photo, filepath)
         preview_link = compress_image(filepath)
-        
+
         new_meme = Meme(
             name=f"{os.path.basename(filepath)}.jpg",
             source_type="tg",

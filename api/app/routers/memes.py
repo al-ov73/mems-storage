@@ -10,7 +10,7 @@ from ..repositories.memes_repository import MemesRepository
 from ..repositories.storage_repository import BaseStorageRepo
 from ..schemas.memes import MemeDbSchema
 from ..schemas.stat import DayStatSchema, StatSchema
-from ..utils.tasks import send_user_info_to_bot
+from ..utils.tasks import send_visit_info_to_db
 
 router = APIRouter()
 
@@ -50,7 +50,7 @@ async def get_checked_memes(
     """
     logger.info("api request '/checked'")
     memes = await meme_repo.get_checked_memes(skip, limit, db)
-    background_tasks.add_task(send_user_info_to_bot, request)
+    background_tasks.add_task(send_visit_info_to_db, request)
     return memes
 
 

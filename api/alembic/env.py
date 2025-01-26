@@ -12,6 +12,7 @@ from app.models.comment import Comment
 from app.models.label import Label, LabelMeme
 from app.models.like import Like
 from app.models.message import Message
+from app.models.visit import Visit
 
 
 config = context.config
