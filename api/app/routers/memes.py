@@ -78,7 +78,7 @@ async def check_memes(
     ids: Annotated[str, Form()],
     db: Session = Depends(get_db),
     meme_repo: MemesRepository = Depends(get_memes_repository),
-):
+) -> list[int]:
     """
     return list of memes with links to download
     """
@@ -86,7 +86,7 @@ async def check_memes(
     logger.info(f"Checked ids from client: {ids}")
     ids = list(map(lambda id: int(id), ids.split(" ")))
     checked_ids = await meme_repo.check_memes(ids, db)
-    logger.info(f"Response from db: Checked ids {' '.join(checked_ids)}")
+    logger.info(f"Response from db: Checked ids {' '.join(map(str, checked_ids))}")
     return checked_ids
 
 

@@ -160,7 +160,7 @@ class MemesRepository:
     async def check_memes(
         meme_ids: list[int],
         db: Session,
-    ) -> MemeDbSchema:
+    ) -> [int]:
         """
         return meme from db
         """
