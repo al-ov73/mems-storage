@@ -175,6 +175,18 @@ async def get_memes_count(
     stat = await meme_repo.get_published_stat(db)
     return stat
 
+@router.get(
+    "/day_count",
+)
+async def get_memes_count_by_day(
+    db: Session = Depends(get_db),
+    meme_repo: MemesRepository = Depends(get_memes_repository),
+) -> list[DayStatSchema]:
+    """
+    return day stat
+    """
+    days_stat = await meme_repo.get_memes_count_by_day(db)
+    return days_stat
 
 @router.get(
     "/add_preview",

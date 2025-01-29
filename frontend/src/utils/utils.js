@@ -37,4 +37,30 @@ const convertDateTime = (isoString) => {
   const dateFormat = `${date}: ${time}`;
   return dateFormat;
 }
-export { getUsernameFromStorage, getUserIdFromStorage, convertDateTime };
+
+const convertDatStat = (dayStat) => {
+  let result = {
+    "today": 0,
+    "yesterday": 0,
+    "dayBeforeYesterday": 0,
+  }
+  let today = new Date();
+  let yesterday = new Date();
+  yesterday.setDate(today.getDate() - 1);
+  let dayBeforeYesterday = new Date();
+  dayBeforeYesterday.setDate(today.getDate() - 2);
+  
+  for (let stat of dayStat) {
+    const converted = new Date(stat.date)
+    if (converted.toLocaleDateString() === today.toLocaleDateString()) {
+      result.today = stat.count;
+    } else if (converted.toLocaleDateString() === yesterday.toLocaleDateString()) {
+      result.yesterday = stat.count;
+    } else if (converted.toLocaleDateString() === dayBeforeYesterday.toLocaleDateString()) {
+      result.dayBeforeYesterday = stat.count;
+    }
+  }
+  return result;
+}
+
+export { getUsernameFromStorage, getUserIdFromStorage, convertDateTime, convertDatStat };

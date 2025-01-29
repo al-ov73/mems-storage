@@ -166,6 +166,11 @@ const getStat = async () => {
   return response.data
 };
 
+const getDayStat = async () => {
+  const response = await axios.get(`${routes.memesPath}/day_count`)
+  return response.data
+};
+
 const postQuestion = async (form, accessToken) => {
   return axios.post(routes.questionPath, form, {
     headers: {
@@ -206,4 +211,5 @@ export {
   getMemesCount,
   sendButtonMsgToBot,
   getStat,
+  getDayStat,
 };
