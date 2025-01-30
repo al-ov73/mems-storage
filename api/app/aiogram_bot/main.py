@@ -15,7 +15,7 @@ from apscheduler.schedulers.asyncio import AsyncIOScheduler
 from .commands import bot_commands
 from ..config import config
 from ..config.db_config import db
-from ..config.dependencies import meme_repo
+from ..config.dependencies import meme_repo, visit_repo
 from ..utils.gigachat import get_response_from_gigachat
 from ..utils.os_utils import get_folder_size
 from ..utils.stat_utils import format_day_stat
@@ -64,7 +64,7 @@ async def stat_command(message: Message):
     folder_size = get_folder_size(f"{config.STATIC_DIR}/photos")
     days_remain = day_stat.not_published / 24
     day_stats = await meme_repo.get_memes_count_by_day(db=db)
-    formated_day_stat = await format_day_stat(day_stats)
+    formated_day_stat = await format_day_stat(day_stats, "добавлено")
     await bot.send_message(
         config.MY_API_ID,
         f"Всего картинок: {day_stat.total} шт.\n"
@@ -76,6 +76,15 @@ async def stat_command(message: Message):
         f"{formated_day_stat}",
     )
 
+@dp.message(Command(commands=["visits"]))
+async def visits_command(message: Message):
+    visits_stat = await visit_repo.get_visit_count_by_day(db=db)
+    formated_day_stat = await format_day_stat(visits_stat, "визитов")
+    await bot.send_message(
+        config.MY_API_ID,
+        f"Статистика визитов:\n"
+        f"{formated_day_stat}",
+    )
 
 @dp.message(Command(commands=["sources"]))
 async def sources_command(message: Message):
