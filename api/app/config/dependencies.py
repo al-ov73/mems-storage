@@ -43,3 +43,5 @@ def get_users_repository():
 
 def get_visit_repository():
     return VisitRepository()
+
+visit_repo = get_visit_repository()
