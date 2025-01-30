@@ -4,6 +4,7 @@ import Button from 'react-bootstrap/Button';
 import useAuth from '../hooks/index.js';
 import { useNavigate } from "react-router-dom";
 import React, { useState, } from "react";
+import ChatModal from './modals/ChatModal.jsx'
 import AboutModal from './modals/AboutModal';
 import { getUsernameFromStorage } from '../utils/utils.js';
 import { sendButtonMsgToBot } from '../utils/requests.js';
@@ -13,6 +14,8 @@ const NavbarPage = ({ full }) => {
   const auth = useAuth();
   const navigate = useNavigate();
   const [modalAboutShow, setModalAboutShow] = useState(false);
+  const [modalChatShow, setModalChatShow] = useState(false);
+
   const username = getUsernameFromStorage()
 
   const handleLogout = () => {
@@ -28,8 +31,8 @@ const NavbarPage = ({ full }) => {
   return <>
     <Navbar data-bs-theme="light" className="justify-content-between">
 
-      <Button variant="outline-primary" className='mx-4 nav-button' onClick={() => setModalAboutShow(true)}>
-        О проекте
+      <Button variant="outline-primary" className='mx-4 nav-button' onClick={() => setModalChatShow(true)}>
+        Чат
       </Button>
 
       <Button variant="outline-primary" className='mx-4 animated-button' onClick={(e) => {
@@ -64,6 +67,10 @@ const NavbarPage = ({ full }) => {
       show={modalAboutShow}
       onHide={() => setModalAboutShow(false)}
     />
+    <ChatModal
+        show={modalChatShow}
+        onHide={() => setModalChatShow(false)}
+      />
   </>
 }
 

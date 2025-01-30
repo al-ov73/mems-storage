@@ -24,13 +24,13 @@ class MessagesRepository:
         self,
         message_id: str,
         db: Session,
-    ) -> MessageSchema:
+    ) -> MessageSchema | None:
         """
         return message from db
         """
         message = db.get(Message, message_id)
         if not message:
-            return "message not exist"
+            return None
         return message
 
     async def add_message(

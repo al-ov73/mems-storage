@@ -162,3 +162,10 @@ code {
   border-top-left-radius: 0;
   border-top-right-radius: 0;
 }
+
+.chat-messages {
+  height: 400px;
+  overflow-y: scroll;
+  display: flex;
+  flex-direction: column-reverse;
+}
