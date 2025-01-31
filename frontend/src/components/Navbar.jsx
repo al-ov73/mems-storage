@@ -57,13 +57,13 @@ const NavbarPage = ({ full }) => {
       }}>
         В телеграмме проще <i className="fab fa-telegram-plane"></i>
       </Button>
-      {/* {userIsAdmin && <Button variant="outline-primary" className='mx-4 animated-button' onClick={(e) => {
+      {userIsAdmin && <Button variant="outline-primary" className='mx-4 animated-button' onClick={(e) => {
         e.preventDefault();
         sendButtonMsgToBot()
         window.location.href = `${process.env.REACT_APP_API_URL}/admin`;
       }}>
        Админ
-      </Button>} */}
+      </Button>}
       {full && (
         <>
           {username ? (
