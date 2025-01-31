@@ -3,11 +3,14 @@ import logging
 from fastapi import FastAPI
 from fastapi.staticfiles import StaticFiles
 from fastapi.middleware.cors import CORSMiddleware
-
+from sqladmin import Admin
 from .aiogram_bot.main import start_bot
 
+from .admin import admin_views, AdminAuth
 from .config import config
 from .config.config import ORIGINS
+from .config.db_config import engine
+
 
 from .routers.auth import router as router_auth
 from .routers.memes import router as router_memes
@@ -29,6 +32,13 @@ if config.ENV == "prod":
 
 
 app = FastAPI()
+
+authentication_backend = AdminAuth(secret_key="secret")
+
+admin = Admin(app, engine, authentication_backend=authentication_backend)
+
+for admin_view in admin_views:
+    admin.add_view(admin_view)
 
 app.add_middleware(
     CORSMiddleware,

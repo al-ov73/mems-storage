@@ -7,8 +7,7 @@ import React, { useEffect, useState } from "react";
 import { getUserIdFromStorage } from '../../utils/utils';
 import { getMessages } from '../../utils/requests';
 
-const ws = new WebSocket(`ws://127.0.0.1:8000/chat/ws`);
-
+const ws = new WebSocket(process.env.REACT_APP_WEBSOCKET_URL);
 
 const ChatModal = ({ show, onHide }) => {
   const [messages, setMessages] = useState([]);
