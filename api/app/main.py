@@ -19,6 +19,7 @@ from .routers.comments import router as router_comments
 from .routers.likes import router as router_likes
 from .routers.users import router as router_users
 from .routers.chat import router as router_chat
+from .routers.aichat import router as router_aichat
 
 logger = logging.getLogger()
 logger.setLevel(logging.INFO)
@@ -64,4 +65,4 @@ app.include_router(router_comments, prefix="/comments", tags=["comments"])
 app.include_router(router_likes, prefix="/likes", tags=["likes"])
 app.include_router(router_chat, prefix="/chat", tags=["chat"])
 app.include_router(router_users, prefix="/users", tags=["users"])
-# app.include_router(router_aichat, prefix="/question", tags=["aichat"])
+app.include_router(router_aichat, prefix="/question", tags=["aichat"])
