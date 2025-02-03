@@ -8,6 +8,7 @@ import ChatModal from './modals/ChatModal.jsx'
 import AboutModal from './modals/AboutModal';
 import { getUsernameFromStorage, getUserIdFromStorage } from '../utils/utils.js';
 import { sendButtonMsgToBot, getUser } from '../utils/requests.js';
+import BookmarkButton from './BookmarkButton.jsx';
 
 
 const NavbarPage = ({ full }) => {
@@ -49,7 +50,7 @@ const NavbarPage = ({ full }) => {
       <Button variant="outline-primary" className='mx-4 nav-button' onClick={() => setModalChatShow(true)}>
         Чат
       </Button>
-
+      <BookmarkButton/>
       <Button variant="outline-primary" className='mx-4 animated-button' onClick={(e) => {
         e.preventDefault();
         sendButtonMsgToBot()
