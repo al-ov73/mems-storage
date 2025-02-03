@@ -30,7 +30,7 @@ class AdminAuth(AuthenticationBackend):
             access_token_expires = timedelta(minutes=ACCESS_TOKEN_EXPIRE_MINUTES)
             access_token = create_access_token(user=user, expires_delta=access_token_expires)
             request.session.update({"token": access_token})
-            print('access_token', access_token)
+            print("access_token", access_token)
             return True
         return False
 

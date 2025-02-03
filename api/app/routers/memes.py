@@ -9,7 +9,7 @@ from ..parsers.telegram_parser import parse_telegram_channels
 from ..repositories.memes_repository import MemesRepository
 from ..repositories.storage_repository import BaseStorageRepo
 from ..schemas.memes import MemeDbSchema
-from ..schemas.stat import DayStatSchema, StatSchema
+from ..schemas.stat import MemesDayStatSchema, StatSchema
 from ..utils.tasks import send_visit_info_to_db
 
 router = APIRouter()
@@ -154,7 +154,7 @@ async def del_meme(
 async def get_checked_memes(
     db: Session = Depends(get_db),
     meme_repo: MemesRepository = Depends(get_memes_repository),
-) -> list[DayStatSchema]:
+) -> list[MemesDayStatSchema]:
     """
     return day stat
     """
@@ -175,18 +175,20 @@ async def get_memes_count(
     stat = await meme_repo.get_published_stat(db)
     return stat
 
+
 @router.get(
     "/day_count",
 )
 async def get_memes_count_by_day(
     db: Session = Depends(get_db),
     meme_repo: MemesRepository = Depends(get_memes_repository),
-) -> list[DayStatSchema]:
+) -> list[MemesDayStatSchema]:
     """
     return day stat
     """
     days_stat = await meme_repo.get_memes_count_by_day(db)
     return days_stat
+
 
 @router.get(
     "/add_preview",
