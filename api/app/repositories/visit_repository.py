@@ -16,6 +16,8 @@ class VisitRepository:
         """
         add visit to db
         """
+        exist_visit = db.query(Visit).filter(Visit.ip == new_visit.ip).first()
+        new_visit.is_new_user = exist_visit is None
         db.add(new_visit)
         if commit:
             db.commit()
