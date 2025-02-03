@@ -64,7 +64,8 @@ const WelcomeImage = () => {
       
       </div>
     </div>
-      <div className="welcome-go align-items-center">ПОЕХАЛИ СМОТРЕТЬ!</div>
+    <div className="welcome-go align-items-center">ПОЕХАЛИ СМОТРЕТЬ!</div>
+    <div className="welcome-go align-items-center">И не забывайте добавлять нас в закладки (CTRL+D)</div>
   </div>
 }
 

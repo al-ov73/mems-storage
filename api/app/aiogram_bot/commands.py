@@ -15,11 +15,11 @@ class TelegramCommand:
 
 
 class TelegramCommands(Enum):
-    PARSE = TelegramCommand("parse", "Парсить")
     STAT = TelegramCommand("stat", "Статистика")
-    SOURCES = TelegramCommand("sources", "Статистика по источникам")
-    SEND = TelegramCommand("send", "Отправить мем")
     VISITS = TelegramCommand("visits", "Статистика визитов")
+    SOURCES = TelegramCommand("sources", "Статистика по источникам")
+    PARSE = TelegramCommand("parse", "Парсить")
+    SEND = TelegramCommand("send", "Отправить мем")
 
 
 bot_commands = [BotCommand(command=c.value.command, description=c.value.title) for c in TelegramCommands]

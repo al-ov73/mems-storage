@@ -4,8 +4,8 @@ import requests
 from fastapi import Request
 import httpx
 from ..config import config
-from ..config.db_config import get_db, db
-from ..config.dependencies import get_memes_repository, get_visit_repository
+from ..config.db_config import db
+from ..config.dependencies import get_visit_repository
 from ..models.visit import Visit
 from ..schemas.visit import VisitInputSchema
 
@@ -74,6 +74,6 @@ async def send_visit_info_to_db(request: Request) -> None:
     user_data = get_info_by_ip(user_ip)
     if user_data:
         new_visit = await visit_repo.add_visit(user_data, db)
-        logger.info(f"New visit registered. Id: {new_visit.id}")
+        logger.info(f"New visit registered. Id: {new_visit.id}, is_new_user: {new_visit.is_new_user}")
     else:
         logger.info(f"New visit from config.LOCAL_IPS. Id: {user_ip}")

@@ -7,7 +7,7 @@ from ..models.comment import Comment
 from ..models.like import Like
 from ..models.meme import Meme
 from ..schemas.memes import MemeDbSchema
-from ..schemas.stat import DayStatSchema, StatSchema, SourceStatSchema
+from ..schemas.stat import MemesDayStatSchema, StatSchema, SourceStatSchema
 
 
 class MemesRepository:
@@ -252,7 +252,7 @@ class MemesRepository:
         return memes
 
     @staticmethod
-    async def get_memes_count_by_day(db: Session, limit: int = 5) -> list[DayStatSchema]:
+    async def get_memes_count_by_day(db: Session, limit: int = 5) -> list[MemesDayStatSchema]:
         """
         return list of top liked memes from db
         """

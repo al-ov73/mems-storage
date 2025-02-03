@@ -17,3 +17,4 @@ class Visit(Base):
     region: Mapped[Optional[str]]
     city: Mapped[Optional[str]]
     visit_at: Mapped[created_at]
+    is_new_user: Mapped[Optional[bool]]

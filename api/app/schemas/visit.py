@@ -20,3 +20,4 @@ class VisitSchema(BaseModel):
     region: str | None
     city: str | None
     visit_at: datetime
+    is_new_user: bool

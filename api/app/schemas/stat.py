@@ -10,9 +10,16 @@ class StatSchema(BaseModel):
     not_checked: int
 
 
-class DayStatSchema(BaseModel):
+class MemesDayStatSchema(BaseModel):
     date: datetime
     count: int
+
+
+class VisitsDayStatSchema(BaseModel):
+    date: datetime
+    total: int
+    new_users: int
+    old_users: int
 
 
 class SourceStatSchema(BaseModel):
