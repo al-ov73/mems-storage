@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useDispatch } from "react-redux";
 import Container from 'react-bootstrap/Container';
-import Row from 'react-bootstrap/Row';
 import { setMemes } from "../slices/memesSlice";
 import { getMemes, getMemesCount } from "../utils/requests.js";
 import NavbarPage from "./Navbar.jsx";
@@ -9,6 +8,8 @@ import MemesList from "./lists/MemesList.jsx";
 import Pagination from 'react-bootstrap/Pagination';
 import WelcomeImage from "./WelcomeImage.jsx";
 import Footer from "../Footer.jsx";
+import Statistic from "./Statictic.jsx";
+import LetsStartMsg from "./LetsStartMsg.jsx";
 
 const paginationRangeLimit = 2;
 
@@ -23,12 +24,31 @@ const createRange = (number) => {
 
 const IndexPage = () => {
   const dispatch = useDispatch();
+  const [isWelcomeVisible, setIsWelcomeVisible] = useState(true);
   const [memeOffset, setMemeOffset] = useState(0);
   const [memesCount, setMemesCount] = useState(0);
 
   const memesPerPage = Number(process.env.REACT_APP_MEMES_PER_PAGE);
   const activePage = (memeOffset / memesPerPage) + 1;
   const maxPages = Math.ceil(memesCount / memesPerPage)
+
+  // Функция для проверки ширины экрана
+  const checkScreenSize = () => {
+    if (window.innerWidth <= 768) {
+      setIsWelcomeVisible(false);
+    } else {
+      setIsWelcomeVisible(true);
+    }
+  }
+
+  useEffect(() => {
+    checkScreenSize();
+    window.addEventListener('resize', checkScreenSize);
+
+    return () => {
+      window.removeEventListener('resize', checkScreenSize);
+    };
+  }, []);
 
   // get memes
   useEffect(() => {
@@ -117,10 +137,10 @@ const IndexPage = () => {
 
       <Container className="d-flex">
         <Container>
-          <Row>
-            {activePage === 1 && <WelcomeImage/>}
+            {activePage === 1 && isWelcomeVisible && <WelcomeImage/>}
+            {activePage === 1 && <Statistic/>}
+            {activePage === 1 && <LetsStartMsg/>}
             <MemesList memeOffset={memeOffset} memesPerPage={memesPerPage} />
-          </Row>
         </Container>
       </Container>
 

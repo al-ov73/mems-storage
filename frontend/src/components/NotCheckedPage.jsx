@@ -57,18 +57,21 @@ const NotCheckedPage = () => {
         На главную
       </Button></Col>
     </Row>
-
+    <Row className="row-cols-auto justify-content-center">
     {tempMemes.map((meme) => {
-      return <Image
-        key={meme.id}
-        width="90%"
-        src={meme.link}
-        className="rounded mx-auto mt-3 d-block "
-        alt='Картинка не загрузилась:('
-        onClick={() => {
-          handleDelete(meme.id)
-        }} />
+      return <Col className="col-sm-6 col-md-4 col-lg-3 mb-3">
+                <Image
+                key={meme.id}
+                width="90%"
+                src={meme.link}
+                className="rounded mx-auto mt-3 d-block "
+                alt='Картинка не загрузилась:('
+                onClick={() => {
+                  handleDelete(meme.id)
+                }}/>
+              </Col>
     })}
+    </Row>
     <Row>
       <Col className="text-center my-2"><Button variant="outline-success"
         onClick={handleCheck}>

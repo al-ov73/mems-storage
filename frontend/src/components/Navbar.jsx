@@ -1,5 +1,6 @@
 import Navbar from 'react-bootstrap/Navbar';
 import Nav from 'react-bootstrap/Nav';
+import Dropdown from 'react-bootstrap/Dropdown';
 import Button from 'react-bootstrap/Button';
 import useAuth from '../hooks/index.js';
 import { useNavigate } from "react-router-dom";
@@ -9,10 +10,12 @@ import AboutModal from './modals/AboutModal';
 import { getUsernameFromStorage, getUserIdFromStorage } from '../utils/utils.js';
 import { sendButtonMsgToBot, getUser } from '../utils/requests.js';
 import BookmarkButton from './BookmarkButton.jsx';
+import logo from '../static/memovoz-icon.ico';
 
 
 const NavbarPage = ({ full }) => {
   const [userIsAdmin, setUserIsAdmin] = useState(false);
+  const [isMobile, setIsMobile] = useState(window.innerWidth <= 768);
   const auth = useAuth();
   const navigate = useNavigate();
   const [modalAboutShow, setModalAboutShow] = useState(false);
@@ -44,28 +47,43 @@ const NavbarPage = ({ full }) => {
     return navigate('/login');
   }
 
+  useEffect(() => {
+    const handleResize = () => {
+      setIsMobile(window.innerWidth <= 768);
+    };
+    window.addEventListener("resize", handleResize);
+    return () => {
+      window.removeEventListener("resize", handleResize);
+    };
+  }, []);
+
   return <>
     <Navbar data-bs-theme="light" className="justify-content-between">
 
-      <Button variant="outline-primary" className='mx-4 nav-button' onClick={() => setModalChatShow(true)}>
-        Чат
-      </Button>
-      <BookmarkButton/>
-      <Button variant="outline-primary" className='mx-4 animated-button' onClick={(e) => {
-        e.preventDefault();
-        sendButtonMsgToBot()
-        window.location.href = process.env.REACT_APP_TG_LINK;
-      }}>
-        В телеграмме проще <i className="fab fa-telegram-plane"></i>
-      </Button>
-      {userIsAdmin && <Button variant="outline-primary" className='mx-4 animated-button' onClick={(e) => {
-        e.preventDefault();
-        sendButtonMsgToBot()
-        window.location.href = `${process.env.REACT_APP_API_URL}/admin`;
-      }}>
-       Админ
-      </Button>}
-      {full && (
+      {!isMobile && (
+        <>
+          <Button variant="outline-primary" className='mx-4 nav-button' onClick={() => setModalChatShow(true)}>
+            Чат
+          </Button>
+          <BookmarkButton />
+          <Button variant="outline-primary" className='mx-4 animated-button' onClick={(e) => {
+            e.preventDefault();
+            sendButtonMsgToBot()
+            window.location.href = process.env.REACT_APP_TG_LINK;
+          }}>
+            В телеграмме проще <i className="fab fa-telegram-plane"></i>
+          </Button>
+          {userIsAdmin && <Button variant="outline-primary" className='mx-4 animated-button' onClick={(e) => {
+            e.preventDefault();
+            sendButtonMsgToBot()
+            window.location.href = `${process.env.REACT_APP_API_URL}/admin`;
+          }}>
+            Админ
+          </Button>}
+        </>
+      )}
+
+      {full && !isMobile && (
         <>
           {username ? (
             <Nav>
@@ -76,23 +94,70 @@ const NavbarPage = ({ full }) => {
             </Nav>
           ) : (
             <Nav>
-              {/* <a href="/signup">Регистрация</a> */}
-                <Button variant="outline-primary" className="mx-4 nav-button" type="submit" onClick={handleLogin}>
+              <Button variant="outline-primary" className="mx-4 nav-button" type="submit" onClick={handleLogin}>
                 Войти
               </Button>
             </Nav>
           )}
         </>
       )}
+
+      {/* Кнопка dropdown для мобильного режима */}
+      {isMobile && (
+        <Dropdown>
+          <Dropdown.Toggle variant="outline-primary" className="mx-4 nav-button" id="navbar-dropdown">
+            Меню
+          </Dropdown.Toggle>
+          <Dropdown.Menu className="dropdown-menu">
+            <Dropdown.Item onClick={() => setModalChatShow(true)}>Чат</Dropdown.Item>
+            <Dropdown.Item onClick={(e) => {
+              e.preventDefault();
+              sendButtonMsgToBot()
+              window.location.href = process.env.REACT_APP_TG_LINK;
+            }}>
+              В телеграмме проще <i className="fab fa-telegram-plane"></i>
+            </Dropdown.Item>
+            {userIsAdmin && (
+              <Dropdown.Item onClick={(e) => {
+                e.preventDefault();
+                sendButtonMsgToBot()
+                window.location.href = `${process.env.REACT_APP_API_URL}/admin`;
+              }}>
+                Админ
+              </Dropdown.Item>
+            )}
+            {full && (
+              <>
+                {username ? (
+                  <>
+                    <Dropdown.Header>Здравствуйте, {username}</Dropdown.Header>
+                    <Dropdown.Divider />
+                    <Dropdown.Item onClick={handleLogout}>Выйти</Dropdown.Item>
+                  </>
+                ) : (
+                  <Dropdown.Item onClick={handleLogin}>Войти</Dropdown.Item>
+                )}
+              </>
+            )}
+          </Dropdown.Menu>
+        </Dropdown>
+      )}
+      <img
+        height="50rem"
+        src={logo}
+        className="rounded mx-3"
+        alt='Картинка не загрузилась:('
+        onClick={() => navigate("/")}
+      />
     </Navbar>
     <AboutModal
       show={modalAboutShow}
       onHide={() => setModalAboutShow(false)}
     />
     <ChatModal
-        show={modalChatShow}
-        onHide={() => setModalChatShow(false)}
-      />
+      show={modalChatShow}
+      onHide={() => setModalChatShow(false)}
+    />
   </>
 }
 

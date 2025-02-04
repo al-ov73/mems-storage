@@ -1,6 +1,6 @@
 import { useSelector } from "react-redux";
 import { useDispatch } from "react-redux";
-
+import Row from 'react-bootstrap/Row';
 import { Image, Col } from 'react-bootstrap';
 import React, { useState, } from "react";
 import { setMemes } from "../../slices/memesSlice";
@@ -41,21 +41,21 @@ const MemesList = ({ memeOffset, memesPerPage }) => {
   }
 
   return Object.keys(grouped).map((date, index) => {
-    return <React.Fragment key={index}>
+    return <Row className="row-cols-auto justify-content-center" key={index}>
       {/* DATE WITH <hr> */}
-      <div style={{ textAlign: "center" }}>
+      <Col className="col-12" style={{ textAlign: "center" }}>
         {index !== 0 && <hr style={{ width: "100%", margin: "20px auto" }} />}
         {date}
-      </div>
+      </Col>
       {/* END DATE WITH <hr> */}
 
       {/* IMAGE CARD */}
       {grouped[date].map((meme) => {
-        return <Col className="mx-1 my-1" key={meme.id}>
+        return <Col className="col-sm-6 col-md-4 col-lg-3 mb-3" key={meme.id}>
           <Image
             height="150rem"
             src={meme.preview || meme.link}
-            className="hover-target rounded mx-auto mt-3 d-block img-card"
+            className="hover-target rounded d-block img-card"
             alt='Картинка не загрузилась:('
             onClick={() => {
               setCurrentMeme(meme)
@@ -76,7 +76,7 @@ const MemesList = ({ memeOffset, memesPerPage }) => {
           onHide={() => setModalShow(false)}
         />
       )}
-    </React.Fragment>
+    </Row>
   })
 
 }

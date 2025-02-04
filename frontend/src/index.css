@@ -97,12 +97,18 @@ code {
   border-radius: 10px;
 }
 
+.dropdown-menu {
+  background: linear-gradient(45deg, #afadad, #f8e3e3);
+}
+
 .img-card {
   display: block;
   transition: transform 0.3s ease;
   border: 2px solid #8a7d7d;
   border-radius: 12px;
   box-shadow: 20px 20px 10px rgba(0, 0, 0, 0.25); /* Настройки тени */
+  max-width: 100%;
+  height: auto;
 }
 
 
@@ -154,6 +160,10 @@ code {
   font-weight: 900;
 }
 
+.welcome-go {
+  font-size: 1em;
+  font-weight: 500;
+}
 .about-modal-header {
   background: linear-gradient(45deg, #797777, #8a7d7d);
 }
