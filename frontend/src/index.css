@@ -111,10 +111,11 @@ code {
   height: auto;
 }
 
-
-.img-card:hover {
-  transform: scale(1.2); /* Увеличение размера изображения */
-  box-shadow: 15px 15px 10px rgba(0, 0, 0, 0.35); /* Увеличенная тень */
+@media (min-width: 767px) {
+  .img-card:hover {
+      transform: scale(1.2);
+      box-shadow: 15px 15px 10px rgba(0, 0, 0, 0.35);
+    }
 }
 
 .page-link{
