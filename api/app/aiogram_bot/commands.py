@@ -25,4 +25,5 @@ class TelegramCommands(Enum):
     DELETE = TelegramCommand("delete", "Удалить напоминание")
     PURGE = TelegramCommand("purge", "Удалить все")
 
+
 bot_commands = [BotCommand(command=c.value.command, description=c.value.title) for c in TelegramCommands]

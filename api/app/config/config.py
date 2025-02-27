@@ -1,4 +1,8 @@
 import os
+
+from aiogram import Bot
+from aiogram.client.default import DefaultBotProperties
+from aiogram.enums import ParseMode
 from tinydb import TinyDB
 import pytz
 from apscheduler.schedulers.asyncio import AsyncIOScheduler
@@ -8,7 +12,7 @@ load_dotenv()
 
 ENV = os.getenv("ENV")
 START_BOT = os.getenv("START_BOT")  # 1 - start bot, '' - bot no need
-print("START_BOT", START_BOT)
+
 ORIGINS = os.getenv("ORIGINS", "").split(",")
 
 # Postgress config
@@ -61,11 +65,12 @@ CHAT_ID = os.getenv("CHAT_ID")
 MY_API_ID = os.getenv("MY_API_ID")
 SEND_BOT_URL = f"https://api.telegram.org/bot{BOT_TOKEN}/sendMessage"
 LOCAL_IPS = os.getenv("LOCAL_IPS").split(" ")
-tiny_db = TinyDB('db.json')
+tiny_db = TinyDB("db.json")
 API_TOKEN = os.getenv("BOT_TOKEN")
 timezone = pytz.timezone("Etc/GMT-4")
 
 scheduler = AsyncIOScheduler()
+bot = Bot(token=BOT_TOKEN, default=DefaultBotProperties(parse_mode=ParseMode.HTML))
 
 remainder_types = {
     "Ежедневно": "dayly",

@@ -1,5 +1,6 @@
 from dataclasses import dataclass
 
+
 @dataclass
 class Remainder:
     user_id: int
@@ -17,10 +18,10 @@ class Remainder:
 
     def __repr__(self):
         match self.type:
-            case 'dayly':
+            case "dayly":
                 return f"Ежедневно в {self.hour}:{self.minutes}, '{self.text}'"
 
-            case 'weekly':
+            case "weekly":
                 week_days = {
                     "ПН": "Каждый понедельник",
                     "ВТ": "Каждый вторник",
@@ -28,11 +29,11 @@ class Remainder:
                     "ЧТ": "Каждый четверг",
                     "ПТ": "Каждую пятницу",
                     "СБ": "Каждую субботу",
-                    "ВС": "Каждое воскресенье"
+                    "ВС": "Каждое воскресенье",
                 }
                 return f"{week_days[self.week_day]} в {self.hour}:{self.minutes} '{self.text}'"
 
-            case 'monthly':
+            case "monthly":
                 return f"Каждое {self.month_day} число в {self.hour}:{self.minutes} '{self.text}'"
 
             case _:

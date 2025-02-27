@@ -13,16 +13,19 @@ def confirm_keyboard(prefix: str, task_id: str = None):
     builder.adjust(2)
     return builder.as_markup(resize_keyboard=True)
 
+
 def delete_task_keyboard():
     builder = InlineKeyboardBuilder()
 
     for j in scheduler.get_jobs():
-        data = j.args[1]
-        remainder = Remainder(**data)
-        builder.button(text=str(remainder), callback_data=f"task__{remainder.task_id}")
+        if j.args[0] == "reminder":
+            data = j.args[2]
+            remainder = Remainder(**data)
+            builder.button(text=str(remainder), callback_data=f"task__{remainder.task_id}")
     builder.button(text="Отменить", callback_data=f"task__")
     builder.adjust(1)
     return builder.as_markup(resize_keyboard=True)
+
 
 def type_keyboard():
     builder = ReplyKeyboardBuilder()
@@ -30,6 +33,7 @@ def type_keyboard():
         builder.button(text=value)
     builder.adjust(3)
     return builder.as_markup(resize_keyboard=True)
+
 
 def week_day_keyboard():
     builder = ReplyKeyboardBuilder()
@@ -39,12 +43,14 @@ def week_day_keyboard():
     builder.adjust(3)
     return builder.as_markup(resize_keyboard=True)
 
+
 def hour_keyboard():
     builder = ReplyKeyboardBuilder()
     for hour in range(0, 24):
         builder.button(text=str(hour))
     builder.adjust(6)
     return builder.as_markup(resize_keyboard=True)
+
 
 def month_day_keyboard():
     builder = ReplyKeyboardBuilder()
@@ -53,12 +59,14 @@ def month_day_keyboard():
     builder.adjust(6)
     return builder.as_markup(resize_keyboard=True)
 
+
 def minutes_keyboard():
     builder = ReplyKeyboardBuilder()
     for minute in ["00", "15", "30", "45"]:
         builder.button(text=minute)
     builder.adjust(4)
     return builder.as_markup(resize_keyboard=True)
+
 
 keyboard = InlineKeyboardMarkup(
     inline_keyboard=[
