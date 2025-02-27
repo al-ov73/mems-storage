@@ -15,11 +15,12 @@ from aiogram.types import ReplyKeyboardRemove
 from filelock import FileLock, Timeout
 
 from .keyboards import confirm_keyboard, delete_task_keyboard, hour_keyboard, minutes_keyboard, month_day_keyboard, type_keyboard, week_day_keyboard
-from .scheduler import add_task, delete_task, get_formatted_jobs, get_formatted_task, rm_all_tasks_from_db
+from .scheduler import add_task, add_tasks_from_db, delete_task, get_formatted_jobs, get_formatted_task, rm_all_tasks_from_db
 from apscheduler.schedulers.asyncio import AsyncIOScheduler
 
 from .commands import bot_commands
-from ..config.config import CHAT_ID, ENV, MY_API_ID, PARSE_INTERVAL, SEND_PHOTO_INTERVAL, STATIC_DIR, tiny_db, BOT_TOKEN
+from ..config.config import CHAT_ID, ENV, MY_API_ID, PARSE_INTERVAL, SEND_PHOTO_INTERVAL, STATIC_DIR, tiny_db, BOT_TOKEN, scheduler
+
 from ..config.db_config import db
 from ..config.dependencies import meme_repo, visit_repo
 from ..utils.gigachat import get_response_from_gigachat
@@ -298,7 +299,9 @@ async def start_bot():
         # Попытка захватить блокировку
         with lock.acquire(timeout=5):  # Устанавливаем таймаут для ожидания блокировки
             if ENV == "prod":
-                scheduler = AsyncIOScheduler()
+
+                add_tasks_from_db(bot)
+
                 scheduler.add_job(
                     send_photo_periodically,
                     "interval",
