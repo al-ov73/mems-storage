@@ -41,6 +41,8 @@ pillow = "^11.1.0"
 sqladmin = "^0.20.1"
 itsdangerous = "^2.2.0"
 openai = "^1.61.0"
+pytz = "^2025.1"
+tinydb = "^4.8.2"
 
 
 [build-system]

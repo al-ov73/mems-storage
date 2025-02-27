@@ -20,6 +20,9 @@ class TelegramCommands(Enum):
     SOURCES = TelegramCommand("sources", "Статистика по источникам")
     PARSE = TelegramCommand("parse", "Парсить")
     SEND = TelegramCommand("send", "Отправить мем")
-
+    ADD = TelegramCommand("add_reminder", "Добавить")
+    REMINDERS = TelegramCommand("reminders", "Напоминания")
+    DELETE = TelegramCommand("delete", "Удалить напоминание")
+    PURGE = TelegramCommand("purge", "Удалить все")
 
 bot_commands = [BotCommand(command=c.value.command, description=c.value.title) for c in TelegramCommands]
