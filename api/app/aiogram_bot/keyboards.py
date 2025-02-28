@@ -1,8 +1,8 @@
 from aiogram.types import InlineKeyboardButton, InlineKeyboardMarkup
 from aiogram.utils.keyboard import ReplyKeyboardBuilder, InlineKeyboardBuilder
 
+from .scheduler import get_reminders
 from ..config.config import remainder_types, scheduler
-
 from .models import Remainder
 
 
@@ -16,17 +16,33 @@ def confirm_keyboard(prefix: str, task_id: str = None):
 
 def delete_task_keyboard():
     builder = InlineKeyboardBuilder()
-
-    for j in scheduler.get_jobs():
-        if j.args[0] == "reminder":
-            data = j.args[2]
-            remainder = Remainder(**data)
-            builder.button(text=str(remainder), callback_data=f"task__{remainder.task_id}")
+    reminders = get_reminders()
+    for r in reminders:
+        builder.button(text=str(r), callback_data=f"task__{r.task_id}")
     builder.button(text="Отменить", callback_data=f"task__")
     builder.adjust(1)
     return builder.as_markup(resize_keyboard=True)
 
+def memovoz_mng_keyboard():
+    return InlineKeyboardMarkup(
+        inline_keyboard=[
+            [InlineKeyboardButton(text="📝Статистика", callback_data="stat")],
+            [InlineKeyboardButton(text="📝Статистика визитов", callback_data="visits")],
+            [InlineKeyboardButton(text="📝Статистика по источникам", callback_data="sources")],
+            [InlineKeyboardButton(text="Парсить", callback_data="parse")],
+        ],
+    )
 
+def reminders_mng_keyboard():
+    return InlineKeyboardMarkup(
+        inline_keyboard=[
+            [InlineKeyboardButton(text="Добавить", callback_data="add_reminder")],
+            [InlineKeyboardButton(text="Напоминания", callback_data="reminders")],
+            [InlineKeyboardButton(text="Удалить напоминание", callback_data="delete")],
+            [InlineKeyboardButton(text="Удалить все", callback_data="purge")],
+        ],
+    )
+    
 def type_keyboard():
     builder = ReplyKeyboardBuilder()
     for value in remainder_types:

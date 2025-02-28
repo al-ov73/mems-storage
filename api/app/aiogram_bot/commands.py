@@ -15,15 +15,8 @@ class TelegramCommand:
 
 
 class TelegramCommands(Enum):
-    STAT = TelegramCommand("stat", "Статистика")
-    VISITS = TelegramCommand("visits", "Статистика визитов")
-    SOURCES = TelegramCommand("sources", "Статистика по источникам")
-    PARSE = TelegramCommand("parse", "Парсить")
-    SEND = TelegramCommand("send", "Отправить мем")
-    ADD = TelegramCommand("add_reminder", "Добавить")
-    REMINDERS = TelegramCommand("reminders", "Напоминания")
-    DELETE = TelegramCommand("delete", "Удалить напоминание")
-    PURGE = TelegramCommand("purge", "Удалить все")
+    MEMOVOZ = TelegramCommand("memovoz", "Управление memovoz.ru")
+    REMINDERS = TelegramCommand("reminders_mng", "Напоминания")
 
 
 bot_commands = [BotCommand(command=c.value.command, description=c.value.title) for c in TelegramCommands]

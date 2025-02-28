@@ -6,17 +6,20 @@ from aiogram.types import Message, BufferedInputFile
 from aiogram.types import ReplyKeyboardRemove
 from aiogram.utils.chat_action import ChatActionSender
 
+from ..commands import TelegramCommands
+
 from ..keyboards import (
     confirm_keyboard,
     delete_task_keyboard,
     hour_keyboard,
     minutes_keyboard,
     month_day_keyboard,
+    reminders_mng_keyboard,
     type_keyboard,
     week_day_keyboard,
 )
-from ..scheduler import add_task, delete_task, get_formatted_jobs, get_formatted_task, rm_all_tasks_from_db
-from .memovoz import delete_last_message
+from ..scheduler import add_task, delete_task, get_reminders, get_formatted_task, rm_all_tasks_from_db
+
 from ...config.config import remainder_types
 from ...config.config import tiny_db, bot
 from ...config.db_config import db
@@ -24,6 +27,19 @@ from ...utils.gigachat import get_response_from_gigachat
 
 reminder_router = Router()
 
+@reminder_router.message(Command(commands=[TelegramCommands.REMINDERS.value.name]))
+async def command_start_handler(message: Message) -> None:
+    await message.answer("Управление напоминаниями:", reply_markup=reminders_mng_keyboard())
+
+async def delete_last_message(chat_id: int | str, state: FSMContext):
+    data = await state.get_data()
+    last_message_id = data.get("last_message_id")
+
+    if last_message_id:
+        try:
+            await bot.delete_message(chat_id=chat_id, message_id=last_message_id)
+        except Exception as e:
+            print(f"Не удалось удалить сообщение: {e}")
 
 class Remainder(StatesGroup):
     type = State()
@@ -35,13 +51,38 @@ class Remainder(StatesGroup):
     text = State()
     last_message_id = State()
 
-
-@reminder_router.message(Command("add_reminder"))
-async def cmd_start(message: types.Message, state: FSMContext):
-    await message.answer("Введи тип напоминания:", reply_markup=type_keyboard())
+@reminder_router.callback_query(lambda c: c.data == "add_reminder")
+async def add_reminder_callback(callback_query: types.CallbackQuery, state: FSMContext):
+    await callback_query.message.answer("Введи тип напоминания:", reply_markup=type_keyboard())
     await state.set_state(Remainder.type)
+    await callback_query.answer()
 
+@reminder_router.callback_query(lambda c: c.data == "reminders")
+async def reminders_callback(callback_query: types.CallbackQuery, state: FSMContext):
+    await delete_last_message(callback_query.message.chat.id, state)
+    reminders = get_reminders()
+    formated_reminders = "\n".join(str(r) for r in reminders)
+    sent_message = await callback_query.message.answer(f"Текущие напоминания:\n\n{formated_reminders}")
+    await state.update_data(last_message_id=sent_message.message_id)
+    await callback_query.answer()
 
+@reminder_router.callback_query(lambda c: c.data == "delete")
+async def delete_reminder_callback(callback_query: types.CallbackQuery, state: FSMContext):
+    await delete_last_message(callback_query.message.chat.id, state)
+    sent_message = await callback_query.message.answer("Какое напоминание удалить?", reply_markup=delete_task_keyboard())
+    await state.update_data(last_message_id=sent_message.message_id)
+    await callback_query.answer()
+
+@reminder_router.callback_query(lambda c: c.data == "purge")
+async def purge_reminders_callback(callback_query: types.CallbackQuery, state: FSMContext):
+    await delete_last_message(callback_query.message.chat.id, state)
+    sent_message = await callback_query.message.answer(
+        text="Вы уверены, что хотите удалить ВСЕ напоминания???",
+        reply_markup=confirm_keyboard("task_purge"),
+    )
+    await state.update_data(last_message_id=sent_message.message_id)
+    await callback_query.answer()
+    
 @reminder_router.message(Remainder.type)
 async def process_name(message: types.Message, state: FSMContext):
     await delete_last_message(message.chat.id, state)
@@ -131,32 +172,6 @@ async def process_name(message: types.Message, state: FSMContext):
     sent_message = await message.answer("Уведомление добавлено", reply_markup=ReplyKeyboardRemove())
     await state.update_data(last_message_id=sent_message.message_id)
     await state.clear()
-
-
-@reminder_router.message(Command("reminders"))
-async def cmd_start(message: types.Message, state: FSMContext):
-    await delete_last_message(message.chat.id, state)
-    formated_reminders = get_formatted_jobs()
-    sent_message = await message.answer(f"текущие напоминания:\n\n{formated_reminders}")
-    await state.update_data(last_message_id=sent_message.message_id)
-
-
-@reminder_router.message(Command("purge"))
-async def cmd_start(message: types.Message, state: FSMContext):
-    await delete_last_message(message.chat.id, state)
-    sent_message = await message.answer(
-        text="Вы уверены, что хотите удалить ВСЕ напоминания???",
-        reply_markup=confirm_keyboard("task_purge"),
-    )
-    await state.update_data(last_message_id=sent_message.message_id)
-
-
-@reminder_router.message(Command("delete"))
-async def cmd_start(message: types.Message, state: FSMContext):
-    await delete_last_message(message.chat.id, state)
-    sent_message = await message.answer(f"Какое напоминание удалить?", reply_markup=delete_task_keyboard())
-    await state.update_data(last_message_id=sent_message.message_id)
-
 
 @reminder_router.callback_query(lambda c: c.data.startswith("task_purge__"))
 async def handle_task_selection(callback: types.CallbackQuery, state: FSMContext):

@@ -1,10 +1,12 @@
 import os
 
-from aiogram import Router
+from aiogram import Router, types
 from aiogram.filters import CommandStart, Command
 from aiogram.fsm.context import FSMContext
 from aiogram.types import URLInputFile, Message
 
+from ..keyboards import memovoz_mng_keyboard
+from ..commands import TelegramCommands
 from ...config.config import (
     CHAT_ID,
     MY_API_ID,
@@ -21,47 +23,34 @@ from ...utils.stat_utils import format_memes_day_stat, format_visits_day_stat
 memovoz_router = Router()
 
 
-async def send_photo_periodically(type: str):
-    random_image = await meme_repo.get_random_meme(db=db)
-    await bot.send_photo(CHAT_ID, URLInputFile(random_image.link))
-    await meme_repo.make_meme_published(random_image.id, db)
 
 
-@memovoz_router.message(CommandStart())
+
+@memovoz_router.message(Command(commands=[TelegramCommands.MEMOVOZ.value.name]))
 async def command_start_handler(message: Message) -> None:
-    await message.answer(f"Hello, {message.from_user.full_name}!")
+    await message.answer("Управление сайтом memovoz.ru:", reply_markup=memovoz_mng_keyboard())
 
 
-@memovoz_router.message(Command(commands=["parse"]))
-async def parse_command(message: Message):
+@memovoz_router.callback_query(lambda c: c.data == "parse")
+async def parse_callback(callback_query: types.CallbackQuery):
     count_before = len(os.listdir(path=f"{STATIC_DIR}/photos"))
     folder_size_before = get_folder_size(f"{STATIC_DIR}/photos")
-    reply = await bot.send_message(MY_API_ID, "Скачиваем картинки")
+    reply = await callback_query.message.answer("Скачиваем картинки")
     await parse()
     count_after = len(os.listdir(path=f"{STATIC_DIR}/photos"))
     folder_size_after = get_folder_size(f"{STATIC_DIR}/photos")
-    await bot.edit_message_text(
+    await callback_query.message.edit_text(
         text=f"Общий объем директории с мемами: {folder_size_before}МБ -> {folder_size_after}МБ\nСкачалось картинок: {count_after - count_before} ({count_before}->{count_after})",
-        chat_id=reply.chat.id,
-        message_id=reply.message_id,
     )
 
-
-@memovoz_router.message(Command(commands=["send"]))
-async def image_send_command(message: Message):
-    await send_photo_periodically()
-    await message.answer("Мем отправлен")
-
-
-@memovoz_router.message(Command(commands=["stat"]))
-async def stat_command(message: Message):
+@memovoz_router.callback_query(lambda c: c.data == "stat")
+async def stat_command(callback_query: types.CallbackQuery):
     day_stat = await meme_repo.get_published_stat(db=db)
     folder_size = get_folder_size(f"{STATIC_DIR}/photos")
     days_remain = day_stat.not_published / 24
     day_stats = await meme_repo.get_memes_count_by_day(db=db)
     formated_day_stat = await format_memes_day_stat(day_stats)
-    await bot.send_message(
-        MY_API_ID,
+    await callback_query.message.answer(
         f"Всего картинок: {day_stat.total} шт.\n"
         f"Опубликовано картинок: {day_stat.published} шт.\n"
         f"Не опубликовано: {day_stat.not_published} шт. ({round(days_remain)} дн.)\n"
@@ -72,19 +61,22 @@ async def stat_command(message: Message):
     )
 
 
-@memovoz_router.message(Command(commands=["visits"]))
-async def visits_command(message: Message):
+@memovoz_router.callback_query(lambda c: c.data == "visits")
+async def visits_callback(callback_query: types.CallbackQuery):
     visits_stat = await visit_repo.get_visit_count_by_day(db=db)
     formated_day_stat = await format_visits_day_stat(visits_stat)
     old_visits = await visit_repo.get_old_users(db=db)
-    await bot.send_message(
-        MY_API_ID,
-        f"Статистика визитов:\n" f"{formated_day_stat}\n" f"Всего старых пользователей: {old_visits}",
+
+    await callback_query.message.answer(
+        f"Статистика визитов:\n"
+        f"{formated_day_stat}\n"
+        f"Всего старых пользователей: {old_visits}"
     )
+    await callback_query.answer()
 
 
-@memovoz_router.message(Command(commands=["sources"]))
-async def sources_command(message: Message):
+@memovoz_router.callback_query(lambda c: c.data == "sources")
+async def sources_callback(callback_query: types.CallbackQuery):
     days_limit = 5
     total_count = 0
     sources_stat = await meme_repo.get_sources_stat(db=db, limit=days_limit)
@@ -96,19 +88,10 @@ async def sources_command(message: Message):
         total_count += stat.count
 
     day_average_count = round(total_count / days_limit, 2)
-    await message.reply(
+
+    await callback_query.message.answer(
         f"Статистика за последние {days_limit} дн.\n"
         f"Среднее за день: {day_average_count}\n"
         f"{''.join(formated_stat)}"
     )
-
-
-async def delete_last_message(chat_id: int | str, state: FSMContext):
-    data = await state.get_data()
-    last_message_id = data.get("last_message_id")
-
-    if last_message_id:
-        try:
-            await bot.delete_message(chat_id=chat_id, message_id=last_message_id)
-        except Exception as e:
-            print(f"Не удалось удалить сообщение: {e}")
+    await callback_query.answer()

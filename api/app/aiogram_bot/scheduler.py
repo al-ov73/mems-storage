@@ -1,7 +1,9 @@
 from aiogram import Bot
+
 from .models import Remainder
 from .tasks import send_reminder
-from ..config.config import scheduler, timezone, tiny_db
+from ..config.config import PARSE_INTERVAL, SEND_PHOTO_INTERVAL, scheduler, timezone, tiny_db
+from ..utils.parse import parse
 
 from tinydb import Query
 
@@ -34,10 +36,11 @@ def add_daily_task(data: dict, bot: Bot):
     return scheduler.add_job(
         send_reminder,
         "cron",
+        name="reminder",
         hour=data["hour"],
         minute=data["minutes"],
         timezone=timezone,
-        args=("reminder", bot, data),
+        args=(bot, data),
     )
 
 
@@ -45,11 +48,12 @@ def add_weekly_task(data: dict, bot: Bot):
     return scheduler.add_job(
         send_reminder,
         "cron",
+        name="reminder",
         day_of_week=week_days.get(data["week_day"]),
         hour=data["hour"],
         minute=data["minutes"],
         timezone=timezone,
-        args=("reminder", bot, data),
+        args=(bot, data),
     )
 
 
@@ -57,11 +61,12 @@ def add_monthly_task(data: dict, bot: Bot):
     return scheduler.add_job(
         send_reminder,
         "cron",
+        name="reminder",
         day=data["month_day"],
         hour=data["hour"],
         minute=data["minutes"],
         timezone=timezone,
-        args=("reminder", bot, data),
+        args=(bot, data),
     )
 
 
@@ -81,27 +86,36 @@ def rm_all_tasks_from_db():
 
 def delete_task(task_id: str) -> None:
     for j in scheduler.get_jobs():
-        data = j.args[1]
-        if data["task_id"] == task_id:
-            scheduler.remove_job(j.id)
-            Task = Query()
-            tiny_db.remove(Task.task_id == task_id)
+        if j.name == "reminder":
+            data = j.args[1]
+            if data["task_id"] == task_id:
+                scheduler.remove_job(j.id)
+                Task = Query()
+                tiny_db.remove(Task.task_id == task_id)
 
 
 def get_formatted_task(task_id: str) -> str | None:
     for j in scheduler.get_jobs():
-        if j.args[0] == "reminder":
-            data = j.args[2]
+        if j.name == "reminder":
+            data = j.args[1]
             if data["task_id"] == task_id:
                 return str(Remainder(**data))
     return None
 
 
-def get_formatted_jobs() -> str:
+def get_reminders() -> list[Remainder]:
     scheduled = []
     for j in scheduler.get_jobs():
-        if j.args[0] == "reminder":
-            data = j.args[2]
-            scheduled.append(str(Remainder(**data)))
+        if j.name == "reminder":
+            data = j.args[1]
+            scheduled.append(Remainder(**data))
+    return scheduled
 
-    return "\n".join(scheduled)
+async def send_photo_periodically():
+    random_image = await meme_repo.get_random_meme(db=db)
+    await bot.send_photo(CHAT_ID, URLInputFile(random_image.link))
+    await meme_repo.make_meme_published(random_image.id, db)
+
+def add_parse_tasks() -> None:
+    scheduler.add_job(send_photo_periodically, "interval", minutes=SEND_PHOTO_INTERVAL, name="parser")
+    scheduler.add_job(parse, "interval", hours=PARSE_INTERVAL, name="parser")
