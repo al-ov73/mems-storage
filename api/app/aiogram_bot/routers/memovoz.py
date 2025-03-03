@@ -1,18 +1,14 @@
 import os
 
 from aiogram import Router, types
-from aiogram.filters import CommandStart, Command
-from aiogram.fsm.context import FSMContext
-from aiogram.types import URLInputFile, Message
+from aiogram.filters import Command
+from aiogram.types import Message
 
-from ..keyboards import memovoz_mng_keyboard
+from ..keyboards import memovoz_mng_keyboard, notchecked_keyboard
 from ..commands import TelegramCommands
 from ...config.config import (
-    CHAT_ID,
-    MY_API_ID,
     SEND_PHOTO_INTERVAL,
     STATIC_DIR,
-    bot,
 )
 from ...config.db_config import db
 from ...config.dependencies import meme_repo, visit_repo
@@ -55,9 +51,10 @@ async def stat_command(callback_query: types.CallbackQuery):
         f"Опубликовано картинок: {day_stat.published} шт.\n"
         f"Не опубликовано: {day_stat.not_published} шт. ({round(days_remain)} дн.)\n"
         f"Отправляются каждые {SEND_PHOTO_INTERVAL / 60} ч.\n"
-        f"Ожидают проверки: {day_stat.not_checked} шт. <a href='https://memovoz.ru/temp'>Проверить</a>\n"
+        f"Ожидают проверки: {day_stat.not_checked} шт.\n"
         f"Общий объем мемов: {folder_size}МБ\n\n"
         f"{formated_day_stat}",
+        reply_markup=notchecked_keyboard(day_stat.not_checked),
     )
 
 

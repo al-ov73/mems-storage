@@ -59,6 +59,7 @@ PARSE_LIMIT = int(os.getenv("PARSE_LIMIT"))
 SEND_PHOTO_INTERVAL = int(os.getenv("SEND_PHOTO_INTERVAL"))
 
 # telegram bot config
+NOT_CHECKED_URL = "https://memovoz.ru/temp"
 BOT_TOKEN = os.getenv("BOT_TOKEN")
 CHANNELS = os.getenv("CHANNELS").split(" ")
 CHAT_ID = os.getenv("CHAT_ID")

@@ -1,10 +1,13 @@
-from aiogram.types import InlineKeyboardButton, InlineKeyboardMarkup
+from aiogram.types import InlineKeyboardButton, InlineKeyboardMarkup, WebAppInfo
 from aiogram.utils.keyboard import ReplyKeyboardBuilder, InlineKeyboardBuilder
 
 from .scheduler import get_reminders
-from ..config.config import remainder_types, scheduler
-from .models import Remainder
+from ..config.config import NOT_CHECKED_URL, remainder_types
 
+def notchecked_keyboard(notchecked_count: int) -> InlineKeyboardButton:
+    builder = InlineKeyboardBuilder()
+    builder.button(text=f"Проверить {notchecked_count} шт.", web_app=WebAppInfo(url=NOT_CHECKED_URL))
+    return builder.as_markup(resize_keyboard=True)
 
 def confirm_keyboard(prefix: str, task_id: str = None):
     builder = InlineKeyboardBuilder()
