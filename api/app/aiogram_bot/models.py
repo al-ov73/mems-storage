@@ -18,7 +18,7 @@ class Remainder:
 
     def __repr__(self):
         match self.type:
-            case "dayly":
+            case "daily":
                 return f"Ежедневно в {self.hour}:{self.minutes}, '{self.text}'"
 
             case "weekly":

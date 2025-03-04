@@ -21,7 +21,7 @@ week_days = {
 
 def add_task(data: dict, bot: Bot) -> str:
     match data["type"]:
-        case "dayly":
+        case "daily":
             job = add_daily_task(data, bot)
         case "weekly":
             job = add_weekly_task(data, bot)
@@ -91,7 +91,7 @@ def delete_task(task_id: str) -> None:
             if data["task_id"] == task_id:
                 scheduler.remove_job(j.id)
                 Task = Query()
-                tiny_db.remove(Task.task_id == task_id)
+                tiny_db.remove(Task.task_id == j.id)
 
 
 def get_formatted_task(task_id: str) -> str | None:

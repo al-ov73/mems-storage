@@ -95,7 +95,7 @@ async def process_name(message: types.Message, state: FSMContext):
     await state.update_data(type=reminder_type)
 
     actions = {
-        "dayly": {
+        "daily": {
             "update": {"month_day": "", "week_day": ""},
             "message": "Введите часы:",
             "keyboard": hour_keyboard(),
