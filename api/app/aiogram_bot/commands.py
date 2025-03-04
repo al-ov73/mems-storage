@@ -17,6 +17,6 @@ class TelegramCommand:
 class TelegramCommands(Enum):
     MEMOVOZ = TelegramCommand("memovoz", "Управление memovoz.ru")
     REMINDERS = TelegramCommand("reminders_mng", "Напоминания")
-
+    VACANCIES = TelegramCommand("vacancies_mng", "Вакансии")
 
 bot_commands = [BotCommand(command=c.value.command, description=c.value.title) for c in TelegramCommands]

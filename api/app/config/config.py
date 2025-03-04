@@ -87,3 +87,7 @@ VK_GROUPS = os.getenv("VK_GROUPS").split(" ")
 # gigachat config
 GIGACHAT_KEY = os.getenv("GIGACHAT_KEY")
 JOKE_INTERVAL = os.getenv("JOKE_INTERVAL")
+
+LEFT_TOP_COORDS = (54.377198, 48.616981)
+RIGHT_BOTTOM_COORDS = (54.356967, 48.712990)
+VACANCY_TEXT = "инженер"

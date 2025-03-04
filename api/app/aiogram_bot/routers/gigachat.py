@@ -10,6 +10,7 @@ gigachat_router = Router()
 
 @gigachat_router.message()
 async def other_command(message: Message) -> None:
+    print(f"get message: '{message}'")
     giga_reply = await get_response_from_gigachat(message.text)
     async with ChatActionSender.typing(bot=bot, chat_id=message.chat.id):
         if giga_reply.image:

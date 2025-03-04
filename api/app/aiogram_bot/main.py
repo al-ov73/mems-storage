@@ -6,6 +6,7 @@ from .commands import bot_commands
 from .routers.gigachat import gigachat_router
 from .routers.memovoz import memovoz_router
 from .routers.reminder import reminder_router
+from .routers.vacancies.vacancies import vacancies_router
 from .scheduler import (
     add_parse_tasks,
     add_tasks_from_db,
@@ -22,6 +23,7 @@ from ..config.config import (
 dp = Dispatcher()
 dp.include_router(memovoz_router)
 dp.include_router(reminder_router)
+dp.include_router(vacancies_router)
 dp.include_router(gigachat_router)
 LOCK_FILE = "/tmp/bot.lock"  # Путь к файлу блокировки
 

@@ -218,14 +218,3 @@ async def handle_task_selection(callback: types.CallbackQuery, state: FSMContext
     else:
         sent_message = await bot.send_message(callback.from_user.id, "Отмена", reply_markup=ReplyKeyboardRemove())
         await state.update_data(last_message_id=sent_message.message_id)
-
-
-@reminder_router.message()
-async def other_command(message: Message) -> None:
-    giga_reply = await get_response_from_gigachat(message.text)
-    async with ChatActionSender.typing(bot=bot, chat_id=message.chat.id):
-        if giga_reply.image:
-            image = BufferedInputFile(giga_reply.image, filename="giga.jpg")
-            await message.reply_photo(image)
-            return
-        await message.reply(giga_reply.text_reply)

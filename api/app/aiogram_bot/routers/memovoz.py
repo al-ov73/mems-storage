@@ -18,10 +18,6 @@ from ...utils.stat_utils import format_memes_day_stat, format_visits_day_stat
 
 memovoz_router = Router()
 
-
-
-
-
 @memovoz_router.message(Command(commands=[TelegramCommands.MEMOVOZ.value.name]))
 async def command_start_handler(message: Message) -> None:
     await message.answer("Управление сайтом memovoz.ru:", reply_markup=memovoz_mng_keyboard())
