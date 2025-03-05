@@ -9,6 +9,7 @@ from .routers.reminder import reminder_router
 from .routers.vacancies.vacancies import vacancies_router
 from .scheduler import (
     add_parse_tasks,
+    add_send_tasks,
     add_tasks_from_db,
 )
 from ..config.config import (
@@ -30,6 +31,7 @@ async def start_bot():
     try:
         with lock.acquire(timeout=5):  # таймаут для ожидания блокировки
             add_tasks_from_db(bot)
+            add_send_tasks()
             add_parse_tasks()
             scheduler.start()
             await bot.set_my_commands(bot_commands)

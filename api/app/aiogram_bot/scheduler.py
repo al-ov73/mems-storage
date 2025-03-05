@@ -120,7 +120,7 @@ async def send_photo_periodically():
     await meme_repo.make_meme_published(random_image.id, db)
 
 def add_send_tasks() -> None:
-    scheduler.add_job(send_photo_periodically, "interval", minutes=SEND_PHOTO_INTERVAL, name="parser")
+    scheduler.add_job(send_photo_periodically, "interval", name="send_photo_periodically", minutes=SEND_PHOTO_INTERVAL, name="parser")
     
 def add_parse_tasks() -> None:
-    scheduler.add_job(parse, "interval", hours=PARSE_INTERVAL, name="parser")
+    scheduler.add_job(parse, "interval", name="parse_periodically",  hours=PARSE_INTERVAL, name="parser")
