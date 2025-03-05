@@ -1,8 +1,11 @@
 from aiogram import Bot
+from aiogram.types import URLInputFile
 
 from .models import Remainder
 from .tasks import send_reminder
-from ..config.config import PARSE_INTERVAL, SEND_PHOTO_INTERVAL, scheduler, timezone, tiny_db
+from ..config.config import PARSE_INTERVAL, SEND_PHOTO_INTERVAL, CHAT_ID, scheduler, timezone, tiny_db, bot
+from ..config.dependencies import meme_repo
+from ..config.db_config import db
 from ..utils.parse import parse
 
 from tinydb import Query
@@ -116,6 +119,8 @@ async def send_photo_periodically():
     await bot.send_photo(CHAT_ID, URLInputFile(random_image.link))
     await meme_repo.make_meme_published(random_image.id, db)
 
-def add_parse_tasks() -> None:
+def add_send_tasks() -> None:
     scheduler.add_job(send_photo_periodically, "interval", minutes=SEND_PHOTO_INTERVAL, name="parser")
+    
+def add_parse_tasks() -> None:
     scheduler.add_job(parse, "interval", hours=PARSE_INTERVAL, name="parser")

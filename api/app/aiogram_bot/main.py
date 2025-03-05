@@ -12,9 +12,6 @@ from .scheduler import (
     add_tasks_from_db,
 )
 from ..config.config import (
-    ENV,
-    PARSE_INTERVAL,
-    SEND_PHOTO_INTERVAL,
     scheduler,
     bot,
 )
