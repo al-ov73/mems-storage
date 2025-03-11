@@ -84,7 +84,10 @@ async def purge_reminders_callback(callback_query: types.CallbackQuery, state: F
     await callback_query.answer()
     
 @reminder_router.message(Remainder.type)
-async def process_name(message: types.Message, state: FSMContext):
+async def process_type(message: types.Message, state: FSMContext):
+    """
+    process remainder type
+    """
     await delete_last_message(message.chat.id, state)
     reminder_type = remainder_types.get(message.text)
 
@@ -102,6 +105,12 @@ async def process_name(message: types.Message, state: FSMContext):
             "next_state": Remainder.hour,
         },
         "weekly": {
+            "update": {"month_day": ""},
+            "message": "В какой день недели делать напоминание?",
+            "keyboard": week_day_keyboard(),
+            "next_state": Remainder.week_day,
+        },
+        "two_weeks": {
             "update": {"month_day": ""},
             "message": "В какой день недели делать напоминание?",
             "keyboard": week_day_keyboard(),
@@ -126,7 +135,11 @@ async def process_name(message: types.Message, state: FSMContext):
 
 
 @reminder_router.message(Remainder.week_day)
-async def process_name(message: types.Message, state: FSMContext):
+async def process_hour(message: types.Message, state: FSMContext):
+    """
+    get week day
+    process hours
+    """
     await delete_last_message(message.chat.id, state)
     await state.update_data(week_day=message.text)
     sent_message = await message.answer(f"Введите часы:", reply_markup=hour_keyboard())
@@ -136,6 +149,10 @@ async def process_name(message: types.Message, state: FSMContext):
 
 @reminder_router.message(Remainder.month_day)
 async def process_name(message: types.Message, state: FSMContext):
+    """
+    get month day
+    process hours 
+    """
     await delete_last_message(message.chat.id, state)
     await state.update_data(month_day=message.text)
     sent_message = await message.answer(f"Введите часы:", reply_markup=hour_keyboard())
@@ -145,6 +162,10 @@ async def process_name(message: types.Message, state: FSMContext):
 
 @reminder_router.message(Remainder.hour)
 async def process_name(message: types.Message, state: FSMContext):
+    """
+    get hours
+    process minutes
+    """
     await delete_last_message(message.chat.id, state)
     await state.update_data(hour=message.text)
     sent_message = await message.answer(f"Введите минуты:", reply_markup=minutes_keyboard())
@@ -154,6 +175,10 @@ async def process_name(message: types.Message, state: FSMContext):
 
 @reminder_router.message(Remainder.minutes)
 async def process_name(message: types.Message, state: FSMContext):
+    """
+    get minutes
+    process text
+    """
     await delete_last_message(message.chat.id, state)
     await state.update_data(minutes=message.text)
     sent_message = await message.answer(f"Введите текст напоминания:", reply_markup=ReplyKeyboardRemove())
@@ -163,6 +188,10 @@ async def process_name(message: types.Message, state: FSMContext):
 
 @reminder_router.message(Remainder.text)
 async def process_name(message: types.Message, state: FSMContext):
+    """
+    get text
+    add remainder to db and scheduler
+    """
     await state.update_data(text=message.text)
     data = await state.get_data()
     del data["last_message_id"]
@@ -174,7 +203,10 @@ async def process_name(message: types.Message, state: FSMContext):
     await state.clear()
 
 @reminder_router.callback_query(lambda c: c.data.startswith("task_purge__"))
-async def handle_task_selection(callback: types.CallbackQuery, state: FSMContext):
+async def handle_remainder_purge(callback: types.CallbackQuery, state: FSMContext):
+    """
+    purge remainder
+    """
     await delete_last_message(callback.message.chat.id, state)
     should_purge = callback.data.split("__")[1]
     if should_purge == "Да":
@@ -189,7 +221,10 @@ async def handle_task_selection(callback: types.CallbackQuery, state: FSMContext
 
 
 @reminder_router.callback_query(lambda c: c.data.startswith("task__"))
-async def handle_task_selection(callback: types.CallbackQuery, state: FSMContext):
+async def handle_remainder_delete(callback: types.CallbackQuery, state: FSMContext):
+    """
+    delete remainder
+    """
     await delete_last_message(callback.message.chat.id, state)
     task_id = callback.data.split("__")[1]
     if task_id:
@@ -206,6 +241,9 @@ async def handle_task_selection(callback: types.CallbackQuery, state: FSMContext
 
 @reminder_router.callback_query(lambda c: c.data.startswith("task_delete__"))
 async def handle_task_selection(callback: types.CallbackQuery, state: FSMContext):
+    """
+    delete remainder after confirmation
+    """
     await delete_last_message(callback.message.chat.id, state)
     should_delete = callback.data.split("__")[1]
     if should_delete == "Да":

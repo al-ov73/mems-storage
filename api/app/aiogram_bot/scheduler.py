@@ -22,18 +22,6 @@ week_days = {
 }
 
 
-def add_task(data: dict, bot: Bot) -> str:
-    match data["type"]:
-        case "daily":
-            job = add_daily_task(data, bot)
-        case "weekly":
-            job = add_weekly_task(data, bot)
-        case "monthly":
-            job = add_monthly_task(data, bot)
-        case _:
-            pass
-    return job.id
-
 
 def add_daily_task(data: dict, bot: Bot):
     return scheduler.add_job(
@@ -59,6 +47,18 @@ def add_weekly_task(data: dict, bot: Bot):
         args=(bot, data),
     )
 
+def add_two_weeks_task(data: dict, bot: Bot):
+    return scheduler.add_job(
+        send_reminder,
+        "cron",
+        name="reminder",
+        day_of_week=week_days.get(data["week_day"]),
+        week="*/2",
+        hour=data["hour"],
+        minute=data["minutes"],
+        timezone=timezone,
+        args=(bot, data),
+    )
 
 def add_monthly_task(data: dict, bot: Bot):
     return scheduler.add_job(
@@ -72,6 +72,26 @@ def add_monthly_task(data: dict, bot: Bot):
         args=(bot, data),
     )
 
+task_handlers = {
+    "daily": add_daily_task,
+    "weekly": add_weekly_task,
+    "two_weeks": add_two_weeks_task,
+    "monthly": add_monthly_task,
+}
+
+def add_task(data: dict, bot: Bot) -> str:
+    match data["type"]:
+        case "daily":
+            job = add_daily_task(data, bot)
+        case "weekly":
+            job = add_weekly_task(data, bot)
+        case "two_weeks":
+            job = add_two_weeks_task(data, bot)
+        case "monthly":
+            job = add_monthly_task(data, bot)
+        case _:
+            pass
+    return job.id
 
 def add_tasks_from_db(bot: Bot):
     jobs = tiny_db.all()

@@ -76,6 +76,7 @@ bot = Bot(token=BOT_TOKEN, default=DefaultBotProperties(parse_mode=ParseMode.HTM
 remainder_types = {
     "Ежедневно": "daily",
     "Еженедельно": "weekly",
+    "Каждые 2 недели": "two_weeks",
     "Ежемесячно": "monthly",
 }
 

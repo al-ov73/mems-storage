@@ -21,6 +21,18 @@ class Remainder:
             case "daily":
                 return f"Ежедневно в {self.hour}:{self.minutes}, '{self.text}'"
 
+            case "two_weeks":
+                week_days = {
+                    "ПН": "Каждый 2 понедельник",
+                    "ВТ": "Каждый 2 вторник",
+                    "СР": "Каждую 2 среду",
+                    "ЧТ": "Каждый 2 четверг",
+                    "ПТ": "Каждую 2 пятницу",
+                    "СБ": "Каждую 2 субботу",
+                    "ВС": "Каждое 2 воскресенье",
+                }
+                return f"{week_days[self.week_day]} в {self.hour}:{self.minutes} '{self.text}'"
+
             case "weekly":
                 week_days = {
                     "ПН": "Каждый понедельник",
@@ -32,9 +44,9 @@ class Remainder:
                     "ВС": "Каждое воскресенье",
                 }
                 return f"{week_days[self.week_day]} в {self.hour}:{self.minutes} '{self.text}'"
-
+            
             case "monthly":
                 return f"Каждое {self.month_day} число в {self.hour}:{self.minutes} '{self.text}'"
 
             case _:
-                pass
+                return "Неизвестный тип"
