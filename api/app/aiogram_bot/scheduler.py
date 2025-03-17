@@ -129,9 +129,17 @@ def get_formatted_task(task_id: str) -> str | None:
 def get_reminders() -> list[Remainder]:
     scheduled = []
     for j in scheduler.get_jobs():
+        print(j)
         if j.name == "reminder":
             data = j.args[1]
             scheduled.append(Remainder(**data))
+    return scheduled
+
+def get_next_call_of_remainders() -> list[Remainder]:
+    scheduled = []
+    for j in scheduler.get_jobs():
+        name = j.args[1]["text"] if j.name == "reminder" else j.name
+        scheduled.append(f"{name} - {j.next_run_time.strftime("%Y-%m-%d %H:%M")}")
     return scheduled
 
 async def send_photo_periodically():

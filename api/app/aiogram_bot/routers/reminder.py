@@ -18,12 +18,10 @@ from ..keyboards import (
     type_keyboard,
     week_day_keyboard,
 )
-from ..scheduler import add_task, delete_task, get_reminders, get_formatted_task, rm_all_tasks_from_db
+from ..scheduler import add_task, delete_task, get_next_call_of_remainders, get_reminders, get_formatted_task, rm_all_tasks_from_db
 
 from ...config.config import remainder_types
 from ...config.config import tiny_db, bot
-from ...config.db_config import db
-from ...utils.gigachat import get_response_from_gigachat
 
 reminder_router = Router()
 
@@ -66,6 +64,15 @@ async def reminders_callback(callback_query: types.CallbackQuery, state: FSMCont
     await state.update_data(last_message_id=sent_message.message_id)
     await callback_query.answer()
 
+@reminder_router.callback_query(lambda c: c.data == "when_next")
+async def reminders_callback(callback_query: types.CallbackQuery, state: FSMContext):
+    await delete_last_message(callback_query.message.chat.id, state)
+    reminders = get_next_call_of_remainders()
+    formated_reminders = "\n".join(reminders)
+    sent_message = await callback_query.message.answer(f"Текущие напоминания:\n\n{formated_reminders}")
+    await state.update_data(last_message_id=sent_message.message_id)
+    await callback_query.answer()
+    
 @reminder_router.callback_query(lambda c: c.data == "delete")
 async def delete_reminder_callback(callback_query: types.CallbackQuery, state: FSMContext):
     await delete_last_message(callback_query.message.chat.id, state)

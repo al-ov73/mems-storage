@@ -4,6 +4,23 @@ from aiogram.utils.keyboard import ReplyKeyboardBuilder, InlineKeyboardBuilder
 from .scheduler import get_reminders
 from ..config.config import NOT_CHECKED_URL, remainder_types
 
+
+# class TelegramCommand:
+#                 [InlineKeyboardButton(text="Добавить", callback_data="add_reminder")],
+#             [InlineKeyboardButton(text="Напоминания", callback_data="reminders")],
+#             [InlineKeyboardButton(text="Удалить напоминание", callback_data="delete")],
+#             [InlineKeyboardButton(text="Удалить все", callback_data="purge")],
+
+# class RemainderCommands:
+#     ADD_REMINDER = "add_reminder"
+#     REMINDERS = "reminders"
+#     DELETE = "delete"
+#     PURGE = "purge"
+#     MEMOVOZ = "memovoz"
+#     STAT = "stat"
+    
+
+
 def notchecked_keyboard(notchecked_count: int) -> InlineKeyboardButton:
     builder = InlineKeyboardBuilder()
     builder.button(text=f"Проверить {notchecked_count} шт.", web_app=WebAppInfo(url=NOT_CHECKED_URL))
@@ -41,6 +58,7 @@ def reminders_mng_keyboard():
         inline_keyboard=[
             [InlineKeyboardButton(text="Добавить", callback_data="add_reminder")],
             [InlineKeyboardButton(text="Напоминания", callback_data="reminders")],
+            [InlineKeyboardButton(text="Когда следующее?", callback_data="when_next")],
             [InlineKeyboardButton(text="Удалить напоминание", callback_data="delete")],
             [InlineKeyboardButton(text="Удалить все", callback_data="purge")],
         ],
