@@ -57,7 +57,7 @@ async def stat_command(callback_query: types.CallbackQuery):
 @memovoz_router.callback_query(lambda c: c.data == "visits")
 async def visits_callback(callback_query: types.CallbackQuery):
     visits_stat = await visit_repo.get_visit_count_by_day(db=db)
-    formated_day_stat = await format_visits_day_stat(visits_stat)
+    formated_day_stat = format_visits_day_stat(visits_stat)
     old_visits = await visit_repo.get_old_users(db=db)
 
     await callback_query.message.answer(

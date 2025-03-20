@@ -69,7 +69,7 @@ async def reminders_callback(callback_query: types.CallbackQuery, state: FSMCont
     await delete_last_message(callback_query.message.chat.id, state)
     reminders = get_next_call_of_remainders()
     formated_reminders = "\n".join(reminders)
-    sent_message = await callback_query.message.answer(f"Текущие напоминания:\n\n{formated_reminders}")
+    sent_message = await callback_query.message.answer(f"Время следующего напоминания:\n\n{formated_reminders}")
     await state.update_data(last_message_id=sent_message.message_id)
     await callback_query.answer()
     

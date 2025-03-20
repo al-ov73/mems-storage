@@ -1,10 +1,13 @@
+from datetime import datetime
 from aiogram import Bot
 from aiogram.types import URLInputFile
 
+from ..utils.stat_utils import format_visits_day_stat
+from ..schemas.stat import StatSchema
 from .models import Remainder
-from .tasks import send_reminder
+from .tasks import send_day_stat, send_reminder
 from ..config.config import PARSE_INTERVAL, SEND_PHOTO_INTERVAL, CHAT_ID, scheduler, timezone, tiny_db, bot
-from ..config.dependencies import meme_repo
+from ..config.dependencies import meme_repo, visit_repo
 from ..config.db_config import db
 from ..utils.parse import parse
 
@@ -152,3 +155,32 @@ def add_send_tasks() -> None:
     
 def add_parse_tasks() -> None:
     scheduler.add_job(parse, "interval", name="parse_periodically",  hours=PARSE_INTERVAL)
+    
+async def send_photo_periodically():
+    random_image = await meme_repo.get_random_meme(db=db)
+    await bot.send_photo(CHAT_ID, URLInputFile(random_image.link))
+    await meme_repo.make_meme_published(random_image.id, db)
+    
+async def send_daystat_every_day():
+    day_stat: StatSchema = await meme_repo.get_published_stat(db=db)
+    days_remain = day_stat.not_published / 24
+    visits_stat = await visit_repo.get_visit_count_by_day(db=db, limit = 2)
+    formatted_visits_stat = format_visits_day_stat(visits_stat)
+    formatted_day_stat = (
+        f"Статистика за {datetime.now().strftime('%d-%m-%Y')}\n"
+        f"Всего картинок: {day_stat.total} шт.\n"
+        f"Опубликовано картинок: {day_stat.published} шт.\n"
+        f"Не опубликовано: {day_stat.not_published} шт. ({round(days_remain)} дн.)\n"
+        f"Ожидают проверки: {day_stat.not_checked} шт.\n\n"
+        f"Статистика визитов:\n"
+        f"{formatted_visits_stat}")
+
+    scheduler.add_job(
+        send_day_stat,
+        name="send_day_stat",
+        trigger="cron",
+        hour=9,
+        minute=30,
+        timezone=timezone,
+        args=(bot, formatted_day_stat),
+    )
