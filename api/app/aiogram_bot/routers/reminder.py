@@ -5,6 +5,7 @@ from aiogram.fsm.state import State, StatesGroup
 from aiogram.types import Message, BufferedInputFile
 from aiogram.types import ReplyKeyboardRemove
 from aiogram.utils.chat_action import ChatActionSender
+import datetime
 
 from ..commands import TelegramCommands
 
@@ -12,22 +13,30 @@ from ..keyboards import (
     confirm_keyboard,
     delete_task_keyboard,
     hour_keyboard,
+    is_even_keyboard,
     minutes_keyboard,
     month_day_keyboard,
     reminders_mng_keyboard,
     type_keyboard,
     week_day_keyboard,
 )
-from ..scheduler import add_task, delete_task, get_next_call_of_remainders, get_reminders, get_formatted_task, rm_all_tasks_from_db
+from ..scheduler import add_task, delete_task, get_next_call_of_remainders, get_reminders, get_formatted_task, get_week_parity, rm_all_tasks_from_db
 
 from ...config.config import remainder_types
 from ...config.config import tiny_db, bot
 
 reminder_router = Router()
 
-@reminder_router.message(Command(commands=[TelegramCommands.REMINDERS.value.name]))
-async def command_start_handler(message: Message) -> None:
-    await message.answer("Управление напоминаниями:", reply_markup=reminders_mng_keyboard())
+class Remainder(StatesGroup):
+    type = State()
+    is_even = State()
+    month_day = State()
+    week_day = State()
+    hour = State()
+    minutes = State()
+    confirm = State()
+    text = State()
+    last_message_id = State()
 
 async def delete_last_message(chat_id: int | str, state: FSMContext):
     data = await state.get_data()
@@ -39,15 +48,9 @@ async def delete_last_message(chat_id: int | str, state: FSMContext):
         except Exception as e:
             print(f"Не удалось удалить сообщение: {e}")
 
-class Remainder(StatesGroup):
-    type = State()
-    month_day = State()
-    week_day = State()
-    hour = State()
-    minutes = State()
-    confirm = State()
-    text = State()
-    last_message_id = State()
+@reminder_router.message(Command(commands=[TelegramCommands.REMINDERS.value.name]))
+async def command_start_handler(message: Message) -> None:
+    await message.answer("Управление напоминаниями:", reply_markup=reminders_mng_keyboard())
 
 @reminder_router.callback_query(lambda c: c.data == "add_reminder")
 async def add_reminder_callback(callback_query: types.CallbackQuery, state: FSMContext):
@@ -103,28 +106,28 @@ async def process_type(message: types.Message, state: FSMContext):
         return
 
     await state.update_data(type=reminder_type)
-
+    parity = "четная" if get_week_parity() else "нечетная"
     actions = {
         "daily": {
-            "update": {"month_day": "", "week_day": ""},
+            "update": {"month_day": "", "week_day": "", "is_even": ""},
             "message": "Введите часы:",
             "keyboard": hour_keyboard(),
             "next_state": Remainder.hour,
         },
         "weekly": {
-            "update": {"month_day": ""},
+            "update": {"month_day": "", "is_even": ""},
             "message": "В какой день недели делать напоминание?",
             "keyboard": week_day_keyboard(),
             "next_state": Remainder.week_day,
         },
         "two_weeks": {
             "update": {"month_day": ""},
-            "message": "В какой день недели делать напоминание?",
-            "keyboard": week_day_keyboard(),
-            "next_state": Remainder.week_day,
+            "message": f"На какой неделе сообщать? Сейчас {parity} неделя",
+            "keyboard": is_even_keyboard(),
+            "next_state": Remainder.is_even,
         },
         "monthly": {
-            "update": {"week_day": ""},
+            "update": {"week_day": "", "is_even": ""},
             "message": "Какого числа делать напоминание?",
             "keyboard": month_day_keyboard(),
             "next_state": Remainder.month_day,
@@ -140,6 +143,18 @@ async def process_type(message: types.Message, state: FSMContext):
     else:
         await message.answer("Неизвестный тип напоминания. Попробуйте снова.")
 
+
+@reminder_router.message(Remainder.is_even)
+async def process_name(message: types.Message, state: FSMContext):
+    """
+    get is_even
+    process week day
+    """
+    await delete_last_message(message.chat.id, state)
+    await state.update_data(is_even=message.text)
+    sent_message = await message.answer(f"В какой день недели делать напоминание?", reply_markup=week_day_keyboard())
+    await state.update_data(last_message_id=sent_message.message_id)
+    await state.set_state(Remainder.week_day)
 
 @reminder_router.message(Remainder.week_day)
 async def process_hour(message: types.Message, state: FSMContext):
@@ -202,6 +217,8 @@ async def process_name(message: types.Message, state: FSMContext):
     await state.update_data(text=message.text)
     data = await state.get_data()
     del data["last_message_id"]
+    data["is_even"] = True if data["is_even"] == "Четная" else False
+    print(data["is_even"])
     data["user_id"] = message.from_user.id
     data["task_id"] = add_task(data, bot)
     tiny_db.insert(data)

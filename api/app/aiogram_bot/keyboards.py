@@ -104,6 +104,12 @@ def minutes_keyboard():
     builder.adjust(4)
     return builder.as_markup(resize_keyboard=True)
 
+def is_even_keyboard():
+    builder = ReplyKeyboardBuilder()
+    for type in ["Четная", "Нечетная"]:
+        builder.button(text=type)
+    builder.adjust(4)
+    return builder.as_markup(resize_keyboard=True)
 
 keyboard = InlineKeyboardMarkup(
     inline_keyboard=[

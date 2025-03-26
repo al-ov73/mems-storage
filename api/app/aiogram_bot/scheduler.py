@@ -1,4 +1,4 @@
-from datetime import datetime
+from datetime import datetime, timedelta
 from aiogram import Bot
 from aiogram.types import URLInputFile
 
@@ -49,17 +49,72 @@ def add_weekly_task(data: dict, bot: Bot):
         timezone=timezone,
         args=(bot, data),
     )
+week_days = {
+    "monday": "mon",
+    "tuesday": "tue",
+    "wednesday": "wed",
+    "thursday": "thu",
+    "friday": "fri",
+    "saturday": "sat",
+    "sunday": "sun"
+}
+
+def get_week_parity() -> bool:
+    """Возвращает True для чётной недели, False для нечётной."""
+    return datetime.now().isocalendar()[1] % 2 == 0
+
+def calculate_start_date(data: dict) -> datetime:
+    """
+    Вычисляет правильную дату старта с учётом:
+    - Требуемой чётности недели
+    - Указанного дня недели и времени
+    - Текущей даты и времени
+    """
+    required_parity = data["is_even"]
+    now = datetime.now()
+    
+    # Создаем целевую дату с правильным временем
+    target_time = datetime.strptime(data["time"], "%H:%M").time()
+    target_date = now.replace(
+        hour=target_time.hour,
+        minute=target_time.minute,
+        second=0,
+        microsecond=0
+    )
+    
+    # Получаем числовое представление дня недели (0-пн, 6-вс)
+    target_weekday = list(week_days.values()).index(data["week_day"])
+    
+    # Корректируем день недели
+    days_ahead = (target_weekday - now.weekday() + 7) % 7
+    target_date += timedelta(days=days_ahead)
+    
+    # Если время уже прошло на этой неделе, переносим на следующую неделю
+    if target_date < now:
+        target_date += timedelta(weeks=1)
+    
+    # Проверяем четность недели у полученной даты
+    target_week_parity = target_date.isocalendar()[1] % 2 == 0
+    
+    # Корректируем по четности
+    if target_week_parity != required_parity:
+        target_date += timedelta(weeks=1)
+    
+    return target_date
 
 def add_two_weeks_task(data: dict, bot: Bot):
+    start_date = calculate_start_date(data)
+    
     return scheduler.add_job(
         send_reminder,
         "cron",
         name="reminder",
-        day_of_week=week_days.get(data["week_day"]),
-        week="*/2",
+        start_date=start_date,
+        day_of_week=data["week_day"],  # например "mon", "tue"
+        week="*/2",  # выполнять каждые 2 недели
         hour=data["hour"],
         minute=data["minutes"],
-        timezone=timezone,
+        timezone=data.get("timezone", "UTC"),
         args=(bot, data),
     )
 
