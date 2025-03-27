@@ -97,7 +97,7 @@ def add_two_weeks_task(data: dict, bot: Bot):
         week="*/2",
         hour=data["hour"],
         minute=data["minutes"],
-        timezone=data.get("timezone", "UTC"),
+        timezone=timezone,
         args=(bot, data),
     )
 
