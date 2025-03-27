@@ -49,18 +49,8 @@ def add_weekly_task(data: dict, bot: Bot):
         timezone=timezone,
         args=(bot, data),
     )
-week_days = {
-    "monday": "mon",
-    "tuesday": "tue",
-    "wednesday": "wed",
-    "thursday": "thu",
-    "friday": "fri",
-    "saturday": "sat",
-    "sunday": "sun"
-}
 
 def get_week_parity() -> bool:
-    """Возвращает True для чётной недели, False для нечётной."""
     return datetime.now().isocalendar()[1] % 2 == 0
 
 def calculate_start_date(data: dict) -> datetime:
@@ -73,30 +63,23 @@ def calculate_start_date(data: dict) -> datetime:
     required_parity = data["is_even"]
     now = datetime.now()
     
-    # Создаем целевую дату с правильным временем
-    target_time = datetime.strptime(data["time"], "%H:%M").time()
     target_date = now.replace(
-        hour=target_time.hour,
-        minute=target_time.minute,
+        hour=int(data["hour"]),
+        minute=int(data["minutes"]),
         second=0,
         microsecond=0
     )
-    
-    # Получаем числовое представление дня недели (0-пн, 6-вс)
-    target_weekday = list(week_days.values()).index(data["week_day"])
-    
-    # Корректируем день недели
+
+    target_weekday = week_days[data["week_day"]]
+
     days_ahead = (target_weekday - now.weekday() + 7) % 7
     target_date += timedelta(days=days_ahead)
-    
-    # Если время уже прошло на этой неделе, переносим на следующую неделю
+
     if target_date < now:
         target_date += timedelta(weeks=1)
-    
-    # Проверяем четность недели у полученной даты
+
     target_week_parity = target_date.isocalendar()[1] % 2 == 0
-    
-    # Корректируем по четности
+
     if target_week_parity != required_parity:
         target_date += timedelta(weeks=1)
     
@@ -110,8 +93,8 @@ def add_two_weeks_task(data: dict, bot: Bot):
         "cron",
         name="reminder",
         start_date=start_date,
-        day_of_week=data["week_day"],  # например "mon", "tue"
-        week="*/2",  # выполнять каждые 2 недели
+        day_of_week=week_days.get(data["week_day"]),
+        week="*/2",
         hour=data["hour"],
         minute=data["minutes"],
         timezone=data.get("timezone", "UTC"),
@@ -130,10 +113,10 @@ def add_monthly_task(data: dict, bot: Bot):
         args=(bot, data),
     )
 
+
 def add_one_time_task(data: dict, bot: Bot):
     now = datetime.now()
     current_year = now.year
-    print(data)
     target_date = datetime(
         year=current_year,
         month=months.get(data["month"]),
@@ -153,13 +136,6 @@ def add_one_time_task(data: dict, bot: Bot):
         timezone=timezone,
         args=(bot, data),
     )
-    
-task_handlers = {
-    "daily": add_daily_task,
-    "weekly": add_weekly_task,
-    "two_weeks": add_two_weeks_task,
-    "monthly": add_monthly_task,
-}
 
 def add_task(data: dict, bot: Bot) -> str:
     match data["type"]:

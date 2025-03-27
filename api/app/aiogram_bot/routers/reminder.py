@@ -238,7 +238,6 @@ async def process_name(message: types.Message, state: FSMContext):
     data = await state.get_data()
     del data["last_message_id"]
     data["is_even"] = True if data["is_even"] == "Четная" else False
-    print(data["is_even"])
     data["user_id"] = message.from_user.id
     data["task_id"] = add_task(data, bot)
     tiny_db.insert(data)
