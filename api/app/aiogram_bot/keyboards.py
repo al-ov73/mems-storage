@@ -2,7 +2,7 @@ from aiogram.types import InlineKeyboardButton, InlineKeyboardMarkup, WebAppInfo
 from aiogram.utils.keyboard import ReplyKeyboardBuilder, InlineKeyboardBuilder
 
 from .scheduler import get_reminders
-from ..config.config import NOT_CHECKED_URL, remainder_types
+from ..config.config import NOT_CHECKED_URL, remainder_types, months
 
 
 # class TelegramCommand:
@@ -71,6 +71,12 @@ def type_keyboard():
     builder.adjust(3)
     return builder.as_markup(resize_keyboard=True)
 
+def month_keyboard():
+    builder = ReplyKeyboardBuilder()
+    for month in months.keys():
+        builder.button(text=month)
+    builder.adjust(4)
+    return builder.as_markup(resize_keyboard=True)
 
 def week_day_keyboard():
     builder = ReplyKeyboardBuilder()

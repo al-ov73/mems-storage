@@ -16,6 +16,7 @@ from ..keyboards import (
     is_even_keyboard,
     minutes_keyboard,
     month_day_keyboard,
+    month_keyboard,
     reminders_mng_keyboard,
     type_keyboard,
     week_day_keyboard,
@@ -30,6 +31,7 @@ reminder_router = Router()
 class Remainder(StatesGroup):
     type = State()
     is_even = State()
+    month = State()
     month_day = State()
     week_day = State()
     hour = State()
@@ -101,6 +103,12 @@ async def process_type(message: types.Message, state: FSMContext):
     await delete_last_message(message.chat.id, state)
     reminder_type = remainder_types.get(message.text)
 
+    await state.update_data(
+        week_day = "",
+        is_even = "",
+        month = "",
+        month_day = ""
+    )
     if not reminder_type:
         await message.answer("Неизвестный тип напоминания. Попробуйте снова.")
         return
@@ -108,26 +116,27 @@ async def process_type(message: types.Message, state: FSMContext):
     await state.update_data(type=reminder_type)
     parity = "четная" if get_week_parity() else "нечетная"
     actions = {
+        "one_time": {
+            "message": "Введите месяц:",
+            "keyboard": month_keyboard(),
+            "next_state": Remainder.month,
+        },
         "daily": {
-            "update": {"month_day": "", "week_day": "", "is_even": ""},
             "message": "Введите часы:",
             "keyboard": hour_keyboard(),
             "next_state": Remainder.hour,
         },
         "weekly": {
-            "update": {"month_day": "", "is_even": ""},
             "message": "В какой день недели делать напоминание?",
             "keyboard": week_day_keyboard(),
             "next_state": Remainder.week_day,
         },
         "two_weeks": {
-            "update": {"month_day": ""},
             "message": f"На какой неделе сообщать? Сейчас {parity} неделя",
             "keyboard": is_even_keyboard(),
             "next_state": Remainder.is_even,
         },
         "monthly": {
-            "update": {"week_day": "", "is_even": ""},
             "message": "Какого числа делать напоминание?",
             "keyboard": month_day_keyboard(),
             "next_state": Remainder.month_day,
@@ -136,7 +145,6 @@ async def process_type(message: types.Message, state: FSMContext):
 
     action = actions.get(reminder_type)
     if action:
-        await state.update_data(**action["update"])
         sent_message = await message.answer(action["message"], reply_markup=action["keyboard"])
         await state.update_data(last_message_id=sent_message.message_id)
         await state.set_state(action["next_state"])
@@ -167,6 +175,18 @@ async def process_hour(message: types.Message, state: FSMContext):
     sent_message = await message.answer(f"Введите часы:", reply_markup=hour_keyboard())
     await state.update_data(last_message_id=sent_message.message_id)
     await state.set_state(Remainder.hour)
+
+@reminder_router.message(Remainder.month)
+async def process_name(message: types.Message, state: FSMContext):
+    """
+    get month
+    process month_day 
+    """
+    await delete_last_message(message.chat.id, state)
+    await state.update_data(month=message.text)
+    sent_message = await message.answer(f"Какого числа делать напоминание?", reply_markup=month_day_keyboard())
+    await state.update_data(last_message_id=sent_message.message_id)
+    await state.set_state(Remainder.month_day)
 
 
 @reminder_router.message(Remainder.month_day)

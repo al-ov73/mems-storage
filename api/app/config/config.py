@@ -74,12 +74,27 @@ scheduler = AsyncIOScheduler()
 bot = Bot(token=BOT_TOKEN, default=DefaultBotProperties(parse_mode=ParseMode.HTML))
 
 remainder_types = {
+    "Один раз": "one_time",
     "Ежедневно": "daily",
     "Еженедельно": "weekly",
     "Каждые 2 недели": "two_weeks",
     "Ежемесячно": "monthly",
 }
 
+months = {
+    "ЯНВ": 1,
+    "ФЕВ": 2,
+    "МАР": 3,
+    "АПР": 4,
+    "МАЙ": 5,
+    "ИЮН": 6,
+    "ИЮЛ": 7,
+    "АВГ": 8,
+    "СЕН": 9,
+    "ОКТ": 10,
+    "НОЯ": 11,
+    "ДЕК": 12,
+}
 
 # vk parser config
 VK_TOKEN = os.getenv("VK_TOKEN")

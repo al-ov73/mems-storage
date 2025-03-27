@@ -7,6 +7,7 @@ class Remainder:
     task_id: int
     type: str
     is_even: bool
+    month: str
     month_day: str
     week_day: str
     hour: str

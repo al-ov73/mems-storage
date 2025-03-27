@@ -6,7 +6,7 @@ from ..utils.stat_utils import format_visits_day_stat
 from ..schemas.stat import StatSchema
 from .models import Remainder
 from .tasks import send_day_stat, send_reminder
-from ..config.config import PARSE_INTERVAL, SEND_PHOTO_INTERVAL, CHAT_ID, scheduler, timezone, tiny_db, bot
+from ..config.config import PARSE_INTERVAL, SEND_PHOTO_INTERVAL, CHAT_ID, scheduler, timezone, tiny_db, bot, months
 from ..config.dependencies import meme_repo, visit_repo
 from ..config.db_config import db
 from ..utils.parse import parse
@@ -130,6 +130,30 @@ def add_monthly_task(data: dict, bot: Bot):
         args=(bot, data),
     )
 
+def add_one_time_task(data: dict, bot: Bot):
+    now = datetime.now()
+    current_year = now.year
+    print(data)
+    target_date = datetime(
+        year=current_year,
+        month=months.get(data["month"]),
+        day=int(data["month_day"]),
+        hour=int(data["hour"]),
+        minute=int(data["minutes"]),
+    )
+    
+    if target_date < now:
+        target_date = target_date.replace(year=current_year + 1)
+    
+    return scheduler.add_job(
+        send_reminder,
+        "date",
+        name="reminder",
+        run_date=target_date,
+        timezone=timezone,
+        args=(bot, data),
+    )
+    
 task_handlers = {
     "daily": add_daily_task,
     "weekly": add_weekly_task,
@@ -139,6 +163,8 @@ task_handlers = {
 
 def add_task(data: dict, bot: Bot) -> str:
     match data["type"]:
+        case "one_time":
+            job = add_one_time_task(data, bot)
         case "daily":
             job = add_daily_task(data, bot)
         case "weekly":
@@ -148,7 +174,7 @@ def add_task(data: dict, bot: Bot) -> str:
         case "monthly":
             job = add_monthly_task(data, bot)
         case _:
-            pass
+            raise Exception("Неверный тип напоминания")
     return job.id
 
 def add_tasks_from_db(bot: Bot):
