@@ -188,6 +188,17 @@ const sendButtonMsgToBot = async () => {
   });
 };
 
+const sendSupportMsg = async (username, message) => {
+  return axios.post(routes.supportPath, {
+    username: username,
+    message: message
+  }, {
+    headers: {
+      'Content-Type': 'application/json'
+    }
+  });
+};
+
 export {
   getMemes,
   getNotCheckedMemes,
@@ -212,4 +223,5 @@ export {
   sendButtonMsgToBot,
   getStat,
   getDayStat,
+  sendSupportMsg,
 };

@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import axios from 'axios';
+import { sendSupportMsg } from '../utils/requests.js';
 import './TelegramChat.css';
 
 const TelegramChat = () => {
@@ -9,9 +9,6 @@ const TelegramChat = () => {
     const [isSending, setIsSending] = useState(false);
     const [isSent, setIsSent] = useState(false);
     const [error, setError] = useState('');
-
-    const BOT_TOKEN = process.env.REACT_APP_MEMOVOZ_BOT_API;
-    const CHAT_ID = process.env.REACT_APP_ADMIN_API;
 
     const toggleChat = () => {
         setIsOpen(!isOpen);
@@ -33,13 +30,7 @@ const TelegramChat = () => {
         setError('');
 
         try {
-            const text = `Новое сообщение от ${name}:\n${message}`;
-            console.log(text)
-            await axios.post(`https://api.telegram.org/bot${BOT_TOKEN}/sendMessage`, {
-                chat_id: CHAT_ID,
-                text: text,
-            });
-
+            const response = await sendSupportMsg(name, message);
             setIsSent(true);
             setName('');
             setMessage('');

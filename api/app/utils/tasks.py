@@ -1,6 +1,7 @@
 import logging
 
 import requests
+from ..schemas.messages import SupportMessageSchema
 from fastapi import Request
 import httpx
 from ..config import config
@@ -77,3 +78,10 @@ async def send_visit_info_to_db(request: Request) -> None:
         logger.info(f"New visit registered. Id: {new_visit.id}, is_new_user: {new_visit.is_new_user}")
     else:
         logger.info(f"New visit from config.LOCAL_IPS. Id: {user_ip}")
+
+async def send_support_msg_to_bot(message: SupportMessageSchema) -> None:
+    text_msg = f'Юзер "{message.username}" отправил сообщение:\n{message.message}'
+    httpx.post(
+        config.SEND_BOT_URL,
+        json={"chat_id": config.MY_API_ID, "text": text_msg},
+    )

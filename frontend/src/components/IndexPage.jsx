@@ -10,6 +10,7 @@ import WelcomeImage from "./WelcomeImage.jsx";
 import Footer from "../Footer.jsx";
 import Statistic from "./Statictic.jsx";
 import LetsStartMsg from "./LetsStartMsg.jsx";
+import TelegramChat from "./TelegramChat.jsx";
 
 const paginationRangeLimit = 2;
 
@@ -157,7 +158,7 @@ const IndexPage = () => {
       {/* END PAGINATION */}
       </Container>
       <Footer />
-      
+      <TelegramChat />
     </>
   );
 }

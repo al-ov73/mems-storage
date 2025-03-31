@@ -20,6 +20,7 @@ from .routers.likes import router as router_likes
 from .routers.users import router as router_users
 from .routers.chat import router as router_chat
 from .routers.aichat import router as router_aichat
+from .routers.support import router as router_support
 
 logger = logging.getLogger()
 logger.setLevel(logging.INFO)
@@ -66,3 +67,4 @@ app.include_router(router_likes, prefix="/likes", tags=["likes"])
 app.include_router(router_chat, prefix="/chat", tags=["chat"])
 app.include_router(router_users, prefix="/users", tags=["users"])
 app.include_router(router_aichat, prefix="/question", tags=["aichat"])
+app.include_router(router_support, prefix="/support", tags=["support"])
