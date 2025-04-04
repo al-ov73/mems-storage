@@ -26,6 +26,7 @@ dp.include_router(vacancies_router)
 dp.include_router(gigachat_router)
 LOCK_FILE = "/tmp/bot.lock"  # Путь к файлу блокировки
 
+
 async def start_bot():
     # Использование файловой блокировки для предотвращения запуска нескольких экземпляров бота
     lock = FileLock(LOCK_FILE)

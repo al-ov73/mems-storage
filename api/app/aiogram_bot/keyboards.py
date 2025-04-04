@@ -18,13 +18,13 @@ from ..config.config import NOT_CHECKED_URL, remainder_types, months
 #     PURGE = "purge"
 #     MEMOVOZ = "memovoz"
 #     STAT = "stat"
-    
 
 
 def notchecked_keyboard(notchecked_count: int) -> InlineKeyboardButton:
     builder = InlineKeyboardBuilder()
     builder.button(text=f"Проверить {notchecked_count} шт.", web_app=WebAppInfo(url=NOT_CHECKED_URL))
     return builder.as_markup(resize_keyboard=True)
+
 
 def confirm_keyboard(prefix: str, task_id: str = None):
     builder = InlineKeyboardBuilder()
@@ -43,6 +43,7 @@ def delete_task_keyboard():
     builder.adjust(1)
     return builder.as_markup(resize_keyboard=True)
 
+
 def memovoz_mng_keyboard():
     return InlineKeyboardMarkup(
         inline_keyboard=[
@@ -52,6 +53,7 @@ def memovoz_mng_keyboard():
             [InlineKeyboardButton(text="Парсить", callback_data="parse")],
         ],
     )
+
 
 def reminders_mng_keyboard():
     return InlineKeyboardMarkup(
@@ -63,7 +65,8 @@ def reminders_mng_keyboard():
             [InlineKeyboardButton(text="Удалить все", callback_data="purge")],
         ],
     )
-    
+
+
 def type_keyboard():
     builder = ReplyKeyboardBuilder()
     for value in remainder_types:
@@ -71,12 +74,14 @@ def type_keyboard():
     builder.adjust(3)
     return builder.as_markup(resize_keyboard=True)
 
+
 def month_keyboard():
     builder = ReplyKeyboardBuilder()
     for month in months.keys():
         builder.button(text=month)
     builder.adjust(4)
     return builder.as_markup(resize_keyboard=True)
+
 
 def week_day_keyboard():
     builder = ReplyKeyboardBuilder()
@@ -110,12 +115,14 @@ def minutes_keyboard():
     builder.adjust(4)
     return builder.as_markup(resize_keyboard=True)
 
+
 def is_even_keyboard():
     builder = ReplyKeyboardBuilder()
     for type in ["Четная", "Нечетная"]:
         builder.button(text=type)
     builder.adjust(4)
     return builder.as_markup(resize_keyboard=True)
+
 
 keyboard = InlineKeyboardMarkup(
     inline_keyboard=[

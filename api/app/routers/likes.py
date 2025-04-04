@@ -41,7 +41,7 @@ async def post_like(
     add like to db
     """
     author_id = user.id
-    new_like = await likes_repo.add_like(author_id, meme_id, db)
+    new_like = await likes_repo.add_like(db, author_id, meme_id)
     current_meme = await meme_repo.get_meme(meme_id, db)
     current_meme.likes.append(new_like)
     db.commit()
@@ -59,5 +59,5 @@ async def delete_like(
     """
     add like to db
     """
-    like = await likes_repo.del_like(like_id, db)
+    like = await likes_repo.delete(db, like_id)
     return like

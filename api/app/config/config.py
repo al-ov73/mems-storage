@@ -7,6 +7,8 @@ from tinydb import TinyDB
 import pytz
 from apscheduler.schedulers.asyncio import AsyncIOScheduler
 from dotenv import load_dotenv
+from fastapi.templating import Jinja2Templates
+from pathlib import Path
 
 load_dotenv()
 
@@ -107,3 +109,5 @@ JOKE_INTERVAL = os.getenv("JOKE_INTERVAL")
 LEFT_TOP_COORDS = (54.377198, 48.616981)
 RIGHT_BOTTOM_COORDS = (54.356967, 48.712990)
 VACANCY_TEXT = "инженер"
+
+templates = Jinja2Templates(directory=str(Path(__file__).parent.parent / "templates"))

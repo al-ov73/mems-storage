@@ -11,15 +11,12 @@ logger = get_logger(__name__)
 
 
 @router.post("")
-async def send_msg_to_support(
-    background_tasks: BackgroundTasks,
-    message: SupportMessageSchema
-):
+async def send_msg_to_support(background_tasks: BackgroundTasks, message: SupportMessageSchema):
     """
     send msg to admin telegram
     """
     logger.info(f'get message from user : ""')
-    
+
     background_tasks.add_task(send_support_msg_to_bot, message)
     return JSONResponse(
         status_code=status.HTTP_200_OK,
@@ -28,6 +25,6 @@ async def send_msg_to_support(
             "message": "Your support request has been queued",
             "details": {
                 "username": message.username,
-            }
-        }
+            },
+        },
     )

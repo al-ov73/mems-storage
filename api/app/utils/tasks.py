@@ -79,6 +79,7 @@ async def send_visit_info_to_db(request: Request) -> None:
     else:
         logger.info(f"New visit from config.LOCAL_IPS. Id: {user_ip}")
 
+
 async def send_support_msg_to_bot(message: SupportMessageSchema) -> None:
     text_msg = f'Юзер "{message.username}" отправил сообщение:\n{message.message}'
     httpx.post(

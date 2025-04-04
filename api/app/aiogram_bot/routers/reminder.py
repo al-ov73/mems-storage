@@ -21,12 +21,21 @@ from ..keyboards import (
     type_keyboard,
     week_day_keyboard,
 )
-from ..scheduler import add_task, delete_task, get_next_call_of_remainders, get_reminders, get_formatted_task, get_week_parity, rm_all_tasks_from_db
+from ..scheduler import (
+    add_task,
+    delete_task,
+    get_next_call_of_remainders,
+    get_reminders,
+    get_formatted_task,
+    get_week_parity,
+    rm_all_tasks_from_db,
+)
 
 from ...config.config import remainder_types
 from ...config.config import tiny_db, bot
 
 reminder_router = Router()
+
 
 class Remainder(StatesGroup):
     type = State()
@@ -40,6 +49,7 @@ class Remainder(StatesGroup):
     text = State()
     last_message_id = State()
 
+
 async def delete_last_message(chat_id: int | str, state: FSMContext):
     data = await state.get_data()
     last_message_id = data.get("last_message_id")
@@ -50,15 +60,18 @@ async def delete_last_message(chat_id: int | str, state: FSMContext):
         except Exception as e:
             print(f"Не удалось удалить сообщение: {e}")
 
+
 @reminder_router.message(Command(commands=[TelegramCommands.REMINDERS.value.name]))
 async def command_start_handler(message: Message) -> None:
     await message.answer("Управление напоминаниями:", reply_markup=reminders_mng_keyboard())
+
 
 @reminder_router.callback_query(lambda c: c.data == "add_reminder")
 async def add_reminder_callback(callback_query: types.CallbackQuery, state: FSMContext):
     await callback_query.message.answer("Введи тип напоминания:", reply_markup=type_keyboard())
     await state.set_state(Remainder.type)
     await callback_query.answer()
+
 
 @reminder_router.callback_query(lambda c: c.data == "reminders")
 async def reminders_callback(callback_query: types.CallbackQuery, state: FSMContext):
@@ -69,6 +82,7 @@ async def reminders_callback(callback_query: types.CallbackQuery, state: FSMCont
     await state.update_data(last_message_id=sent_message.message_id)
     await callback_query.answer()
 
+
 @reminder_router.callback_query(lambda c: c.data == "when_next")
 async def reminders_callback(callback_query: types.CallbackQuery, state: FSMContext):
     await delete_last_message(callback_query.message.chat.id, state)
@@ -77,13 +91,17 @@ async def reminders_callback(callback_query: types.CallbackQuery, state: FSMCont
     sent_message = await callback_query.message.answer(f"Время следующего напоминания:\n\n{formated_reminders}")
     await state.update_data(last_message_id=sent_message.message_id)
     await callback_query.answer()
-    
+
+
 @reminder_router.callback_query(lambda c: c.data == "delete")
 async def delete_reminder_callback(callback_query: types.CallbackQuery, state: FSMContext):
     await delete_last_message(callback_query.message.chat.id, state)
-    sent_message = await callback_query.message.answer("Какое напоминание удалить?", reply_markup=delete_task_keyboard())
+    sent_message = await callback_query.message.answer(
+        "Какое напоминание удалить?", reply_markup=delete_task_keyboard()
+    )
     await state.update_data(last_message_id=sent_message.message_id)
     await callback_query.answer()
+
 
 @reminder_router.callback_query(lambda c: c.data == "purge")
 async def purge_reminders_callback(callback_query: types.CallbackQuery, state: FSMContext):
@@ -94,7 +112,8 @@ async def purge_reminders_callback(callback_query: types.CallbackQuery, state: F
     )
     await state.update_data(last_message_id=sent_message.message_id)
     await callback_query.answer()
-    
+
+
 @reminder_router.message(Remainder.type)
 async def process_type(message: types.Message, state: FSMContext):
     """
@@ -103,12 +122,7 @@ async def process_type(message: types.Message, state: FSMContext):
     await delete_last_message(message.chat.id, state)
     reminder_type = remainder_types.get(message.text)
 
-    await state.update_data(
-        week_day = "",
-        is_even = "",
-        month = "",
-        month_day = ""
-    )
+    await state.update_data(week_day="", is_even="", month="", month_day="")
     if not reminder_type:
         await message.answer("Неизвестный тип напоминания. Попробуйте снова.")
         return
@@ -164,6 +178,7 @@ async def process_name(message: types.Message, state: FSMContext):
     await state.update_data(last_message_id=sent_message.message_id)
     await state.set_state(Remainder.week_day)
 
+
 @reminder_router.message(Remainder.week_day)
 async def process_hour(message: types.Message, state: FSMContext):
     """
@@ -176,11 +191,12 @@ async def process_hour(message: types.Message, state: FSMContext):
     await state.update_data(last_message_id=sent_message.message_id)
     await state.set_state(Remainder.hour)
 
+
 @reminder_router.message(Remainder.month)
 async def process_name(message: types.Message, state: FSMContext):
     """
     get month
-    process month_day 
+    process month_day
     """
     await delete_last_message(message.chat.id, state)
     await state.update_data(month=message.text)
@@ -193,7 +209,7 @@ async def process_name(message: types.Message, state: FSMContext):
 async def process_name(message: types.Message, state: FSMContext):
     """
     get month day
-    process hours 
+    process hours
     """
     await delete_last_message(message.chat.id, state)
     await state.update_data(month_day=message.text)
@@ -244,6 +260,7 @@ async def process_name(message: types.Message, state: FSMContext):
     sent_message = await message.answer("Уведомление добавлено", reply_markup=ReplyKeyboardRemove())
     await state.update_data(last_message_id=sent_message.message_id)
     await state.clear()
+
 
 @reminder_router.callback_query(lambda c: c.data.startswith("task_purge__"))
 async def handle_remainder_purge(callback: types.CallbackQuery, state: FSMContext):

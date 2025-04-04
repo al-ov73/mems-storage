@@ -18,6 +18,7 @@ from ...utils.stat_utils import format_memes_day_stat, format_visits_day_stat
 
 memovoz_router = Router()
 
+
 @memovoz_router.message(Command(commands=[TelegramCommands.MEMOVOZ.value.name]))
 async def command_start_handler(message: Message) -> None:
     await message.answer("Управление сайтом memovoz.ru:", reply_markup=memovoz_mng_keyboard())
@@ -34,6 +35,7 @@ async def parse_callback(callback_query: types.CallbackQuery):
     await callback_query.message.edit_text(
         text=f"Общий объем директории с мемами: {folder_size_before}МБ -> {folder_size_after}МБ\nСкачалось картинок: {count_after - count_before} ({count_before}->{count_after})",
     )
+
 
 @memovoz_router.callback_query(lambda c: c.data == "stat")
 async def stat_command(callback_query: types.CallbackQuery):
@@ -61,9 +63,7 @@ async def visits_callback(callback_query: types.CallbackQuery):
     old_visits = await visit_repo.get_old_users(db=db)
 
     await callback_query.message.answer(
-        f"Статистика визитов:\n"
-        f"{formated_day_stat}\n"
-        f"Всего старых пользователей: {old_visits}"
+        f"Статистика визитов:\n" f"{formated_day_stat}\n" f"Всего старых пользователей: {old_visits}"
     )
     await callback_query.answer()
 

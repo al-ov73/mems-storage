@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container">
+    <h2>Upload PDF File</h2>
+    <form action="/pdf/upload" class="dropzone" id="pdf-upload" enctype="multipart/form-data">
+        <div class="fallback">
+            <input name="file" type="file" accept=".pdf" />
+        </div>
+    </form>
+    <div class="actions">
+        <a href="/pdf/split" class="btn">Split PDF</a>
+        <a href="/pdf/merge" class="btn">Merge PDFs</a>
+        <a href="/pdf/convert" class="btn">Convert to JPG</a>
+    </div>
+</div>
+
+{% endblock %}

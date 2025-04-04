@@ -8,5 +8,6 @@ async def send_reminder(bot: Bot, data: dict):
     text = data["text"]
     await bot.send_message(user_id, text)
 
+
 async def send_day_stat(bot: Bot, stat: str):
     await bot.send_message(MY_API_ID, stat)

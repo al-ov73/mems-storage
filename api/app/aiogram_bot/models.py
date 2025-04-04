@@ -46,7 +46,7 @@ class Remainder:
                     "ВС": "Каждое воскресенье",
                 }
                 return f"{week_days[self.week_day]} в {self.hour}:{self.minutes} '{self.text}'"
-            
+
             case "monthly":
                 return f"Каждое {self.month_day} число в {self.hour}:{self.minutes} '{self.text}'"
 

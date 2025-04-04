@@ -1,0 +1,24 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container">
+    <h2>Split PDF</h2>
+    {% if filename %}
+        <p>Current file: {{ filename }}</p>
+    {% else %}
+        <p>No file selected. <a href="/pdf/">Upload a PDF first</a></p>
+    {% endif %}
+    
+    <form action="/pdf/split-pdf" method="post">
+        <div class="form-group">
+            <label for="pages">Pages to extract (e.g., 1-3,5,7-9):</label>
+            <input type="text" id="pages" name="pages" required>
+        </div>
+        <div class="form-group">
+            <label for="output_name">Output filename:</label>
+            <input type="text" id="output_name" name="output_name" value="split.pdf">
+        </div>
+        <button type="submit" class="btn">Split PDF</button>
+    </form>
+</div>
+{% endblock %}

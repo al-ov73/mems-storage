@@ -11,6 +11,7 @@ def vacancies_mng_keyboard():
         ],
     )
 
+
 def engineer_vacancies_keyboard() -> InlineKeyboardButton:
     vacancies: list[Vacancy] = search_vacancies()
     builder = InlineKeyboardBuilder()
@@ -18,4 +19,3 @@ def engineer_vacancies_keyboard() -> InlineKeyboardButton:
         builder.button(text=f"{v.name} - {v.employer["name"]}", web_app=WebAppInfo(url=v.url))
     builder.adjust(1)
     return builder.as_markup(resize_keyboard=True)
-

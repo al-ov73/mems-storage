@@ -27,7 +27,7 @@ async def get_labels(
     """
     return list of labels
     """
-    labels = await labels_repo.get_labels(skip, limit, db)
+    labels = await labels_repo.get_all(db, skip, limit)
     return labels
 
 

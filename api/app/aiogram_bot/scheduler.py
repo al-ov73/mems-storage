@@ -25,7 +25,6 @@ week_days = {
 }
 
 
-
 def add_daily_task(data: dict, bot: Bot):
     return scheduler.add_job(
         send_reminder,
@@ -50,8 +49,10 @@ def add_weekly_task(data: dict, bot: Bot):
         args=(bot, data),
     )
 
+
 def get_week_parity() -> bool:
     return datetime.now().isocalendar()[1] % 2 == 0
+
 
 def calculate_start_date(data: dict) -> datetime:
     """
@@ -62,13 +63,8 @@ def calculate_start_date(data: dict) -> datetime:
     """
     required_parity = data["is_even"]
     now = datetime.now()
-    
-    target_date = now.replace(
-        hour=int(data["hour"]),
-        minute=int(data["minutes"]),
-        second=0,
-        microsecond=0
-    )
+
+    target_date = now.replace(hour=int(data["hour"]), minute=int(data["minutes"]), second=0, microsecond=0)
 
     target_weekday = week_days[data["week_day"]]
 
@@ -82,12 +78,13 @@ def calculate_start_date(data: dict) -> datetime:
 
     if target_week_parity != required_parity:
         target_date += timedelta(weeks=1)
-    
+
     return target_date
+
 
 def add_two_weeks_task(data: dict, bot: Bot):
     start_date = calculate_start_date(data)
-    
+
     return scheduler.add_job(
         send_reminder,
         "cron",
@@ -100,6 +97,7 @@ def add_two_weeks_task(data: dict, bot: Bot):
         timezone=timezone,
         args=(bot, data),
     )
+
 
 def add_monthly_task(data: dict, bot: Bot):
     return scheduler.add_job(
@@ -124,10 +122,10 @@ def add_one_time_task(data: dict, bot: Bot):
         hour=int(data["hour"]),
         minute=int(data["minutes"]),
     )
-    
+
     if target_date < now:
         target_date = target_date.replace(year=current_year + 1)
-    
+
     return scheduler.add_job(
         send_reminder,
         "date",
@@ -136,6 +134,7 @@ def add_one_time_task(data: dict, bot: Bot):
         timezone=timezone,
         args=(bot, data),
     )
+
 
 def add_task(data: dict, bot: Bot) -> str:
     match data["type"]:
@@ -152,6 +151,7 @@ def add_task(data: dict, bot: Bot) -> str:
         case _:
             raise Exception("Неверный тип напоминания")
     return job.id
+
 
 def add_tasks_from_db(bot: Bot):
     jobs = tiny_db.all()
@@ -195,6 +195,7 @@ def get_reminders() -> list[Remainder]:
             scheduled.append(Remainder(**data))
     return scheduled
 
+
 def get_next_call_of_remainders() -> list[Remainder]:
     scheduled = []
     for j in scheduler.get_jobs():
@@ -202,26 +203,31 @@ def get_next_call_of_remainders() -> list[Remainder]:
         scheduled.append(f"{name} - {j.next_run_time.strftime("%Y-%m-%d %H:%M")}")
     return scheduled
 
+
 async def send_photo_periodically():
     random_image = await meme_repo.get_random_meme(db=db)
     await bot.send_photo(CHAT_ID, URLInputFile(random_image.link))
     await meme_repo.make_meme_published(random_image.id, db)
 
+
 def add_send_tasks() -> None:
     scheduler.add_job(send_photo_periodically, "interval", name="send_photo_periodically", minutes=SEND_PHOTO_INTERVAL)
-    
+
+
 def add_parse_tasks() -> None:
-    scheduler.add_job(parse, "interval", name="parse_periodically",  hours=PARSE_INTERVAL)
-    
+    scheduler.add_job(parse, "interval", name="parse_periodically", hours=PARSE_INTERVAL)
+
+
 async def send_photo_periodically():
     random_image = await meme_repo.get_random_meme(db=db)
     await bot.send_photo(CHAT_ID, URLInputFile(random_image.link))
     await meme_repo.make_meme_published(random_image.id, db)
-    
+
+
 async def send_daystat_every_day():
     day_stat: StatSchema = await meme_repo.get_published_stat(db=db)
     days_remain = day_stat.not_published / 24
-    visits_stat = await visit_repo.get_visit_count_by_day(db=db, limit = 2)
+    visits_stat = await visit_repo.get_visit_count_by_day(db=db, limit=2)
     formatted_visits_stat = format_visits_day_stat(visits_stat)
     formatted_day_stat = (
         f"Статистика за {datetime.now().strftime('%d-%m-%Y')}\n"
@@ -230,7 +236,8 @@ async def send_daystat_every_day():
         f"Не опубликовано: {day_stat.not_published} шт. ({round(days_remain)} дн.)\n"
         f"Ожидают проверки: {day_stat.not_checked} шт.\n\n"
         f"Статистика визитов:\n"
-        f"{formatted_visits_stat}")
+        f"{formatted_visits_stat}"
+    )
 
     scheduler.add_job(
         send_day_stat,

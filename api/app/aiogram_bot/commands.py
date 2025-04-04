@@ -19,4 +19,5 @@ class TelegramCommands(Enum):
     REMINDERS = TelegramCommand("reminders_mng", "Напоминания")
     VACANCIES = TelegramCommand("vacancies_mng", "Вакансии")
 
+
 bot_commands = [BotCommand(command=c.value.command, description=c.value.title) for c in TelegramCommands]

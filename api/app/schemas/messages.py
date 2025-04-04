@@ -9,6 +9,7 @@ class MessageSchema(BaseModel):
     created_at: datetime
     author: UserSchema
 
+
 class SupportMessageSchema(BaseModel):
     username: str
     message: str

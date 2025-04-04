@@ -25,5 +25,5 @@ async def get_user_by_id(
     """
     return user from db
     """
-    user = await users_repo.get_user(user_id, db)
+    user = await users_repo.get_by_id(db, user_id)
     return user

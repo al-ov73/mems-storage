@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container">
+    <h2>Merge PDF Files</h2>
+    
+    <form action="/pdf/merge-pdfs" method="post">
+        <div class="form-group">
+            <label>Select PDFs to merge:</label>
+            <div class="file-list">
+                {% for pdf in pdf_files %}
+                    <div class="file-item">
+                        <input type="checkbox" id="file_{{ loop.index }}" name="files" value="{{ pdf }}">
+                        <label for="file_{{ loop.index }}">{{ pdf }}</label>
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
+        <div class="form-group">
+            <label for="output_name">Output filename:</label>
+            <input type="text" id="output_name" name="output_name" value="merged.pdf">
+        </div>
+        <button type="submit" class="btn">Merge PDFs</button>
+    </form>
+</div>
+{% endblock %}

@@ -4,6 +4,7 @@ from typing import List, Optional, Dict, Any
 
 from ..config.config import LEFT_TOP_COORDS, RIGHT_BOTTOM_COORDS, VACANCY_TEXT
 
+
 @dataclass
 class Vacancy:
     id: str
@@ -13,6 +14,7 @@ class Vacancy:
     employer: Dict[str, Any]
     published_at: str
     url: str
+
 
 def search_vacancies() -> List[Vacancy]:
     url = "https://api.hh.ru/vacancies"
@@ -28,9 +30,9 @@ def search_vacancies() -> List[Vacancy]:
         "left_lng": LEFT_TOP_COORDS[1],
         "right_lng": RIGHT_BOTTOM_COORDS[1],
     }
-    
+
     response = requests.get(url, params=params)
-    
+
     if response.status_code == 200:
         data = response.json()
         vacancies = [
@@ -41,7 +43,7 @@ def search_vacancies() -> List[Vacancy]:
                 salary=vacancy.get("salary"),
                 employer=vacancy.get("employer", {}),
                 published_at=vacancy.get("published_at", ""),
-                url=vacancy.get("alternate_url", "")
+                url=vacancy.get("alternate_url", ""),
             )
             for vacancy in data.get("items", [])
         ]
