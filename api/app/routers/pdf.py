@@ -1,16 +1,12 @@
-from typing import Annotated
-from fastapi import Depends, Form, APIRouter, Request, BackgroundTasks
+from fastapi import Depends, Form, APIRouter, Request
 import os
-from fastapi import FastAPI, Request, UploadFile, Form, File, HTTPException
+from fastapi import Request, UploadFile, Form, File, HTTPException
 from fastapi.responses import HTMLResponse, RedirectResponse, FileResponse
-from fastapi.staticfiles import StaticFiles
-from fastapi.templating import Jinja2Templates
 from typing import List
 from PyPDF2 import PdfMerger, PdfReader, PdfWriter
 from pdf2image import convert_from_path
 import shutil
-import uuid
-from starlette.middleware.base import BaseHTTPMiddleware
+
 from ..config.config import templates
 
 async def get_session_id(request: Request) -> str:
@@ -24,7 +20,7 @@ async def home(request: Request):
     return templates.TemplateResponse("index.html", {"request": request})
 
 @router.post("/upload")
-async def upload_pdf(request: Request, file: UploadFile = File(...), session_id: str = Depends(get_session_id)):
+async def upload_pdf(request: Request, file: UploadFile = File(...)):
     if not file.filename.lower().endswith('.pdf'):
         raise HTTPException(status_code=400, detail="Only PDF files are allowed")
     
@@ -36,7 +32,7 @@ async def upload_pdf(request: Request, file: UploadFile = File(...), session_id:
     return RedirectResponse(url="/pdf/split", status_code=303)
 
 @router.get("/split", response_class=HTMLResponse)
-async def split_page(request: Request, session_id: str = Depends(get_session_id)):
+async def split_page(request: Request):
     current_file = request.state.session.get("current_file", "")
     print("vcurrent_file split_page", request.state.session)
     return templates.TemplateResponse("split.html", {
@@ -49,7 +45,6 @@ async def split_pdf(
     request: Request,
     pages: str = Form(...),
     output_name: str = Form("output.pdf"),
-    session_id: str = Depends(get_session_id)
 ):
     filename = request.state.session.get("current_file", "")
     if not filename:
@@ -63,11 +58,10 @@ async def split_pdf(
     for part in pages.split(","):
         if "-" in part:
             start, end = map(int, part.split("-"))
-            page_ranges.extend(range(start-1, end))  # PDF pages are 0-indexed
+            page_ranges.extend(range(start-1, end))
         else:
             page_ranges.append(int(part)-1)
     
-    # Perform the split
     reader = PdfReader(input_path)
     writer = PdfWriter()
     
@@ -86,7 +80,6 @@ async def split_pdf(
 
 @router.get("/merge", response_class=HTMLResponse)
 async def merge_page(request: Request):
-    # List all uploaded PDFs
     pdf_files = [f for f in os.listdir("uploads") if f.lower().endswith(".pdf")]
     return templates.TemplateResponse("merge.html", {
         "request": request,
@@ -95,7 +88,6 @@ async def merge_page(request: Request):
 
 @router.post("/merge-pdfs")
 async def merge_pdfs(
-    request: Request,
     files: List[str] = Form(...),
     output_name: str = Form("merged.pdf")
 ):
@@ -116,7 +108,7 @@ async def merge_pdfs(
     )
 
 @router.get("/convert", response_class=HTMLResponse)
-async def convert_page(request: Request, session_id: str = Depends(get_session_id)):
+async def convert_page(request: Request):
     current_file = request.state.session.get("current_file", "")
     return templates.TemplateResponse("convert.html", {
         "request": request,
@@ -128,7 +120,6 @@ async def convert_pdf_to_jpg(
     request: Request,
     dpi: int = Form(300),
     output_name: str = Form("converted"),
-    session_id: str = Depends(get_session_id)
 ):
     filename = request.state.session.get("current_file", "")
     print(filename)
@@ -137,10 +128,8 @@ async def convert_pdf_to_jpg(
     
     input_path = f"uploads/{filename}"
     
-    # Convert PDF to images
     images = convert_from_path(input_path, dpi=dpi)
-    
-    # Save images
+
     output_dir = "uploads/converted"
     os.makedirs(output_dir, exist_ok=True)
     

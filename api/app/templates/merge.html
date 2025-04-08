@@ -2,11 +2,11 @@
 
 {% block content %}
 <div class="container">
-    <h2>Merge PDF Files</h2>
+    <h2>Объединить PDF файлы</h2>
     
     <form action="/pdf/merge-pdfs" method="post">
         <div class="form-group">
-            <label>Select PDFs to merge:</label>
+            <label>Выберите PDF-файлы для объединения:</label>
             <div class="file-list">
                 {% for pdf in pdf_files %}
                     <div class="file-item">
@@ -20,7 +20,7 @@
             <label for="output_name">Output filename:</label>
             <input type="text" id="output_name" name="output_name" value="merged.pdf">
         </div>
-        <button type="submit" class="btn">Merge PDFs</button>
+        <button type="submit" class="btn">Объединить PDF файлы</button>
     </form>
 </div>
 {% endblock %}

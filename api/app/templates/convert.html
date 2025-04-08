@@ -2,23 +2,23 @@
 
 {% block content %}
 <div class="container">
-    <h2>Convert PDF to JPG</h2>
+    <h2>Преобразовать PDF в JPG</h2>
     {% if filename %}
-        <p>Current file: {{ filename }}</p>
+        <p>Текущий файл: {{ filename }}</p>
     {% else %}
-        <p>No file selected. <a href="/pdf/">Upload a PDF first</a></p>
+        <p>Нет выбранного файла. <a href="/pdf/">Сначала загрузите PDF-файл</a></p>
     {% endif %}
     
     <form action="/pdf/convert-pdf-to-jpg" method="post">
         <div class="form-group">
-            <label for="dpi">DPI (quality):</label>
+            <label for="dpi">DPI (качество 72-600):</label>
             <input type="number" id="dpi" name="dpi" value="300" min="72" max="600">
         </div>
         <div class="form-group">
-            <label for="output_name">Output filename (without extension):</label>
+            <label for="output_name">Имя нового файла (без расширения):</label>
             <input type="text" id="output_name" name="output_name" value="converted">
         </div>
-        <button type="submit" class="btn">Convert to JPG</button>
+        <button type="submit" class="btn">Преобразовать в JPG</button>
     </form>
 </div>
 {% endblock %}
