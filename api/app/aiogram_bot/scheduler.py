@@ -1,6 +1,7 @@
 from datetime import datetime, timedelta
 from aiogram import Bot
 from aiogram.types import URLInputFile
+from apscheduler.triggers.interval import IntervalTrigger
 
 from ..utils.stat_utils import format_visits_day_stat
 from ..schemas.stat import StatSchema
@@ -75,7 +76,6 @@ def calculate_start_date(data: dict) -> datetime:
         target_date += timedelta(weeks=1)
 
     target_week_parity = target_date.isocalendar()[1] % 2 == 0
-
     if target_week_parity != required_parity:
         target_date += timedelta(weeks=1)
 
@@ -87,14 +87,8 @@ def add_two_weeks_task(data: dict, bot: Bot):
 
     return scheduler.add_job(
         send_reminder,
-        "cron",
+        trigger=IntervalTrigger(weeks=2, start_date=start_date, timezone=timezone),
         name="reminder",
-        start_date=start_date,
-        day_of_week=week_days.get(data["week_day"]),
-        week="*/2",
-        hour=data["hour"],
-        minute=data["minutes"],
-        timezone=timezone,
         args=(bot, data),
     )
 
