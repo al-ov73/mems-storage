@@ -52,8 +52,6 @@ user_sessions = {}
 class SessionMiddleware(BaseHTTPMiddleware):
     async def dispatch(self, request: Request, call_next):
         session_id = request.cookies.get("session_id")
-        logger.info(f"session_id: {session_id}")
-        logger.info(f"if session_id in user_sessions: {session_id in user_sessions}")
         if session_id in user_sessions:
             request.state.session = user_sessions[session_id]
         else:
@@ -63,8 +61,6 @@ class SessionMiddleware(BaseHTTPMiddleware):
 
         if not request.cookies.get("session_id"):
             response.set_cookie(key="session_id", value=session_id, httponly=True)
-        logger.info(f"request.state.session: {request.state.session}")
-        logger.info(f"user_sessions: {user_sessions}")
 
         return response
 

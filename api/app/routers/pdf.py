@@ -34,7 +34,6 @@ async def upload_pdf(request: Request, file: UploadFile = File(...)):
 @router.get("/split", response_class=HTMLResponse)
 async def split_page(request: Request):
     current_file = request.state.session.get("current_file", "")
-    print("vcurrent_file split_page", request.state.session)
     return templates.TemplateResponse("split.html", {
         "request": request,
         "filename": current_file
@@ -122,7 +121,6 @@ async def convert_pdf_to_jpg(
     output_name: str = Form("converted"),
 ):
     filename = request.state.session.get("current_file", "")
-    print(filename)
     if not filename:
         return RedirectResponse(url="/pdf", status_code=303)
     
