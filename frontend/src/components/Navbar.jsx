@@ -154,10 +154,10 @@ const NavbarPage = ({ full }) => {
       show={modalAboutShow}
       onHide={() => setModalAboutShow(false)}
     />
-    <ChatModal
+    {/* <ChatModal
       show={modalChatShow}
       onHide={() => setModalChatShow(false)}
-    />
+    /> */}
   </>
 }
 
