@@ -1,5 +1,7 @@
 import asyncio
 import logging
+import uuid
+
 from fastapi.staticfiles import StaticFiles
 from fastapi.middleware.cors import CORSMiddleware
 from sqladmin import Admin
@@ -8,8 +10,6 @@ from .aiogram_bot.main import start_bot
 import os
 from fastapi import FastAPI, Request
 from fastapi.staticfiles import StaticFiles
-from fastapi.templating import Jinja2Templates
-import uuid
 from starlette.middleware.base import BaseHTTPMiddleware
 
 from .admin import admin_views, AdminAuth
@@ -54,13 +54,25 @@ class SessionMiddleware(BaseHTTPMiddleware):
         session_id = request.cookies.get("session_id")
         if session_id in user_sessions:
             request.state.session = user_sessions[session_id]
+        elif session_id is None:
+            new_session_id = str(uuid.uuid4())
+            request.state.session = {}
+            user_sessions[new_session_id] = request.state.session
+            session_id = new_session_id
         else:
             request.state.session = {}
             user_sessions[session_id] = request.state.session
+
         response = await call_next(request)
 
-        if not request.cookies.get("session_id"):
-            response.set_cookie(key="session_id", value=session_id, httponly=True)
+        if request.cookies.get("session_id") is None:
+            print("Check CC!")
+            response.set_cookie(
+                key="session_id",
+                value=session_id,
+                httponly=True
+            )
+
 
         return response
 

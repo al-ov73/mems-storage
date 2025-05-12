@@ -1,0 +1,114 @@
+2025-04-30 07:59:35,414 - INFO - === Starting application ===
+2025-04-30 07:59:35,415 - INFO - Starting image download process
+2025-04-30 07:59:35,415 - INFO - Base URL: https://yandex.ru/images-xml
+2025-04-30 07:59:35,415 - INFO - Request params: {'folderid': 'b1gn5rfj8qvn1c9ai1hh', 'apikey': 'AQVNyldC7dhAcIzsU0pWjlVtYMMkSE7QYSnpORka', 'text': 'Юрий гагарин'}
+2025-04-30 07:59:35,422 - INFO - Making request to Yandex Images API...
+2025-04-30 07:59:35,829 - INFO - HTTP Request: GET https://yandex.ru/images-xml?folderid=b1gn5rfj8qvn1c9ai1hh&apikey=AQVNyldC7dhAcIzsU0pWjlVtYMMkSE7QYSnpORka&text=%D0%AE%D1%80%D0%B8%D0%B9%20%D0%B3%D0%B0%D0%B3%D0%B0%D1%80%D0%B8%D0%BD "HTTP/1.1 200 Ok"
+2025-04-30 07:59:35,830 - INFO - Received response with status: 200
+2025-04-30 07:59:35,830 - INFO - Parsing XML response...
+2025-04-30 07:59:35,830 - WARNING - No image URLs found in the response!
+2025-04-30 07:59:35,831 - INFO - === Application finished ===
+2025-04-30 09:04:41,467 - INFO - === Starting application ===
+2025-04-30 09:04:41,480 - INFO - Starting image download process
+2025-04-30 09:04:41,483 - INFO - Base URL: https://yandex.ru/images-xml
+2025-04-30 09:04:41,483 - INFO - Request params: {'folderid': 'b1gn5rfj8qvn1c9ai1hh', 'apikey': 'AQVNyldC7dhAcIzsU0pWjlVtYMMkSE7QYSnpORka', 'text': 'Юрий гагарин'}
+2025-04-30 09:04:41,530 - INFO - Making request to Yandex Images API...
+2025-04-30 09:04:42,110 - INFO - HTTP Request: GET https://yandex.ru/images-xml?folderid=b1gn5rfj8qvn1c9ai1hh&apikey=AQVNyldC7dhAcIzsU0pWjlVtYMMkSE7QYSnpORka&text=%D0%AE%D1%80%D0%B8%D0%B9%20%D0%B3%D0%B0%D0%B3%D0%B0%D1%80%D0%B8%D0%BD "HTTP/1.1 200 Ok"
+2025-04-30 09:04:42,117 - INFO - Received response with status: 200
+2025-04-30 09:04:42,118 - INFO - Parsing XML to extract image URLs
+2025-04-30 09:04:42,120 - INFO - Found 0 image URLs in XML
+2025-04-30 09:04:42,121 - ERROR - No image URLs found in the response!
+2025-04-30 09:04:42,125 - INFO - === Application finished ===
+2025-04-30 10:04:26,324 - INFO - === Starting application ===
+2025-04-30 10:04:26,328 - INFO - Parsing XML to extract image URLs
+2025-04-30 10:04:26,329 - ERROR - Unexpected error during XML parsing: a bytes-like object is required, not 'builtin_function_or_method'
+2025-04-30 10:04:26,329 - INFO - === Application finished ===
+2025-04-30 10:07:13,682 - INFO - === Starting application ===
+2025-04-30 10:07:13,685 - INFO - Parsing XML to extract image URLs
+2025-04-30 10:07:13,686 - ERROR - XML parsing error: not well-formed (invalid token): line 40, column 157
+2025-04-30 10:07:13,688 - INFO - === Application finished ===
+2025-04-30 10:07:40,440 - INFO - === Starting application ===
+2025-04-30 10:07:40,441 - INFO - Parsing XML to extract image URLs
+2025-04-30 10:07:40,442 - ERROR - XML parsing error: not well-formed (invalid token): line 40, column 157
+2025-04-30 10:07:40,444 - INFO - === Application finished ===
+2025-04-30 10:08:05,395 - INFO - === Starting application ===
+2025-04-30 10:08:05,396 - INFO - Parsing XML to extract image URLs
+2025-04-30 10:08:05,409 - ERROR - XML parsing error: not well-formed (invalid token): line 40, column 157
+2025-04-30 10:08:05,409 - INFO - === Application finished ===
+2025-04-30 10:12:06,985 - INFO - === Starting application ===
+2025-04-30 10:12:06,989 - INFO - Parsing XML to extract image URLs
+2025-04-30 10:12:06,989 - ERROR - XML parsing error: not well-formed (invalid token): line 43, column 177
+2025-04-30 10:12:06,989 - INFO - === Application finished ===
+2025-04-30 10:13:44,108 - INFO - === Starting application ===
+2025-04-30 10:13:44,109 - INFO - Parsing XML to extract image URLs
+2025-04-30 10:13:44,110 - INFO - Found 3 image URLs in XML
+2025-04-30 10:13:44,111 - INFO - === Application finished ===
+2025-04-30 10:14:33,895 - INFO - === Starting application ===
+2025-04-30 10:14:33,897 - INFO - Parsing XML to extract image URLs
+2025-04-30 10:14:33,900 - INFO - Found 3 image URLs in XML
+2025-04-30 10:14:33,900 - INFO - === Application finished ===
+2025-04-30 10:15:06,168 - INFO - === Starting application ===
+2025-04-30 10:15:06,169 - INFO - Parsing XML to extract image URLs
+2025-04-30 10:15:06,171 - INFO - Found 3 image URLs in XML
+2025-04-30 10:15:19,722 - INFO - === Starting application ===
+2025-04-30 10:15:19,725 - INFO - Parsing XML to extract image URLs
+2025-04-30 10:15:19,726 - INFO - Found 3 image URLs in XML
+2025-04-30 10:15:19,727 - INFO - === Application finished ===
+2025-04-30 10:16:39,295 - INFO - === Starting application ===
+2025-04-30 10:16:39,299 - INFO - Parsing XML to extract image URLs
+2025-04-30 10:16:39,303 - INFO - Found 5 image URLs in XML
+2025-04-30 10:16:39,305 - INFO - === Application finished ===
+2025-04-30 10:56:28,520 - INFO - === Starting application ===
+2025-04-30 10:56:28,521 - INFO - Starting image download process
+2025-04-30 10:56:28,521 - INFO - Base URL: https://yandex.ru/images-xml/
+2025-04-30 10:56:28,522 - INFO - Request params: {'folderid': 'b1gn5rfj8qvn1c9ai1hh', 'apikey': 'AQVNyldC7dhAcIzsU0pWjlVtYMMkSE7QYSnpORka', 'text': 'Юрий гагарин'}
+2025-04-30 10:56:28,549 - INFO - Making request to Yandex Images API...
+2025-04-30 10:56:28,978 - INFO - HTTP Request: GET https://yandex.ru/images-xml/?folderid=b1gn5rfj8qvn1c9ai1hh&apikey=AQVNyldC7dhAcIzsU0pWjlVtYMMkSE7QYSnpORka&text=%D0%AE%D1%80%D0%B8%D0%B9%20%D0%B3%D0%B0%D0%B3%D0%B0%D1%80%D0%B8%D0%BD "HTTP/1.1 200 Ok"
+2025-04-30 10:56:28,982 - INFO - Received response with status: 200
+2025-04-30 10:56:28,982 - ERROR - Critical error in download process: name 'w' is not defined
+Traceback (most recent call last):
+  File "/workspaces/mems-storage/api/test.py", line 128, in download_images
+    with open("test1", w) as f:
+                       ^
+NameError: name 'w' is not defined
+2025-04-30 10:56:28,987 - CRITICAL - Application crashed: name 'w' is not defined
+Traceback (most recent call last):
+  File "/workspaces/mems-storage/api/test.py", line 159, in <module>
+    asyncio.run(download_images())
+  File "/usr/local/python/3.12.1/lib/python3.12/asyncio/runners.py", line 194, in run
+    return runner.run(main)
+           ^^^^^^^^^^^^^^^^
+  File "/usr/local/python/3.12.1/lib/python3.12/asyncio/runners.py", line 118, in run
+    return self._loop.run_until_complete(task)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/python/3.12.1/lib/python3.12/asyncio/base_events.py", line 684, in run_until_complete
+    return future.result()
+           ^^^^^^^^^^^^^^^
+  File "/workspaces/mems-storage/api/test.py", line 128, in download_images
+    with open("test1", w) as f:
+                       ^
+NameError: name 'w' is not defined
+2025-04-30 10:56:28,994 - INFO - === Application finished ===
+2025-04-30 10:57:04,101 - INFO - === Starting application ===
+2025-04-30 10:57:04,102 - INFO - Starting image download process
+2025-04-30 10:57:04,102 - INFO - Base URL: https://yandex.ru/images-xml/
+2025-04-30 10:57:04,105 - INFO - Request params: {'folderid': 'b1gn5rfj8qvn1c9ai1hh', 'apikey': 'AQVNyldC7dhAcIzsU0pWjlVtYMMkSE7QYSnpORka', 'text': 'Юрий гагарин'}
+2025-04-30 10:57:04,127 - INFO - Making request to Yandex Images API...
+2025-04-30 10:57:04,498 - INFO - HTTP Request: GET https://yandex.ru/images-xml/?folderid=b1gn5rfj8qvn1c9ai1hh&apikey=AQVNyldC7dhAcIzsU0pWjlVtYMMkSE7QYSnpORka&text=%D0%AE%D1%80%D0%B8%D0%B9%20%D0%B3%D0%B0%D0%B3%D0%B0%D1%80%D0%B8%D0%BD "HTTP/1.1 200 Ok"
+2025-04-30 10:57:04,501 - INFO - Received response with status: 200
+2025-04-30 10:57:04,505 - INFO - Parsing XML to extract image URLs
+2025-04-30 10:57:04,505 - INFO - Found 0 image URLs in XML
+2025-04-30 10:57:04,506 - ERROR - No image URLs found in the response!
+2025-04-30 10:57:04,508 - INFO - === Application finished ===
+2025-04-30 10:59:52,417 - INFO - === Starting application ===
+2025-04-30 10:59:52,420 - INFO - Parsing XML to extract image URLs
+2025-04-30 10:59:52,421 - ERROR - XML parsing error: not well-formed (invalid token): line 171, column 139
+2025-04-30 10:59:52,422 - INFO - === Application finished ===
+2025-04-30 11:01:32,046 - INFO - === Starting application ===
+2025-04-30 11:01:32,048 - INFO - Parsing XML to extract image URLs
+2025-04-30 11:01:32,050 - INFO - Found 5 image URLs in XML
+2025-04-30 11:01:32,052 - INFO - === Application finished ===
+2025-04-30 11:02:11,984 - INFO - === Starting application ===
+2025-04-30 11:02:11,986 - INFO - Parsing XML to extract image URLs
+2025-04-30 11:02:11,987 - INFO - Found 5 image URLs in XML
+2025-04-30 11:02:11,990 - INFO - === Application finished ===
