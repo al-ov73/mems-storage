@@ -1,0 +1,8 @@
+{% macro upload_form() %}
+<h4>Загрузить PDF-файл</h4>
+<form action="/pdf/upload" class="dropzone" id="pdf-upload" enctype="multipart/form-data">
+    <div class="fallback">
+        <input name="file" type="file" accept=".pdf"/>
+    </div>
+</form>
+{% endmacro %}

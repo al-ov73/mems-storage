@@ -9,6 +9,7 @@ from apscheduler.schedulers.asyncio import AsyncIOScheduler
 from dotenv import load_dotenv
 from fastapi.templating import Jinja2Templates
 from pathlib import Path
+from base64 import b64encode
 
 load_dotenv()
 
@@ -111,3 +112,4 @@ RIGHT_BOTTOM_COORDS = (54.356967, 48.712990)
 VACANCY_TEXT = "инженер"
 
 templates = Jinja2Templates(directory=str(Path(__file__).parent.parent / "templates"))
+templates.env.filters["b64encode"] = lambda x: b64encode(x).decode('utf-8')

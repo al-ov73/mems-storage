@@ -1,0 +1,13 @@
+{% macro pdf_preview(page_previews) %}
+    <div class="container">
+        {%- if page_previews %}
+        <h2>Предпросмотр страниц:</h2>
+        <div class="previews">
+            {% for preview in page_previews %}
+                <span class="page-number">Стр. {{ loop.index }}</span>
+                <img src="data:image/png;base64,{{preview|b64encode}}" alt="Page Preview" style="max-width: 100px; max-height: 100px;">
+            {% endfor %}
+        </div>
+        {%- endif %}
+    </div>
+{% endmacro %}

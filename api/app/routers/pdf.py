@@ -1,4 +1,5 @@
-from fastapi import Depends, Form, APIRouter, Request
+from ..utils.pdf_utils import convert_pdf_to_images
+from fastapi import Form, APIRouter, Request
 import os
 from fastapi import Request, UploadFile, Form, File, HTTPException
 from fastapi.responses import HTMLResponse, RedirectResponse, FileResponse, StreamingResponse
@@ -6,51 +7,44 @@ from typing import List
 from PyPDF2 import PdfMerger, PdfReader, PdfWriter
 import io
 from io import BytesIO
-from pathlib import Path
-import logging
 from ..config.config import templates
-
-logger = logging.getLogger(__name__)
-
-async def get_session_id(request: Request) -> str:
-    return request.cookies.get("session_id")
-
 
 router = APIRouter()
 
 @router.get("/", response_class=HTMLResponse)
 async def home(request: Request):
-    print(request.state.session.keys())
-    current_file = request.state.session.get("filename", "")
-    return templates.TemplateResponse("index.html", {"request": request})
+    return templates.TemplateResponse("index.html", {
+        "request": request,
+        "session": request.state.session,
+    })
 
 @router.post("/upload")
-async def upload_pdf(
-    request: Request,
-    file: UploadFile = File(...)
-):
+async def upload_pdf(request: Request, file: UploadFile = File(...)):
     if not file.filename.lower().endswith(".pdf"):
         raise HTTPException(status_code=400, detail="Только файлы формата PDF разрешены.")
 
-    content = await file.read()  
+    content = await file.read()
     memory_file = io.BytesIO(content)
 
+    previews = convert_pdf_to_images(memory_file.getvalue())[:5]
+    filename = file.filename.rsplit(".")[0]
     session_data = {
-        "filename": file.filename,
+        "filename": filename,
         "file_content": memory_file.getvalue(),
+        "page_previews": previews,
     }
 
     request.state.session.update(session_data)
-    return RedirectResponse(url="/pdf/split", status_code=303)
+    return templates.TemplateResponse("index.html", {
+        "request": request,
+        "session": request.state.session,
+    })
 
 @router.get("/split", response_class=HTMLResponse)
 async def split_page(request: Request):
-    print(request.state.session.keys())
-    current_file = request.state.session.get("filename", "")
-    print("get /split")  
     return templates.TemplateResponse("split.html", {
         "request": request,
-        "filename": current_file,
+        "session": request.state.session,
     })
 
 @router.post("/split-pdf")
@@ -67,17 +61,13 @@ async def split_pdf(
     for part in pages.split(","):
         if "-" in part:
             start, end = map(int, part.split("-"))
-            page_ranges.extend(range(start-1, end))  # преобразование индексов (чтобы нумерация начиналась с 1)
+            page_ranges.extend(range(start-1, end))
         else:
             page_ranges.append(int(part)-1)
 
-    # Чтение PDF-данных из байтов
     pdf_reader = PdfReader(BytesIO(file_content))
-
-    # Создание нового PDF-документа
     pdf_writer = PdfWriter()
 
-    # Добавляем указанные страницы в выходной документ
     for page_num in page_ranges:
         if 0 <= page_num < len(pdf_reader.pages):
             pdf_writer.add_page(pdf_reader.pages[page_num])

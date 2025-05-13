@@ -66,11 +66,12 @@ class SessionMiddleware(BaseHTTPMiddleware):
         response = await call_next(request)
 
         if request.cookies.get("session_id") is None:
-            print("Check CC!")
+            cookie_life = 5 * 60
             response.set_cookie(
                 key="session_id",
                 value=session_id,
-                httponly=True
+                httponly=True,
+                max_age=cookie_life,
             )
 
 

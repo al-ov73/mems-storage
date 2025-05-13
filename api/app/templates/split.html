@@ -2,34 +2,27 @@
 
 {% block content %}
 <div class="container">
-    <h2>Split PDF</h2>
+    <h2>Разделить PDF</h2>
 
-    {% if filename %}
-        <div class="pdf-preview">
-            <h3>{{ filename }}</h3>
-            
-            {% if preview_images %}
-                <div class="preview-container">
-                    {% for img in preview_images %}
-                        <img src="/static/{{ img }}" alt="PDF Preview" class="pdf-thumbnail">
-                    {% endfor %}
-                </div>
-            {% endif %}
-        </div>
+    {% if session.page_previews %}
         
         <form action="/pdf/split-pdf" method="post">
             <div class="form-group">
-                <label for="pages">Pages to extract (e.g., 1-3,5,7-9):</label>
+                <label for="pages">Введите номера страниц(например, 1-3,5,7-9):</label>
                 <input type="text" id="pages" name="pages" required>
             </div>
             <div class="form-group">
-                <label for="output_name">Output filename:</label>
-                <input type="text" id="output_name" name="output_name" value="split.pdf">
+                <label for="output_name">Новое имя файла:</label>
+                <input type="text" id="output_name" name="output_name" value="{{ session.filename }}_split.pdf">
             </div>
-            <button type="submit" class="btn">Split PDF</button>
+            <button type="submit" class="btn">Разделить PDF</button>
         </form>
+
+        {% from 'preview.html' import pdf_preview %}
+        {{ pdf_preview(session.page_previews) }}
+
     {% else %}
-        <p>No file selected. <a href="/pdf/">Upload a PDF first</a></p>
+        <a href="/pdf/"><h4>Загрузите Ваш PDF</h4></a>   
     {% endif %}
 </div>
 
