@@ -5,9 +5,7 @@ from aiogram.filters import Command
 from aiogram.types import Message
 
 from ...commands import TelegramCommands
-
 from .keyboards import engineer_vacancies_keyboard, vacancies_mng_keyboard
-
 
 vacancies_router = Router()
 

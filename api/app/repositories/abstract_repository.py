@@ -1,18 +1,15 @@
 from abc import ABC, abstractmethod
-from typing import TypeVar, Generic, Optional, List, Type
+from typing import Any, Dict, Generic, List, Optional, Type, TypeVar
 
-from ..schemas.likes import LikeSchema
-from ..models.like import Like
+from sqlalchemy import func
+from sqlalchemy.orm import Session, joinedload
+
 from ..models.comment import Comment
 from ..models.label import Label
+from ..models.like import Like
 from ..models.message import Message
 from ..models.user import User
-from sqlalchemy.orm import Session
-
-from abc import ABC, abstractmethod
-from typing import TypeVar, Generic, Optional, List, Type, Dict, Any
-from sqlalchemy.orm import Session, joinedload
-from sqlalchemy import func
+from ..schemas.likes import LikeSchema
 
 T = TypeVar("T")
 

@@ -1,6 +1,7 @@
+from io import BytesIO
+
 import fitz
 from PIL import Image
-from io import BytesIO
 
 
 def convert_pdf_to_images(pdf_bytes, quality=50):
@@ -15,9 +16,9 @@ def convert_pdf_to_images(pdf_bytes, quality=50):
         page = pdf_document.load_page(page_num)
         pixmap = page.get_pixmap()
         img = Image.frombytes("RGB", [pixmap.width, pixmap.height], pixmap.samples)
-        
+
         # Создаем JPEG с заданным уровнем качества
         image_buffer = BytesIO()
-        img.save(image_buffer, format='JPEG', quality=quality, optimize=True)
+        img.save(image_buffer, format="JPEG", quality=quality, optimize=True)
         images.append(image_buffer.getvalue())
     return images

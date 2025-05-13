@@ -1,5 +1,5 @@
 from aiogram import Router
-from aiogram.types import Message, BufferedInputFile
+from aiogram.types import BufferedInputFile, Message
 from aiogram.utils.chat_action import ChatActionSender
 
 from ...config.config import bot

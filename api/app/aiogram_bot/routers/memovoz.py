@@ -4,17 +4,14 @@ from aiogram import Router, types
 from aiogram.filters import Command
 from aiogram.types import Message
 
-from ..keyboards import memovoz_mng_keyboard, notchecked_keyboard
-from ..commands import TelegramCommands
-from ...config.config import (
-    SEND_PHOTO_INTERVAL,
-    STATIC_DIR,
-)
+from ...config.config import SEND_PHOTO_INTERVAL, STATIC_DIR
 from ...config.db_config import db
 from ...config.dependencies import meme_repo, visit_repo
 from ...utils.os_utils import get_folder_size
 from ...utils.parse import parse
 from ...utils.stat_utils import format_memes_day_stat, format_visits_day_stat
+from ..commands import TelegramCommands
+from ..keyboards import memovoz_mng_keyboard, notchecked_keyboard
 
 memovoz_router = Router()
 

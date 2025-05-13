@@ -1,9 +1,8 @@
 from aiogram.types import InlineKeyboardButton, InlineKeyboardMarkup, WebAppInfo
-from aiogram.utils.keyboard import ReplyKeyboardBuilder, InlineKeyboardBuilder
+from aiogram.utils.keyboard import InlineKeyboardBuilder, ReplyKeyboardBuilder
 
+from ..config.config import NOT_CHECKED_URL, months, remainder_types
 from .scheduler import get_reminders
-from ..config.config import NOT_CHECKED_URL, remainder_types, months
-
 
 # class TelegramCommand:
 #                 [InlineKeyboardButton(text="Добавить", callback_data="add_reminder")],

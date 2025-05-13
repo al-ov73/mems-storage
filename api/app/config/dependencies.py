@@ -1,18 +1,18 @@
-from ..models.user import User
-from ..models.like import Like
-from ..models.label import Label
-from ..models.comment import Comment
-from ..repositories.abstract_repository import RepositoryFactory
-from ..repositories.users_repository import UsersRepository
 from ..config import config
+from ..models.comment import Comment
+from ..models.label import Label
+from ..models.like import Like
+from ..models.message import Message
+from ..models.user import User
+from ..repositories.abstract_repository import RepositoryFactory
 from ..repositories.comments_repository import CommentsRepository
-from ..repositories.memes_repository import MemesRepository
-from ..repositories.storage_repository import FSStorageRepository
-from ..repositories.messages_repository import MessagesRepository
 from ..repositories.labels_repository import LabelsRepository
 from ..repositories.likes_repository import LikesRepository
+from ..repositories.memes_repository import MemesRepository
+from ..repositories.messages_repository import MessagesRepository
+from ..repositories.storage_repository import FSStorageRepository
+from ..repositories.users_repository import UsersRepository
 from ..repositories.visit_repository import VisitRepository
-from ..models.message import Message
 
 
 def get_memes_repository():

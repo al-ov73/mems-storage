@@ -1,5 +1,5 @@
-import os
 import logging
+import os
 from urllib.parse import urljoin
 
 from telethon import TelegramClient
@@ -9,7 +9,6 @@ from ..config.db_config import get_db
 from ..config.dependencies import get_memes_repository
 from ..models.meme import Meme
 from ..utils.os_utils import compress_image
-
 
 logger = logging.getLogger(__name__)
 

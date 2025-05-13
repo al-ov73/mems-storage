@@ -2,22 +2,18 @@ from datetime import datetime, timedelta, timezone
 from typing import Annotated, Optional
 
 import jwt
-from fastapi import Depends, HTTPException, status, UploadFile
+from fastapi import Depends, HTTPException, UploadFile, status
 from fastapi.security import OAuth2PasswordBearer
 from jwt.exceptions import InvalidTokenError
 from passlib.context import CryptContext
 from sqlalchemy.orm import Session
 
-from ..config.config import (
-    ALGORITHM,
-    JWT_TOKEN_SECRET_KEY,
-    ACCESS_TOKEN_EXPIRE_MINUTES,
-)
-from ..repositories.storage_repository import BaseStorageRepo
+from ..config.config import ACCESS_TOKEN_EXPIRE_MINUTES, ALGORITHM, JWT_TOKEN_SECRET_KEY
 from ..config.db_config import get_db
 from ..models.user import User
-from ..schemas.users import UserDbSchema
+from ..repositories.storage_repository import BaseStorageRepo
 from ..schemas.tokens import TokenDataSchema
+from ..schemas.users import UserDbSchema
 
 pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 

@@ -1,6 +1,7 @@
+from sqlalchemy.orm import Session
+
 from ..models.label import Label
 from ..schemas.labels import LabelSchema
-from sqlalchemy.orm import Session
 
 
 class LabelsRepository:

@@ -1,6 +1,7 @@
-import requests
 from dataclasses import dataclass
-from typing import List, Optional, Dict, Any
+from typing import Any, Dict, List, Optional
+
+import requests
 
 from ..config.config import LEFT_TOP_COORDS, RIGHT_BOTTOM_COORDS, VACANCY_TEXT
 

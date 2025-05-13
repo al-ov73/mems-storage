@@ -1,16 +1,16 @@
 """
 
 Revision ID: 7977bd4a2946
-Revises: 
+Revises:
 Create Date: 2024-12-13 14:52:33.977802+04:00
 
 """
 
 from typing import Sequence, Union
 
-from alembic import op
 import sqlalchemy as sa
 
+from alembic import op
 
 # revision identifiers, used by Alembic.
 revision: str = "7977bd4a2946"

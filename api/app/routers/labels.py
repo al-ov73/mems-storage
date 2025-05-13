@@ -1,13 +1,10 @@
-from fastapi import Depends, Form, APIRouter
+from fastapi import APIRouter, Depends, Form
 from sqlalchemy.orm import Session
 
 from ..config.db_config import get_db
-from ..config.dependencies import (
-    get_labels_repository,
-    get_memes_repository,
-)
-from ..repositories.memes_repository import MemesRepository
+from ..config.dependencies import get_labels_repository, get_memes_repository
 from ..repositories.labels_repository import LabelsRepository
+from ..repositories.memes_repository import MemesRepository
 from ..schemas.memes import MemeDbSchema
 from ..utils.auth_utils import get_current_user
 

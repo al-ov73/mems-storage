@@ -20,4 +20,9 @@ parse:
 		poetry run python3 parse.py
 
 black:
-		black -l 120 .
+		poetry run black -l 120 .
+
+isort:
+		poetry run isort .
+
+format: isort black

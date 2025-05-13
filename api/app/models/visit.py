@@ -2,8 +2,8 @@ from typing import Optional
 
 from sqlalchemy.orm import Mapped
 
-from .user import intpk, created_at
 from ..config.db_config import Base
+from .user import created_at, intpk
 
 
 class Visit(Base):

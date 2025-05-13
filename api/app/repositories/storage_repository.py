@@ -1,12 +1,13 @@
 import os
+from abc import ABC, abstractmethod
+from tempfile import SpooledTemporaryFile
+from typing import BinaryIO
+
 import aiohttp
 import httpx
 from aiohttp import FormData, StreamReader
-from abc import abstractmethod, ABC
-from tempfile import SpooledTemporaryFile
-from typing import BinaryIO
-from ..config import config as config
 
+from ..config import config as config
 from ..config.logger_config import get_logger
 
 # from ..config.redis_config import get_redis

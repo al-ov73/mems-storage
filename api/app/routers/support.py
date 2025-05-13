@@ -1,9 +1,9 @@
-from ..schemas.messages import SupportMessageSchema
-from ..utils.tasks import send_support_msg_to_bot
-from fastapi import status, APIRouter, BackgroundTasks
+from fastapi import APIRouter, BackgroundTasks, status
 from fastapi.responses import JSONResponse
 
 from ..config.logger_config import get_logger
+from ..schemas.messages import SupportMessageSchema
+from ..utils.tasks import send_support_msg_to_bot
 
 router = APIRouter()
 

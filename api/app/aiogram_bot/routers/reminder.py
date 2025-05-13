@@ -1,14 +1,14 @@
-from aiogram import types, Router
+import datetime
+
+from aiogram import Router, types
 from aiogram.filters import Command
 from aiogram.fsm.context import FSMContext
 from aiogram.fsm.state import State, StatesGroup
-from aiogram.types import Message, BufferedInputFile
-from aiogram.types import ReplyKeyboardRemove
+from aiogram.types import BufferedInputFile, Message, ReplyKeyboardRemove
 from aiogram.utils.chat_action import ChatActionSender
-import datetime
 
+from ...config.config import bot, remainder_types, tiny_db
 from ..commands import TelegramCommands
-
 from ..keyboards import (
     confirm_keyboard,
     delete_task_keyboard,
@@ -24,15 +24,12 @@ from ..keyboards import (
 from ..scheduler import (
     add_task,
     delete_task,
+    get_formatted_task,
     get_next_call_of_remainders,
     get_reminders,
-    get_formatted_task,
     get_week_parity,
     rm_all_tasks_from_db,
 )
-
-from ...config.config import remainder_types
-from ...config.config import tiny_db, bot
 
 reminder_router = Router()
 

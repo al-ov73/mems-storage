@@ -1,9 +1,8 @@
-from sqlalchemy.orm import Mapped, mapped_column, relationship
 from sqlalchemy import ForeignKey
+from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from ..config.db_config import Base
-from .user import intpk
-from .user import created_at
+from .user import created_at, intpk
 
 
 class Message(Base):

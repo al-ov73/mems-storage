@@ -1,19 +1,17 @@
-from logging.config import fileConfig
 import os
+from logging.config import fileConfig
 
-from sqlalchemy import engine_from_config
-from sqlalchemy import pool
+from sqlalchemy import engine_from_config, pool
+
 from alembic import context
-
 from app.config.db_config import Base
-from app.models.user import User
-from app.models.meme import Meme
 from app.models.comment import Comment
 from app.models.label import Label, LabelMeme
 from app.models.like import Like
+from app.models.meme import Meme
 from app.models.message import Message
+from app.models.user import User
 from app.models.visit import Visit
-
 
 config = context.config
 

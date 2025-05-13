@@ -1,9 +1,11 @@
-import requests
 import base64
 import shutil
 from dataclasses import dataclass
+
+import requests
 from gigachat import GigaChat
 from gigachat.models import Chat, Messages, MessagesRole
+
 from ..config import config
 
 GIGACHAT_KEY = config.GIGACHAT_KEY

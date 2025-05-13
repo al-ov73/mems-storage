@@ -2,22 +2,13 @@ from aiogram import Dispatcher
 from aiogram.exceptions import TelegramConflictError
 from filelock import FileLock, Timeout
 
+from ..config.config import bot, scheduler
 from .commands import bot_commands
 from .routers.gigachat import gigachat_router
 from .routers.memovoz import memovoz_router
 from .routers.reminder import reminder_router
 from .routers.vacancies.vacancies import vacancies_router
-from .scheduler import (
-    add_parse_tasks,
-    add_send_tasks,
-    add_tasks_from_db,
-    send_daystat_every_day,
-)
-from ..config.config import (
-    scheduler,
-    bot,
-)
-
+from .scheduler import add_parse_tasks, add_send_tasks, add_tasks_from_db, send_daystat_every_day
 
 dp = Dispatcher()
 dp.include_router(memovoz_router)

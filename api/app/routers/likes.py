@@ -1,15 +1,14 @@
-from fastapi import Depends, Form, APIRouter
+from fastapi import APIRouter, Depends, Form
 from sqlalchemy.orm import Session
 
 from ..config.db_config import get_db
 from ..config.dependencies import get_likes_repository, get_memes_repository
 from ..repositories.likes_repository import LikesRepository
 from ..repositories.memes_repository import MemesRepository
+from ..schemas.likes import LikeSchema
 from ..schemas.memes import MemeDbSchema
 from ..schemas.users import UserDbSchema
-from ..schemas.likes import LikeSchema
 from ..utils.auth_utils import get_current_user
-
 
 router = APIRouter()
 

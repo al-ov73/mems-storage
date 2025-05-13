@@ -1,4 +1,4 @@
-from fastapi import Depends, Form, APIRouter
+from fastapi import APIRouter, Depends, Form
 from sqlalchemy.orm import Session
 
 from ..config.db_config import get_db

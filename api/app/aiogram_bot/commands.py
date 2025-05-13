@@ -1,7 +1,7 @@
+from dataclasses import dataclass
 from enum import Enum
 
 from aiogram.types import BotCommand
-from dataclasses import dataclass
 
 
 @dataclass

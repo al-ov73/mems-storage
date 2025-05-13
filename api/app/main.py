@@ -1,34 +1,29 @@
 import asyncio
 import logging
+import os
 import uuid
 
-from fastapi.staticfiles import StaticFiles
-from fastapi.middleware.cors import CORSMiddleware
-from sqladmin import Admin
-from .aiogram_bot.main import start_bot
-
-import os
 from fastapi import FastAPI, Request
+from fastapi.middleware.cors import CORSMiddleware
 from fastapi.staticfiles import StaticFiles
+from sqladmin import Admin
 from starlette.middleware.base import BaseHTTPMiddleware
 
-from .admin import admin_views, AdminAuth
+from .admin import AdminAuth, admin_views
+from .aiogram_bot.main import start_bot
 from .config import config
 from .config.config import ORIGINS
 from .config.db_config import engine
-
-
-from .routers.auth import router as router_auth
-from .routers.memes import router as router_memes
-from .routers.labels import router as router_labels
-from .routers.comments import router as router_comments
-from .routers.likes import router as router_likes
-from .routers.users import router as router_users
-from .routers.chat import router as router_chat
 from .routers.aichat import router as router_aichat
-from .routers.support import router as router_support
+from .routers.auth import router as router_auth
+from .routers.chat import router as router_chat
+from .routers.comments import router as router_comments
+from .routers.labels import router as router_labels
+from .routers.likes import router as router_likes
+from .routers.memes import router as router_memes
 from .routers.pdf import router as router_pdf
-
+from .routers.support import router as router_support
+from .routers.users import router as router_users
 
 logger = logging.getLogger()
 logger.setLevel(logging.INFO)
@@ -73,7 +68,6 @@ class SessionMiddleware(BaseHTTPMiddleware):
                 httponly=True,
                 max_age=cookie_life,
             )
-
 
         return response
 

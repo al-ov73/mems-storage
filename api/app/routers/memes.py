@@ -1,10 +1,11 @@
 from typing import Annotated
-from fastapi import Depends, Form, APIRouter, Request, BackgroundTasks
+
+from fastapi import APIRouter, BackgroundTasks, Depends, Form, Request
 from sqlalchemy.orm import Session
 
-from ..config.logger_config import get_logger
 from ..config.db_config import get_db
-from ..config.dependencies import get_storage_repo, get_memes_repository
+from ..config.dependencies import get_memes_repository, get_storage_repo
+from ..config.logger_config import get_logger
 from ..parsers.telegram_parser import parse_telegram_channels
 from ..repositories.memes_repository import MemesRepository
 from ..repositories.storage_repository import BaseStorageRepo

@@ -1,10 +1,11 @@
+import logging
 import os
 import shutil
 from urllib.parse import urljoin
-import logging
+
+from PIL import Image, UnidentifiedImageError
 
 from ..config import config
-from PIL import Image, UnidentifiedImageError
 
 logger = logging.getLogger(__name__)
 

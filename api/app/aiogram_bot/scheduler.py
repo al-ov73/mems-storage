@@ -1,19 +1,18 @@
 from datetime import datetime, timedelta
+
 from aiogram import Bot
 from aiogram.types import URLInputFile
 from apscheduler.triggers.interval import IntervalTrigger
-
-from ..utils.stat_utils import format_visits_day_stat
-from ..schemas.stat import StatSchema
-from .models import Remainder
-from .tasks import send_day_stat, send_reminder
-from ..config.config import PARSE_INTERVAL, SEND_PHOTO_INTERVAL, CHAT_ID, scheduler, timezone, tiny_db, bot, months
-from ..config.dependencies import meme_repo, visit_repo
-from ..config.db_config import db
-from ..utils.parse import parse
-
 from tinydb import Query
 
+from ..config.config import CHAT_ID, PARSE_INTERVAL, SEND_PHOTO_INTERVAL, bot, months, scheduler, timezone, tiny_db
+from ..config.db_config import db
+from ..config.dependencies import meme_repo, visit_repo
+from ..schemas.stat import StatSchema
+from ..utils.parse import parse
+from ..utils.stat_utils import format_visits_day_stat
+from .models import Remainder
+from .tasks import send_day_stat, send_reminder
 
 week_days = {
     "ПН": 0,
@@ -194,7 +193,7 @@ def get_next_call_of_remainders() -> list[Remainder]:
     scheduled = []
     for j in scheduler.get_jobs():
         name = j.args[1]["text"] if j.name == "reminder" else j.name
-        scheduled.append(f"{name} - {j.next_run_time.strftime("%Y-%m-%d %H:%M")}")
+        scheduled.append(f"{name} - {j.next_run_time.strftime('%Y-%m-%d %H:%M')}")
     return scheduled
 
 

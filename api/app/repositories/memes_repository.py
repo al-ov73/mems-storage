@@ -1,13 +1,13 @@
 from datetime import datetime, timedelta
 
 from sqlalchemy import func
-from sqlalchemy.orm import Session, selectinload, contains_eager
+from sqlalchemy.orm import Session, contains_eager, selectinload
 
 from ..models.comment import Comment
 from ..models.like import Like
 from ..models.meme import Meme
 from ..schemas.memes import MemeDbSchema
-from ..schemas.stat import MemesDayStatSchema, StatSchema, SourceStatSchema
+from ..schemas.stat import MemesDayStatSchema, SourceStatSchema, StatSchema
 
 
 class MemesRepository:

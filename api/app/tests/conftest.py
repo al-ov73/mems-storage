@@ -1,17 +1,18 @@
-import pytest
 import os
+
+import pytest
 from dotenv import load_dotenv
 from fastapi.testclient import TestClient
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
-from sqlalchemy_utils import database_exists, create_database
+from sqlalchemy_utils import create_database, database_exists
 
-from ..schemas.memes import MemeSchema
-from .fake.fake_storage_repository import FakeStorageRepository
 from ..config.config import MINIO_API_URL
 from ..config.db_config import Base, get_db
 from ..config.dependencies import get_storage_repo
 from ..main import app
+from ..schemas.memes import MemeSchema
+from .fake.fake_storage_repository import FakeStorageRepository
 
 load_dotenv()
 

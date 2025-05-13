@@ -1,11 +1,10 @@
 import os
 
 import httpx
-from openai import OpenAI
-from gigachat import GigaChat
 from dotenv import load_dotenv
-
 from fastapi import APIRouter, Form
+from gigachat import GigaChat
+from openai import OpenAI
 
 load_dotenv()
 

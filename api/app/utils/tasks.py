@@ -1,13 +1,14 @@
 import logging
 
-import requests
-from ..schemas.messages import SupportMessageSchema
-from fastapi import Request
 import httpx
+import requests
+from fastapi import Request
+
 from ..config import config
 from ..config.db_config import db
 from ..config.dependencies import get_visit_repository
 from ..models.visit import Visit
+from ..schemas.messages import SupportMessageSchema
 from ..schemas.visit import VisitInputSchema
 
 logger = logging.getLogger(__name__)

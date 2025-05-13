@@ -1,4 +1,4 @@
-from .fixtures.test_data import TEST_LABEL, TEST_FILE, TEST_USER
+from .fixtures.test_data import TEST_FILE, TEST_LABEL, TEST_USER
 
 
 def test_labels(

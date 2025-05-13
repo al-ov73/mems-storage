@@ -1,5 +1,6 @@
+from sqlalchemy import case, func
 from sqlalchemy.orm import Session
-from sqlalchemy import func, case
+
 from ..models.visit import Visit
 from ..schemas.stat import VisitsDayStatSchema
 from ..schemas.visit import VisitSchema
