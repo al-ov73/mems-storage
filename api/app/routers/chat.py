@@ -9,7 +9,6 @@ from ..config.dependencies import get_messages_repository
 from ..models.message import Message
 from ..repositories.messages_repository import MessagesRepository
 from ..schemas.messages import MessageSchema
-from ..utils.auth_utils import get_current_user
 from ..utils.chat_utils import ConnectionManager
 
 router = APIRouter()

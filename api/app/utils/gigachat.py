@@ -1,8 +1,6 @@
 import base64
-import shutil
 from dataclasses import dataclass
 
-import requests
 from gigachat import GigaChat
 from gigachat.models import Chat, Messages, MessagesRole
 

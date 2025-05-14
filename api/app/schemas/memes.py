@@ -5,7 +5,6 @@ from pydantic import BaseModel
 from .comments import CommentSchema
 from .labels import LabelSchema
 from .likes import LikeSchema
-from .users import UserSchema
 
 
 class MemeDbSchema(BaseModel):

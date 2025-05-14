@@ -6,7 +6,6 @@ from ..config.dependencies import get_labels_repository, get_memes_repository
 from ..repositories.labels_repository import LabelsRepository
 from ..repositories.memes_repository import MemesRepository
 from ..schemas.memes import MemeDbSchema
-from ..utils.auth_utils import get_current_user
 
 router = APIRouter()
 

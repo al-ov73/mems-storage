@@ -7,7 +7,6 @@ import aiohttp
 import httpx
 from aiohttp import FormData, StreamReader
 
-from ..config import config as config
 from ..config.logger_config import get_logger
 
 # from ..config.redis_config import get_redis

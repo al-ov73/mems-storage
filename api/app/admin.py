@@ -1,7 +1,6 @@
 from datetime import timedelta
-from typing import Annotated
 
-from fastapi import Depends, Request
+from fastapi import Request
 from fastapi.security import OAuth2PasswordBearer
 from sqladmin import ModelView
 from sqladmin.authentication import AuthenticationBackend
@@ -15,7 +14,7 @@ from .models.meme import Meme
 from .models.message import Message
 from .models.user import User
 from .models.visit import Visit
-from .utils.auth_utils import authenticate_user, create_access_token, get_current_user
+from .utils.auth_utils import authenticate_user, create_access_token
 
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="token")
 

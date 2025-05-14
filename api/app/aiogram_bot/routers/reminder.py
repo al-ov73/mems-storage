@@ -1,11 +1,8 @@
-import datetime
-
 from aiogram import Router, types
 from aiogram.filters import Command
 from aiogram.fsm.context import FSMContext
 from aiogram.fsm.state import State, StatesGroup
-from aiogram.types import BufferedInputFile, Message, ReplyKeyboardRemove
-from aiogram.utils.chat_action import ChatActionSender
+from aiogram.types import Message, ReplyKeyboardRemove
 
 from ...config.config import bot, remainder_types, tiny_db
 from ..commands import TelegramCommands

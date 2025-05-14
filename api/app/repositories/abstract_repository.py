@@ -1,7 +1,6 @@
 from abc import ABC, abstractmethod
-from typing import Any, Dict, Generic, List, Optional, Type, TypeVar
+from typing import Generic, List, Optional, Type, TypeVar
 
-from sqlalchemy import func
 from sqlalchemy.orm import Session, joinedload
 
 from ..models.comment import Comment

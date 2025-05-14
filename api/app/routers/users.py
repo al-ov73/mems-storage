@@ -2,9 +2,8 @@ from fastapi import APIRouter, Depends
 from sqlalchemy.orm import Session
 
 from ..config.db_config import get_db
-from ..config.dependencies import get_storage_repo, get_users_repository
+from ..config.dependencies import get_users_repository
 from ..config.logger_config import get_logger
-from ..repositories.storage_repository import BaseStorageRepo
 from ..repositories.users_repository import UsersRepository
 from ..schemas.users import UserSchema
 

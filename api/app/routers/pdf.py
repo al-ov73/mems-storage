@@ -1,13 +1,8 @@
 import io
-import os
-import zipfile
-from io import BytesIO
-from typing import List
 from urllib.parse import quote
 
 from fastapi import APIRouter, File, Form, HTTPException, Request, UploadFile
-from fastapi.responses import FileResponse, HTMLResponse, RedirectResponse, StreamingResponse
-from PyPDF2 import PdfMerger, PdfReader, PdfWriter
+from fastapi.responses import HTMLResponse, StreamingResponse
 
 from ..config.config import templates
 from ..utils.pdf_utils import (

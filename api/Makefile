@@ -25,4 +25,7 @@ black:
 isort:
 		poetry run isort .
 
-format: isort black
+autoflake:
+		poetry run autoflake --remove-all-unused-imports --in-place --recursive .
+
+format: autoflake isort black

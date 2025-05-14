@@ -47,6 +47,7 @@ jinja2 = "^3.1.6"
 pdf2image = "^1.17.0"
 pypdf2 = "^3.0.1"
 pymupdf = "^1.25.5"
+autoflake = "^2.3.1"
 
 
 [tool.poetry.group.dev.dependencies]
