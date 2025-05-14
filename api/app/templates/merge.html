@@ -8,10 +8,10 @@
         <div class="form-group">
             <label>Выберите PDF-файлы для объединения:</label>
             <div class="file-list">
-                {% for pdf in pdf_files %}
+                {% for file in session.files %}
                     <div class="file-item">
-                        <input type="checkbox" id="file_{{ loop.index }}" name="files" value="{{ pdf }}">
-                        <label for="file_{{ loop.index }}">{{ pdf }}</label>
+                        <input type="checkbox" id="file_{{ loop.index }}" name="filenames" value="{{ file.filename }}">
+                        <label for="file_{{ loop.index }}">{{ file.filename }}</label>
                     </div>
                 {% endfor %}
             </div>

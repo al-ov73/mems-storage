@@ -1,14 +1,23 @@
 import io
 import os
+import zipfile
 from io import BytesIO
 from typing import List
+from urllib.parse import quote
 
 from fastapi import APIRouter, File, Form, HTTPException, Request, UploadFile
 from fastapi.responses import FileResponse, HTMLResponse, RedirectResponse, StreamingResponse
 from PyPDF2 import PdfMerger, PdfReader, PdfWriter
 
 from ..config.config import templates
-from ..utils.pdf_utils import convert_pdf_to_images
+from ..utils.pdf_utils import (
+    combine_archives,
+    convert_and_pack,
+    convert_pdf_to_images,
+    get_files_from_session,
+    merge_pdfs,
+    split_pdf,
+)
 
 router = APIRouter()
 
@@ -32,15 +41,19 @@ async def upload_pdf(request: Request, file: UploadFile = File(...)):
     content = await file.read()
     memory_file = io.BytesIO(content)
 
-    previews = convert_pdf_to_images(memory_file.getvalue())[:5]
-    filename = file.filename.rsplit(".")[0]
-    session_data = {
+    file_previews = convert_pdf_to_images(memory_file.getvalue())
+    filename = file.filename
+
+    new_file = {
         "filename": filename,
         "file_content": memory_file.getvalue(),
-        "page_previews": previews,
+        "file_previews": file_previews,
     }
+    files = request.state.session.get("files", [])
+    files.append(new_file)
+    updated_session = {"files": files}
+    request.state.session.update(updated_session)
 
-    request.state.session.update(session_data)
     return templates.TemplateResponse(
         "index.html",
         {
@@ -62,102 +75,93 @@ async def split_page(request: Request):
 
 
 @router.post("/split-pdf")
-async def split_pdf(
+async def split_pdf_page(
     request: Request,
+    original_filename: str = Form(...),
     pages: str = Form(...),
     output_name: str = Form("output.pdf"),
 ):
-    file_content = request.state.session.get("file_content", b"")
+    files = request.state.session.get("files", {})
+    file_content = files.get(original_filename, {}).get("file_content", None)
     if not file_content:
         raise HTTPException(status_code=400, detail="Нет загруженного файла PDF в сессии.")
 
-    page_ranges = []
-    for part in pages.split(","):
-        if "-" in part:
-            start, end = map(int, part.split("-"))
-            page_ranges.extend(range(start - 1, end))
-        else:
-            page_ranges.append(int(part) - 1)
-
-    pdf_reader = PdfReader(BytesIO(file_content))
-    pdf_writer = PdfWriter()
-
-    for page_num in page_ranges:
-        if 0 <= page_num < len(pdf_reader.pages):
-            pdf_writer.add_page(pdf_reader.pages[page_num])
-        else:
-            raise HTTPException(status_code=400, detail=f"Список страниц некорректен ({page_num+1}).")
-
-    output_stream = BytesIO()
-    pdf_writer.write(output_stream)
-    output_stream.seek(0)
+    output_stream = split_pdf(file_content, pages)
 
     return StreamingResponse(
         output_stream,
-        headers={"Content-Disposition": f"attachment; filename={output_name}"},
+        headers={"Content-Disposition": f"attachment; filename={quote(output_name)}"},
         media_type="application/pdf",
     )
 
 
 @router.get("/merge", response_class=HTMLResponse)
 async def merge_page(request: Request):
-    pdf_files = [f for f in os.listdir("uploads") if f.lower().endswith(".pdf")]
-    return templates.TemplateResponse("merge.html", {"request": request, "pdf_files": pdf_files})
+    return templates.TemplateResponse(
+        "merge.html",
+        {
+            "request": request,
+            "session": request.state.session,
+        },
+    )
 
 
 @router.post("/merge-pdfs")
-async def merge_pdfs(files: List[str] = Form(...), output_name: str = Form("merged.pdf")):
-    merger = PdfMerger()
-    output_path = f"uploads/{output_name}"
-
-    for filename in files:
-        file_path = f"uploads/{filename}"
-        merger.append(file_path)
-
-    merger.write(output_path)
-    merger.close()
-
-    return FileResponse(output_path, filename=output_name, media_type="application/pdf")
+async def merge_pdfs_page(request: Request, filenames: list = Form(...), output_name: str = Form("merged.pdf")):
+    session_files = request.state.session.get("files", [])
+    merged_bytes = merge_pdfs(filenames, session_files)
+    return StreamingResponse(
+        merged_bytes,
+        media_type="application/pdf",
+        headers={"Content-Disposition": f"attachment; filename={output_name}"},
+    )
 
 
 @router.get("/convert", response_class=HTMLResponse)
 async def convert_page(request: Request):
-    current_file = request.state.session.get("current_file", "")
-    return templates.TemplateResponse("convert.html", {"request": request, "filename": current_file})
+    return templates.TemplateResponse(
+        "convert.html",
+        {
+            "request": request,
+            "session": request.state.session,
+        },
+    )
 
 
 @router.post("/convert-pdf-to-jpg")
 async def convert_pdf_to_jpg(
     request: Request,
+    filenames: list = Form(...),
     dpi: int = Form(300),
     output_name: str = Form("converted"),
 ):
-    filename = request.state.session.get("current_file", "")
-    if not filename:
-        return RedirectResponse(url="/pdf", status_code=303)
+    requested_files = get_files_from_session(request, filenames)
 
-    input_path = f"uploads/{filename}"
+    individual_archives = []
+    for filename, file_content in requested_files.items():
+        individual_archive = convert_and_pack(filename, file_content, dpi)
+        individual_archives.append(individual_archive)
 
-    # images = convert_from_path(input_path, dpi=dpi)
-    images = []
-    output_dir = "uploads/converted"
-    os.makedirs(output_dir, exist_ok=True)
+    combined_archive = combine_archives(individual_archives)
 
-    output_files = []
-    for i, image in enumerate(images):
-        output_path = f"{output_dir}/{output_name}_{i+1}.jpg"
-        image.save(output_path, "JPEG")
-        output_files.append(output_path)
+    return StreamingResponse(
+        combined_archive,
+        media_type="application/zip",
+        headers={"Content-Disposition": f"attachment; filename={output_name}.zip"},
+    )
 
-    # Create a zip if multiple files
-    if len(output_files) > 1:
-        import zipfile
 
-        zip_path = f"uploads/{output_name}.zip"
-        with zipfile.ZipFile(zip_path, "w") as zipf:
-            for file in output_files:
-                zipf.write(file, os.path.basename(file))
-
-        return FileResponse(zip_path, filename=f"{output_name}.zip", media_type="application/zip")
-    else:
-        return FileResponse(output_files[0], filename=f"{output_name}.jpg", media_type="image/jpeg")
+# {
+#     "files": [
+#         {
+#             "filename": "example.pdf",
+#             "file_content": bytes_object,
+#             "file_previews": [...],
+#         },
+#         {
+#             "filename": "another.pdf",
+#             "file_content": bytes_object,
+#             "file_previews": [...],
+#         }
+#     ]
+# }
