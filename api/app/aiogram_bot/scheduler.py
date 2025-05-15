@@ -212,7 +212,17 @@ def add_parse_tasks() -> None:
 
 async def clean_old_memes() -> None:
     old_memes = await meme_repo.get_old_memes(db=db)
-    print("old_memes", old_memes)
+    for meme in old_memes[:5]:
+        print("----old meme----")
+        print(meme.id)
+        print(meme.created_at)
+        print(meme.checked)
+    print(".......")
+    for meme in old_memes[-5:]:
+        print("----old meme----")
+        print(meme.id)
+        print(meme.created_at)
+        print(meme.checked)        
 
 async def send_photo_periodically():
     random_image = await meme_repo.get_random_meme(db=db)
