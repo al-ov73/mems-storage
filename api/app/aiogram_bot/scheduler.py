@@ -2,6 +2,7 @@ from datetime import datetime, timedelta
 
 from aiogram import Bot
 from aiogram.types import URLInputFile
+from ..config.logger_config import get_logger
 from apscheduler.triggers.interval import IntervalTrigger
 from tinydb import Query
 
@@ -13,6 +14,8 @@ from ..utils.parse import parse
 from ..utils.stat_utils import format_visits_day_stat
 from .models import Remainder
 from .tasks import send_day_stat, send_reminder
+
+logger = get_logger(__name__)
 
 week_days = {
     "ПН": 0,
@@ -211,7 +214,9 @@ def add_parse_tasks() -> None:
     scheduler.add_job(parse, "interval", name="parse_periodically", hours=PARSE_INTERVAL)
 
 async def clean_old_memes() -> None:
+    logger.info("СТАРТ ПОИСКА СТАРЫХ МЕМОВ")
     old_memes = await meme_repo.get_old_memes(db=db)
+    logger.info(f"НАШЕЛ {len(old_memes)} МЕМОВ")
     for meme in old_memes[:5]:
         print("----old meme----")
         print(meme.id)
