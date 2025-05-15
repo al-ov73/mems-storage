@@ -284,7 +284,7 @@ class MemesRepository:
         return memes
 
     @staticmethod
-    async def get_old_memes(
+    async def delete_old_memes(
         db: Session,
         older_then_days: int = 120,
     ) -> list[MemeDbSchema]:
@@ -292,10 +292,10 @@ class MemesRepository:
         Return list of memes older than 4 months from db
         """
         four_months_ago = datetime.now() - timedelta(days=older_then_days)
-        
-        memes = (
-            db.query(Meme)
-            .filter(Meme.created_at < four_months_ago)
-            .all()
-        )
-        return memes
+
+        old_memes = db.query(Meme).filter(Meme.created_at < four_months_ago).all()
+        old_memes_ids = [meme.id for meme in old_memes]
+        for meme in old_memes:
+            db.delete(meme)
+        db.commit()
+        return old_memes_ids

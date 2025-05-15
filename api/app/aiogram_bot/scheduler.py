@@ -2,13 +2,13 @@ from datetime import datetime, timedelta
 
 from aiogram import Bot
 from aiogram.types import URLInputFile
-from ..config.logger_config import get_logger
 from apscheduler.triggers.interval import IntervalTrigger
 from tinydb import Query
 
 from ..config.config import CHAT_ID, PARSE_INTERVAL, SEND_PHOTO_INTERVAL, bot, months, scheduler, timezone, tiny_db
 from ..config.db_config import db
 from ..config.dependencies import meme_repo, visit_repo
+from ..config.logger_config import get_logger
 from ..schemas.stat import StatSchema
 from ..utils.parse import parse
 from ..utils.stat_utils import format_visits_day_stat
@@ -213,21 +213,16 @@ def add_send_tasks() -> None:
 def add_parse_tasks() -> None:
     scheduler.add_job(parse, "interval", name="parse_periodically", hours=PARSE_INTERVAL)
 
+
+async def clean_old_memes_task() -> None:
+    scheduler.add_job(clean_old_memes, "interval", name="clean_old_memes_periodically", hours=12)
+
+
 async def clean_old_memes() -> None:
-    logger.info("СТАРТ ПОИСКА СТАРЫХ МЕМОВ")
-    old_memes = await meme_repo.get_old_memes(db=db)
-    logger.info(f"НАШЕЛ {len(old_memes)} МЕМОВ")
-    for meme in old_memes[:5]:
-        print("----old meme----")
-        print(meme.id)
-        print(meme.created_at)
-        print(meme.checked)
-    print(".......")
-    for meme in old_memes[-5:]:
-        print("----old meme----")
-        print(meme.id)
-        print(meme.created_at)
-        print(meme.checked)        
+    logger.info("Clean_old_memes started")
+    old_memes_ids = await meme_repo.delete_old_memes(db=db)
+    logger.info(f"Deleted {len(old_memes_ids)} memes")
+
 
 async def send_photo_periodically():
     random_image = await meme_repo.get_random_meme(db=db)
