@@ -8,7 +8,7 @@ from .routers.gigachat import gigachat_router
 from .routers.memovoz import memovoz_router
 from .routers.reminder import reminder_router
 from .routers.vacancies.vacancies import vacancies_router
-from .scheduler import add_parse_tasks, add_send_tasks, add_tasks_from_db, send_daystat_every_day
+from .scheduler import add_parse_tasks, add_send_tasks, add_tasks_from_db, clean_old_memes, send_daystat_every_day
 
 dp = Dispatcher()
 dp.include_router(memovoz_router)
@@ -26,6 +26,7 @@ async def start_bot():
             add_tasks_from_db(bot)
             add_send_tasks()
             add_parse_tasks()
+            await clean_old_memes()
             await send_daystat_every_day()
             scheduler.start()
             await bot.set_my_commands(bot_commands)

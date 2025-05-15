@@ -210,6 +210,9 @@ def add_send_tasks() -> None:
 def add_parse_tasks() -> None:
     scheduler.add_job(parse, "interval", name="parse_periodically", hours=PARSE_INTERVAL)
 
+async def clean_old_memes() -> None:
+    old_memes = await meme_repo.get_old_memes(db=db)
+    print("old_memes", old_memes)
 
 async def send_photo_periodically():
     random_image = await meme_repo.get_random_meme(db=db)

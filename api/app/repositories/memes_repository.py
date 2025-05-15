@@ -282,3 +282,20 @@ class MemesRepository:
                 meme.preview = preview
         db.commit()
         return memes
+
+    @staticmethod
+    async def get_old_memes(
+        db: Session,
+        older_then_days: int = 120,
+    ) -> list[MemeDbSchema]:
+        """
+        Return list of memes older than 4 months from db
+        """
+        four_months_ago = datetime.now() - timedelta(days=older_then_days)
+        
+        memes = (
+            db.query(Meme)
+            .filter(Meme.created_at < four_months_ago)
+            .all()
+        )
+        return memes

@@ -102,3 +102,12 @@ footer {
     background: #ecf0f1;
     margin-top: 2rem;
 }
+
+.hover-effect h4 {
+    transition: transform 0.3s ease-in-out, color 0.3s ease-in-out;
+}
+
+.hover-effect:hover h4 {
+    transform: scale(1.1);
+    color: #ff5c00;
+}
