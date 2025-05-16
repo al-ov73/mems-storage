@@ -4,6 +4,7 @@ from sqlalchemy import func
 from sqlalchemy.orm import Session, contains_eager, selectinload
 
 from ..models.comment import Comment
+from ..models.label import LabelMeme
 from ..models.like import Like
 from ..models.meme import Meme
 from ..schemas.memes import MemeDbSchema
@@ -287,15 +288,39 @@ class MemesRepository:
     async def delete_old_memes(
         db: Session,
         older_then_days: int = 120,
-    ) -> list[MemeDbSchema]:
+        batch_size: int = 100,  # Добавляем пакетную обработку для больших объемов
+    ) -> list[int]:
         """
-        Return list of memes older than 4 months from db
+        Delete memes older than specified days and return their IDs.
+        Handles related data (comments, likes, labels) properly.
         """
-        four_months_ago = datetime.now() - timedelta(days=older_then_days)
 
-        old_memes = db.query(Meme).filter(Meme.created_at < four_months_ago).all()
-        old_memes_ids = [meme.id for meme in old_memes]
-        for meme in old_memes:
-            db.delete(meme)
-        db.commit()
-        return old_memes_ids
+        four_months_ago = datetime.now() - timedelta(days=older_then_days)
+        deleted_ids = []
+
+        while True:
+            # Получаем порцию мемов для удаления
+            old_memes = db.query(Meme).filter(Meme.created_at < four_months_ago).limit(batch_size).all()
+
+            if not old_memes:
+                break
+
+            old_memes_ids = [meme.id for meme in old_memes]
+            deleted_ids.extend(old_memes_ids)
+
+            # Удаляем связанные данные
+            # 1. Лайки
+            db.query(Like).filter(Like.meme_id.in_(old_memes_ids)).delete(synchronize_session=False)
+
+            # 2. Комментарии
+            db.query(Comment).filter(Comment.meme_id.in_(old_memes_ids)).delete(synchronize_session=False)
+
+            # 3. Связи с метками (для many-to-many)
+            db.query(LabelMeme).filter(LabelMeme.meme_id.in_(old_memes_ids)).delete(synchronize_session=False)
+
+            # Удаляем сами мемы
+            db.query(Meme).filter(Meme.id.in_(old_memes_ids)).delete(synchronize_session=False)
+
+            db.commit()
+
+        return deleted_ids
