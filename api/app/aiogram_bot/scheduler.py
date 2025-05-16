@@ -215,6 +215,7 @@ def add_parse_tasks() -> None:
 
 
 async def clean_old_memes_task() -> None:
+    await clean_old_memes()
     scheduler.add_job(clean_old_memes, "interval", name="clean_old_memes_periodically", hours=12)
 
 
