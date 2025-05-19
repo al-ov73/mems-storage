@@ -1,13 +1,24 @@
-from datetime import datetime, timedelta
 import os
 import time
-from datetime import timedelta
+from datetime import datetime, timedelta
+
 from aiogram import Bot
 from aiogram.types import URLInputFile
 from apscheduler.triggers.interval import IntervalTrigger
 from tinydb import Query
 
-from ..config.config import CHAT_ID, PARSE_INTERVAL, SEND_PHOTO_INTERVAL, bot, months, scheduler, timezone, tiny_db, PHOTOS_DIR, PREVIEWS_DIR
+from ..config.config import (
+    CHAT_ID,
+    PARSE_INTERVAL,
+    PHOTOS_DIR,
+    PREVIEWS_DIR,
+    SEND_PHOTO_INTERVAL,
+    bot,
+    months,
+    scheduler,
+    timezone,
+    tiny_db,
+)
 from ..config.db_config import db
 from ..config.dependencies import meme_repo, storage_repo, visit_repo
 from ..config.logger_config import get_logger
@@ -232,7 +243,8 @@ async def clean_old_memes() -> None:
 async def remove_not_used_files_task() -> None:
     await clean_old_memes()
     scheduler.add_job(remove_not_used_files, "interval", name="remove_not_used_files", hours=12)
-    
+
+
 async def remove_not_used_files() -> None:
     logger.info("remove_not_used_files started")
 
@@ -261,7 +273,7 @@ async def remove_not_used_files() -> None:
     previews_time = time.perf_counter() - previews_start
     logger.info(f"Deleted {previews_delete_count} previews from {PREVIEWS_DIR} in {previews_time:.4f} seconds")
 
-    
+
 async def send_photo_periodically():
     random_image = await meme_repo.get_random_meme(db=db)
     await bot.send_photo(CHAT_ID, URLInputFile(random_image.link))

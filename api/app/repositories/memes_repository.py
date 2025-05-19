@@ -67,12 +67,7 @@ class MemesRepository:
         """
         Return list of only meme names from db
         """
-        memes = (
-            db.query(Meme.name)
-            .filter_by(checked=True)
-            .order_by(Meme.id.desc())
-            .all()
-        )
+        memes = db.query(Meme.name).filter_by(checked=True).order_by(Meme.id.desc()).all()
         return [meme[0] for meme in memes]
 
     @staticmethod
