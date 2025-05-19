@@ -241,7 +241,7 @@ async def clean_old_memes() -> None:
 
 
 async def remove_not_used_files_task() -> None:
-    await clean_old_memes()
+    await remove_not_used_files()
     scheduler.add_job(remove_not_used_files, "interval", name="remove_not_used_files", hours=12)
 
 
