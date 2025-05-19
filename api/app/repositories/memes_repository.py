@@ -306,7 +306,7 @@ class MemesRepository:
             old_memes_ids = [meme.id for meme in old_memes]
             old_memes_names = [meme.name for meme in old_memes]
             deleted_ids.extend(old_memes_ids)
-            deleted_names.extens(old_memes_names)
+            deleted_names.extend(old_memes_names)
             db.query(Like).filter(Like.meme_id.in_(old_memes_ids)).delete(synchronize_session=False)
             db.query(Comment).filter(Comment.meme_id.in_(old_memes_ids)).delete(synchronize_session=False)
             db.query(LabelMeme).filter(LabelMeme.meme_id.in_(old_memes_ids)).delete(synchronize_session=False)
