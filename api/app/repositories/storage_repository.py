@@ -7,6 +7,7 @@ import aiohttp
 import httpx
 from aiohttp import FormData, StreamReader
 
+from ..config import config
 from ..config.logger_config import get_logger
 
 # from ..config.redis_config import get_redis
@@ -91,11 +92,16 @@ class StorageRepository(BaseStorageRepo):
 
 
 class FSStorageRepository(ABC):
-    def __init__(self, static_path):
-        self.static_path = static_path
+
+    def __init__(self, storage_path: str, previews_path: str = config.PREVIEWS_DIR):
+        self.storage_path = storage_path
+        self.previews_path = previews_path
 
     async def delete_image(self, filename: str) -> str:
-        filepath = f"{self.static_path}/{filename}"
+        filepath = f"{self.storage_path}/{filename}"
         if os.path.exists(filepath):
             os.remove(filepath)
+        preview_filepath = f"{self.previews_path}/{filename}"
+        if os.path.exists(preview_filepath):
+            os.remove(preview_filepath)
         return f"file {filepath} deleted"

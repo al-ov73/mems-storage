@@ -46,9 +46,11 @@ ACCESS_TOKEN_EXPIRE_MINUTES = 120
 
 # Static files directory
 STATIC_DIR = "app/static"
-PHOTOS_DIR = (f"{STATIC_DIR}/photos",)
+PHOTOS_DIR = f"{STATIC_DIR}/photos"
+PREVIEWS_DIR = f"{STATIC_DIR}/previews"
 STATIC_URL = "static"
 PHOTOS_URL = f"{STATIC_URL}/photos"
+PREVIEWS_URL = f"{STATIC_URL}/previews"
 
 # parser config
 API_ID = os.getenv("API_ID")

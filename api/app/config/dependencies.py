@@ -14,6 +14,7 @@ def get_memes_repository():
 
 
 meme_repo = get_memes_repository()
+storage_repo = FSStorageRepository(config.PHOTOS_DIR, config.PREVIEWS_DIR)
 
 
 def get_storage_repo():

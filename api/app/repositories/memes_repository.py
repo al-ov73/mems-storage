@@ -288,7 +288,7 @@ class MemesRepository:
     async def delete_old_memes(
         db: Session,
         older_then_days: int = 120,
-        batch_size: int = 100,  # Добавляем пакетную обработку для больших объемов
+        batch_size: int = 100,
     ) -> list[str]:
         """
         Delete memes older than specified days and return their IDs.
