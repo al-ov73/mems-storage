@@ -1,11 +1,13 @@
 from datetime import datetime, timedelta
-
+import os
+import time
+from datetime import timedelta
 from aiogram import Bot
 from aiogram.types import URLInputFile
 from apscheduler.triggers.interval import IntervalTrigger
 from tinydb import Query
 
-from ..config.config import CHAT_ID, PARSE_INTERVAL, SEND_PHOTO_INTERVAL, bot, months, scheduler, timezone, tiny_db
+from ..config.config import CHAT_ID, PARSE_INTERVAL, SEND_PHOTO_INTERVAL, bot, months, scheduler, timezone, tiny_db, PHOTOS_DIR, PREVIEWS_DIR
 from ..config.db_config import db
 from ..config.dependencies import meme_repo, storage_repo, visit_repo
 from ..config.logger_config import get_logger
@@ -227,6 +229,39 @@ async def clean_old_memes() -> None:
     logger.info(f"Deleted {len(old_memes_names)} memes")
 
 
+async def remove_not_used_files_task() -> None:
+    await clean_old_memes()
+    scheduler.add_job(remove_not_used_files, "interval", name="remove_not_used_files", hours=12)
+    
+async def remove_not_used_files() -> None:
+    logger.info("remove_not_used_files started")
+
+    db_start = time.perf_counter()
+    db_memes_names = await meme_repo.get_meme_names(db=db)
+    db_time = time.perf_counter() - db_start
+    logger.info(f"Fetched {len(db_memes_names)} meme names from DB in {db_time:.4f} seconds")
+
+    memes_delete_count = 0
+    photos_start = time.perf_counter()
+    with os.scandir(PHOTOS_DIR) as entries:
+        for entry in entries:
+            if entry.name not in db_memes_names:
+                storage_repo.delete_image(entry.name)
+                memes_delete_count += 1
+    photos_time = time.perf_counter() - photos_start
+    logger.info(f"Deleted {memes_delete_count} files from {PHOTOS_DIR} in {photos_time:.4f} seconds")
+
+    previews_delete_count = 0
+    previews_start = time.perf_counter()
+    with os.scandir(PREVIEWS_DIR) as entries:
+        for entry in entries:
+            if entry.name not in db_memes_names:
+                storage_repo.delete_image(entry.name)
+                previews_delete_count += 1
+    previews_time = time.perf_counter() - previews_start
+    logger.info(f"Deleted {previews_delete_count} previews from {PREVIEWS_DIR} in {previews_time:.4f} seconds")
+
+    
 async def send_photo_periodically():
     random_image = await meme_repo.get_random_meme(db=db)
     await bot.send_photo(CHAT_ID, URLInputFile(random_image.link))

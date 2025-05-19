@@ -61,6 +61,21 @@ class MemesRepository:
         return memes
 
     @staticmethod
+    async def get_meme_names(
+        db: Session,
+    ) -> list[str]:
+        """
+        Return list of only meme names from db
+        """
+        memes = (
+            db.query(Meme.name)
+            .filter_by(checked=True)
+            .order_by(Meme.id.desc())
+            .all()
+        )
+        return [meme[0] for meme in memes]
+
+    @staticmethod
     async def get_not_checked_memes(
         skip: int,
         limit: int,
