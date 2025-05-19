@@ -17,3 +17,4 @@ class MemeDbSchema(BaseModel):
     comments: list[CommentSchema]
     published: bool
     checked: bool
+    name: str

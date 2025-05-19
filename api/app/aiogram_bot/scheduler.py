@@ -7,7 +7,7 @@ from tinydb import Query
 
 from ..config.config import CHAT_ID, PARSE_INTERVAL, SEND_PHOTO_INTERVAL, bot, months, scheduler, timezone, tiny_db
 from ..config.db_config import db
-from ..config.dependencies import meme_repo, visit_repo
+from ..config.dependencies import get_storage_repo, meme_repo, visit_repo
 from ..config.logger_config import get_logger
 from ..schemas.stat import StatSchema
 from ..utils.parse import parse
@@ -221,8 +221,11 @@ async def clean_old_memes_task() -> None:
 
 async def clean_old_memes() -> None:
     logger.info("Clean_old_memes started")
-    old_memes_ids = await meme_repo.delete_old_memes(db=db)
-    logger.info(f"Deleted {len(old_memes_ids)} memes")
+    storage_repo = get_storage_repo()
+    old_memes_names = await meme_repo.delete_old_memes(db=db)
+    for name in old_memes_names:
+        await storage_repo.delete_image(name)
+    logger.info(f"Deleted {len(old_memes_names)} memes")
 
 
 async def send_photo_periodically():

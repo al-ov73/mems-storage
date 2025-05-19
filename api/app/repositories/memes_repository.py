@@ -289,38 +289,29 @@ class MemesRepository:
         db: Session,
         older_then_days: int = 120,
         batch_size: int = 100,  # Добавляем пакетную обработку для больших объемов
-    ) -> list[int]:
+    ) -> list[str]:
         """
         Delete memes older than specified days and return their IDs.
         Handles related data (comments, likes, labels) properly.
         """
-
         four_months_ago = datetime.now() - timedelta(days=older_then_days)
         deleted_ids = []
-
+        deleted_names = []
         while True:
-            # Получаем порцию мемов для удаления
             old_memes = db.query(Meme).filter(Meme.created_at < four_months_ago).limit(batch_size).all()
 
             if not old_memes:
                 break
 
             old_memes_ids = [meme.id for meme in old_memes]
+            old_memes_names = [meme.name for meme in old_memes]
             deleted_ids.extend(old_memes_ids)
-
-            # Удаляем связанные данные
-            # 1. Лайки
+            deleted_names.extens(old_memes_names)
             db.query(Like).filter(Like.meme_id.in_(old_memes_ids)).delete(synchronize_session=False)
-
-            # 2. Комментарии
             db.query(Comment).filter(Comment.meme_id.in_(old_memes_ids)).delete(synchronize_session=False)
-
-            # 3. Связи с метками (для many-to-many)
             db.query(LabelMeme).filter(LabelMeme.meme_id.in_(old_memes_ids)).delete(synchronize_session=False)
-
-            # Удаляем сами мемы
             db.query(Meme).filter(Meme.id.in_(old_memes_ids)).delete(synchronize_session=False)
 
             db.commit()
 
-        return deleted_ids
+        return deleted_names
