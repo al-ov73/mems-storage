@@ -1,5 +1,6 @@
 import zipfile
 from io import BytesIO
+from typing import Dict
 
 import fitz
 from fastapi import HTTPException, Request
@@ -7,11 +8,12 @@ from PIL import Image
 from PyPDF2 import PdfMerger, PdfReader, PdfWriter
 
 
-def convert_pdf_to_images(pdf_bytes, quality=50):
+def convert_pdf_to_images(pdf_bytes: bytes, quality: int = 50) -> list[bytes]:
     """
-    Конвертирует страницы PDF в список байтов изображений с пониженным качеством (JPEG).
-    :param pdf_bytes: Байтовые данные PDF-файла.
-    :param quality: Уровень качества JPEG (0–100).
+    Конвертирует страницы PDF в список байтов изображений JPEG.
+    :param pdf_bytes: Байтовые данные PDF-файла
+    :param quality: Уровень качества JPEG (0-100)
+    :return: Список байтовых строк с изображениями
     """
     pdf_document = fitz.open(stream=BytesIO(pdf_bytes))
     images = []
@@ -26,71 +28,131 @@ def convert_pdf_to_images(pdf_bytes, quality=50):
     return images
 
 
-def split_pdf(file_content: bytes, pages: str) -> BytesIO:
+def parse_page_ranges(pages: str) -> list[int]:
+    """Парсит строку с диапазонами страниц в список номеров страниц"""
     page_ranges = []
     for part in pages.split(","):
+        part = part.strip()
         if "-" in part:
             start, end = map(int, part.split("-"))
-            page_ranges.extend(range(start - 1, end))
+            page_ranges.extend(range(start - 1, end))  # -1 для 0-based индекса
         else:
             page_ranges.append(int(part) - 1)
+    return sorted(list(set(page_ranges)))  # Удаляем дубликаты и сортируем
 
-    pdf_reader = PdfReader(BytesIO(file_content))
-    pdf_writer = PdfWriter()
 
-    for page_num in page_ranges:
-        if 0 <= page_num < len(pdf_reader.pages):
-            pdf_writer.add_page(pdf_reader.pages[page_num])
-        else:
-            raise HTTPException(status_code=400, detail=f"Список страниц некорректен ({page_num+1}).")
+def split_pdf(file_content: bytes, pages: str) -> BytesIO:
+    """
+    Разделяет PDF по заданным страницам
+    :param file_content: Байтовое содержимое PDF
+    :param pages: Строка с номерами страниц (например, "1-3,5,7-9")
+    :return: BytesIO поток с результирующим PDF
+    :raises HTTPException: При ошибках обработки
+    """
+    try:
+        page_numbers = parse_page_ranges(pages)
+    except ValueError:
+        raise HTTPException(status_code=400, detail="Некорректный формат номеров страниц")
 
-    output_stream = BytesIO()
-    pdf_writer.write(output_stream)
-    output_stream.seek(0)
-    return output_stream
+    try:
+        pdf_reader = PdfReader(BytesIO(file_content))
+        pdf_writer = PdfWriter()
+
+        for page_num in page_numbers:
+            if 0 <= page_num < len(pdf_reader.pages):
+                pdf_writer.add_page(pdf_reader.pages[page_num])
+            else:
+                raise HTTPException(
+                    status_code=400,
+                    detail=f"Страница {page_num + 1} не существует в документе"
+                )
+
+        output_stream = BytesIO()
+        pdf_writer.write(output_stream)
+        output_stream.seek(0)
+        return output_stream
+    except Exception as e:
+        raise HTTPException(
+            status_code=500,
+            detail=f"Ошибка при обработке PDF: {str(e)}"
+        )
 
 
 def merge_pdfs(filenames: list[str], session_files: dict) -> BytesIO:
-    requested_files = {}
-    for filename in filenames:
-        found = next((f for f in session_files if f["filename"] == filename), None)
-        if found:
-            requested_files[filename] = found["file_content"]
-        else:
-            raise HTTPException(status_code=404, detail=f"Файл '{filename}' не найден!")
-
+    """
+    Объединяет несколько PDF из сессии в один
+    :param filenames: Список имен файлов для объединения
+    :param session_files: Словарь файлов из сессии {filename: file_data}
+    :return: BytesIO поток с объединенным PDF
+    :raises HTTPException: Если файлы не найдены
+    """
     merger = PdfMerger()
-    for filename, file_content in requested_files.items():
-        reader = PdfReader(BytesIO(file_content))
-        merger.append(reader)
+    output = BytesIO()
 
-    # Генерируем выходной поток байтов
-    merged_bytes = BytesIO()
-    merger.write(merged_bytes)
-    merged_bytes.seek(0)
-    return merged_bytes
+    try:
+        # Проверяем наличие всех файлов
+        missing_files = [f for f in filenames if f not in session_files]
+        if missing_files:
+            raise HTTPException(
+                status_code=404,
+                detail=f"Файлы не найдены: {', '.join(missing_files)}"
+            )
+
+        # Добавляем файлы в merger
+        for filename in filenames:
+            file_data = session_files[filename]
+            merger.append(BytesIO(file_data["file_content"]))
+
+        merger.write(output)
+        output.seek(0)
+        return output
+    except Exception as e:
+        raise HTTPException(
+            status_code=500,
+            detail=f"Ошибка при объединении PDF: {str(e)}"
+        )
+    finally:
+        merger.close()
 
 
-def get_files_from_session(request: Request, filenames: list) -> dict[str, bytes]:
+def get_files_from_session(request: Request, filenames: list[str]) -> Dict[str, bytes]:
     """
-    Получает файлы из сессии по указанным именам.
+    Получает файлы из сессии по именам
+    :param request: FastAPI Request объект
+    :param filenames: Список имен файлов
+    :return: Словарь {имя_файла: содержимое_файла}
+    :raises HTTPException: Если файлы не найдены
     """
-    session_files = request.state.session.get("files", [])
-    requested_files = {}
+    session_files = request.state.session.get("files", {})
+    result = {}
+
     for filename in filenames:
-        found = next((f for f in session_files if f["filename"] == filename), None)
-        if found:
-            requested_files[filename] = found["file_content"]
-        else:
-            raise HTTPException(status_code=404, detail=f"Файл '{filename}' не найден!")
-    return requested_files
+        if filename not in session_files:
+            raise HTTPException(
+                status_code=404,
+                detail=f"Файл '{filename}' не найден в сессии"
+            )
+
+        file_content = session_files[filename].get("file_content")
+        if not file_content:
+            raise HTTPException(
+                status_code=400,
+                detail=f"Отсутствует содержимое файла '{filename}'"
+            )
+
+        result[filename] = file_content
+
+    return result
 
 
 def convert_pdf_to_jpeg(file_content: bytes, dpi: int = 300) -> list[Image.Image]:
     """
-    Конвертирует PDF-файл в список изображений JPEG.
+    Конвертирует PDF в список изображений JPEG
+    :param file_content: Байтовое содержимое PDF
+    :param dpi: Разрешение изображений
+    :return: Список объектов PIL.Image
     """
-    doc = fitz.open(stream=file_content)
+    doc = fitz.open(stream=BytesIO(file_content))
     images = []
     for page_num in range(doc.page_count):
         page = doc.load_page(page_num)
@@ -102,39 +164,46 @@ def convert_pdf_to_jpeg(file_content: bytes, dpi: int = 300) -> list[Image.Image
 
 def pack_images_into_zip(images: list[Image.Image], prefix: str) -> BytesIO:
     """
-    Пакует изображения в ZIP-архив с префиксом для имен файлов.
+    Упаковывает изображения в ZIP-архив
+    :param images: Список изображений PIL.Image
+    :param prefix: Префикс для имен файлов
+    :return: BytesIO поток с ZIP-архивом
     """
     buffer = BytesIO()
-    with zipfile.ZipFile(buffer, mode="w") as zf:
-        for idx, img in enumerate(images):
-            img_byte_arr = BytesIO()
-            img.save(img_byte_arr, format="JPEG")
-            zf.writestr(f"{prefix}_{idx}.jpg", img_byte_arr.getvalue())
+    with zipfile.ZipFile(buffer, "w") as zf:
+        for idx, img in enumerate(images, start=1):
+            img_bytes = BytesIO()
+            img.save(img_bytes, format="JPEG", quality=85)
+            zf.writestr(f"{prefix}_page_{idx}.jpg", img_bytes.getvalue())
     buffer.seek(0)
     return buffer
 
 
 def convert_and_pack(filename: str, file_content: bytes, dpi: int = 300) -> BytesIO:
     """
-    Конвертирует PDF-файл в JPEG и упаковывает в ZIP-архив.
+    Конвертирует PDF в JPEG и упаковывает в ZIP
+    :param filename: Имя исходного файла
+    :param file_content: Байтовое содержимое PDF
+    :param dpi: Разрешение изображений
+    :return: BytesIO поток с ZIP-архивом
     """
-    doc = fitz.open(stream=file_content)
-    images = []
-    for page_num in range(doc.page_count):
-        page = doc.load_page(page_num)
-        pixmap = page.get_pixmap(dpi=dpi)
-        img = Image.frombytes("RGB", [pixmap.width, pixmap.height], pixmap.samples)
-        images.append(img)
-    return pack_images_into_zip(images, filename.split(".")[0])
+    images = convert_pdf_to_jpeg(file_content, dpi)
+    prefix = filename.rsplit(".", 1)[0]  # Удаляем расширение
+    return pack_images_into_zip(images, prefix)
 
 
 def combine_archives(individual_archives: list[BytesIO]) -> BytesIO:
     """
-    Объединяет отдельные ZIP-архивы в один общий архив.
+    Объединяет несколько ZIP-архивов в один
+    :param individual_archives: Список BytesIO потоков с ZIP-архивами
+    :return: BytesIO поток с объединенным ZIP-архивом
     """
     buffer = BytesIO()
-    with zipfile.ZipFile(buffer, mode="w") as zf:
-        for idx, archive in enumerate(individual_archives):
-            zf.writestr(f"archive_{idx}.zip", archive.getvalue())
+    with zipfile.ZipFile(buffer, "w") as zf:
+        for idx, archive in enumerate(individual_archives, start=1):
+            archive.seek(0)
+            with zipfile.ZipFile(archive) as src_zip:
+                for name in src_zip.namelist():
+                    zf.writestr(f"file_{idx}/{name}", src_zip.read(name))
     buffer.seek(0)
     return buffer

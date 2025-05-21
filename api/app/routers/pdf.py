@@ -44,10 +44,10 @@ async def upload_pdf(request: Request, file: UploadFile = File(...)):
         "file_content": memory_file.getvalue(),
         "file_previews": file_previews,
     }
-    files = request.state.session.get("files", [])
-    files.append(new_file)
-    updated_session = {"files": files}
-    request.state.session.update(updated_session)
+
+    files = request.state.session.get("files", {})  # Теперь это словарь
+    files[filename] = new_file  # Используем имя файла как ключ
+    request.state.session["files"] = files  # Обновляем сессию
 
     return templates.TemplateResponse(
         "index.html",
@@ -56,7 +56,6 @@ async def upload_pdf(request: Request, file: UploadFile = File(...)):
             "session": request.state.session,
         },
     )
-
 
 @router.get("/split", response_class=HTMLResponse)
 async def split_page(request: Request):
@@ -71,18 +70,54 @@ async def split_page(request: Request):
 
 @router.post("/split-pdf")
 async def split_pdf_page(
-    request: Request,
-    original_filename: str = Form(...),
-    pages: str = Form(...),
-    output_name: str = Form("output.pdf"),
+        request: Request,
+        original_filename: str = Form(...),
+        pages: str = Form(...),
+        output_name: str = Form("output.pdf"),
 ):
+    """
+    Обрабатывает запрос на разделение PDF
+
+    Args:
+        request: FastAPI Request объект
+        original_filename: Имя исходного файла из формы
+        pages: Строка с номерами страниц для извлечения
+        output_name: Имя результирующего файла
+
+    Returns:
+        StreamingResponse: Ответ с PDF файлом
+    """
+    # Получаем файлы из сессии
     files = request.state.session.get("files", {})
-    file_content = files.get(original_filename, {}).get("file_content", None)
+
+    # Проверяем наличие файла
+    if original_filename not in files:
+        raise HTTPException(
+            status_code=400,
+            detail="Запрошенный файл не найден в сессии"
+        )
+
+    # Получаем содержимое файла
+    file_data = files[original_filename]
+    file_content = file_data.get("file_content")
     if not file_content:
-        raise HTTPException(status_code=400, detail="Нет загруженного файла PDF в сессии.")
+        raise HTTPException(
+            status_code=400,
+            detail="Отсутствует содержимое PDF файла"
+        )
 
-    output_stream = split_pdf(file_content, pages)
+    # Используем нашу функцию для разделения PDF
+    try:
+        output_stream = split_pdf(file_content, pages)
+    except HTTPException as he:
+        raise he
+    except Exception as e:
+        raise HTTPException(
+            status_code=500,
+            detail=f"Внутренняя ошибка сервера: {str(e)}"
+        )
 
+    # Возвращаем результат
     return StreamingResponse(
         output_stream,
         headers={"Content-Disposition": f"attachment; filename={quote(output_name)}"},

@@ -1,13 +1,108 @@
-{% macro pdf_preview(page_previews) %}
-    <div class="container">
+{% macro pdf_preview(page_previews, filename) %}
+    <div class="preview-container">
         {%- if page_previews %}
-        <h2>Предпросмотр страниц:</h2>
-        <div class="previews">
+        <h2>Предпросмотр страниц (наведите для увеличения):</h2>
+        <div class="previews-grid" id="previews_{{ filename|replace('.', '_') }}">
             {% for preview in page_previews %}
-                <span class="page-number">Стр. {{ loop.index }}</span>
-                <img src="data:image/png;base64,{{preview|b64encode}}" alt="Page Preview" style="max-width: 100px; max-height: 100px;">
+                <div class="preview-item" data-page="{{ loop.index }}" data-filename="{{ filename|replace('.', '_') }}">
+                    <span class="page-badge">Стр. {{ loop.index }}</span>
+                    <div class="image-container">
+                        <img src="data:image/jpeg;base64,{{ preview|b64encode }}"
+                             alt="Page {{ loop.index }}"
+                             class="preview-image">
+                    </div>
+                </div>
             {% endfor %}
         </div>
+        <input type="hidden" id="selected_pages_{{ filename|replace('.', '_') }}" name="pages" value="">
         {%- endif %}
     </div>
+
+    <style>
+    .preview-container {
+        margin: 20px 0;
+        position: relative;
+    }
+
+    .previews-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+        gap: 15px;
+        margin-top: 15px;
+    }
+
+    .preview-item {
+        position: relative;
+        cursor: pointer;
+        transition: all 0.2s ease;
+        border-radius: 5px;
+        height: 200px;
+    }
+
+    .image-container {
+        position: relative;
+        width: 100%;
+        height: 100%;
+        overflow: visible;
+    }
+
+    .preview-image {
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        object-fit: contain;
+        transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+        transform-origin: center center;
+        z-index: 1;
+        box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    }
+
+    .preview-item:hover .preview-image {
+        transform: scale(2);
+        z-index: 100;
+        box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+    }
+
+    .page-badge {
+        position: absolute;
+        top: 5px;
+        left: 5px;
+        background: rgba(0,0,0,0.7);
+        color: white;
+        padding: 3px 8px;
+        border-radius: 10px;
+        font-size: 12px;
+        z-index: 10;
+    }
+
+    .preview-item.selected .preview-image {
+        border: 3px solid #4CAF50;
+    }
+
+    .preview-item.selected:hover .preview-image {
+        border-color: #45a049;
+    }
+    </style>
+
+    <script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const filename = "{{ filename|replace('.', '_') }}";
+        const container = document.getElementById(`previews_${filename}`);
+
+        if (container) {
+            container.querySelectorAll('.preview-item').forEach(item => {
+                item.addEventListener('click', function() {
+                    this.classList.toggle('selected');
+                    updateSelectedPages(filename);
+                });
+            });
+        }
+
+        function updateSelectedPages(filename) {
+            const selectedItems = document.querySelectorAll(`#previews_${filename} .preview-item.selected`);
+            const pages = Array.from(selectedItems).map(item => item.dataset.page);
+            document.getElementById(`selected_pages_${filename}`).value = pages.join(',');
+        }
+    });
+    </script>
 {% endmacro %}
