@@ -62,20 +62,14 @@ def split_pdf(file_content: bytes, pages: str) -> BytesIO:
             if 0 <= page_num < len(pdf_reader.pages):
                 pdf_writer.add_page(pdf_reader.pages[page_num])
             else:
-                raise HTTPException(
-                    status_code=400,
-                    detail=f"Страница {page_num + 1} не существует в документе"
-                )
+                raise HTTPException(status_code=400, detail=f"Страница {page_num + 1} не существует в документе")
 
         output_stream = BytesIO()
         pdf_writer.write(output_stream)
         output_stream.seek(0)
         return output_stream
     except Exception as e:
-        raise HTTPException(
-            status_code=500,
-            detail=f"Ошибка при обработке PDF: {str(e)}"
-        )
+        raise HTTPException(status_code=500, detail=f"Ошибка при обработке PDF: {str(e)}")
 
 
 def merge_pdfs(filenames: list[str], session_files: dict) -> BytesIO:
@@ -93,10 +87,7 @@ def merge_pdfs(filenames: list[str], session_files: dict) -> BytesIO:
         # Проверяем наличие всех файлов
         missing_files = [f for f in filenames if f not in session_files]
         if missing_files:
-            raise HTTPException(
-                status_code=404,
-                detail=f"Файлы не найдены: {', '.join(missing_files)}"
-            )
+            raise HTTPException(status_code=404, detail=f"Файлы не найдены: {', '.join(missing_files)}")
 
         # Добавляем файлы в merger
         for filename in filenames:
@@ -107,10 +98,7 @@ def merge_pdfs(filenames: list[str], session_files: dict) -> BytesIO:
         output.seek(0)
         return output
     except Exception as e:
-        raise HTTPException(
-            status_code=500,
-            detail=f"Ошибка при объединении PDF: {str(e)}"
-        )
+        raise HTTPException(status_code=500, detail=f"Ошибка при объединении PDF: {str(e)}")
     finally:
         merger.close()
 
@@ -128,17 +116,11 @@ def get_files_from_session(request: Request, filenames: list[str]) -> Dict[str, 
 
     for filename in filenames:
         if filename not in session_files:
-            raise HTTPException(
-                status_code=404,
-                detail=f"Файл '{filename}' не найден в сессии"
-            )
+            raise HTTPException(status_code=404, detail=f"Файл '{filename}' не найден в сессии")
 
         file_content = session_files[filename].get("file_content")
         if not file_content:
-            raise HTTPException(
-                status_code=400,
-                detail=f"Отсутствует содержимое файла '{filename}'"
-            )
+            raise HTTPException(status_code=400, detail=f"Отсутствует содержимое файла '{filename}'")
 
         result[filename] = file_content
 
@@ -207,3 +189,36 @@ def combine_archives(individual_archives: list[BytesIO]) -> BytesIO:
                     zf.writestr(f"file_{idx}/{name}", src_zip.read(name))
     buffer.seek(0)
     return buffer
+
+
+def rotate_pages_in_pdf(file_content: bytes, rotations: list[tuple[int, int]]) -> BytesIO:
+    """
+    Поворачивает указанные страницы PDF на указанные углы
+    :param file_content: Байтовое содержимое PDF
+    :param rotations: Список кортежей (номер_страницы, угол_поворота)
+                     где номер_страницы начинается с 1 (1-based)
+                     угол_поворота может быть 0, 90, 180 или 270 градусов
+    :return: BytesIO поток с результатом
+    """
+    try:
+        reader = PdfReader(BytesIO(file_content))
+        writer = PdfWriter()
+
+        # Создаем словарь для быстрого доступа к углам поворота
+        rotations_dict = {page_num: angle for page_num, angle in rotations}
+
+        for i, page in enumerate(reader.pages):
+            page_num = i + 1  # Преобразуем в 1-based индекс
+            if page_num in rotations_dict:
+                angle = rotations_dict[page_num]
+                if angle != 0:  # Поворачиваем только если угол не 0
+                    page.rotate(angle)
+
+            writer.add_page(page)
+
+        output_stream = BytesIO()
+        writer.write(output_stream)
+        output_stream.seek(0)
+        return output_stream
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Ошибка при повороте страниц: {str(e)}")

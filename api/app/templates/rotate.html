@@ -1,0 +1,161 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container">
+    <h2>Поворот страниц PDF</h2>
+
+    {% if session.files %}
+        {% for filename, file in session.files.items() %}
+            <div class="file-container">
+                <h3>{{ file.filename }}</h3>
+                
+                <!-- Форма для отправки данных -->
+                <form action="/pdf/rotate-pdf" method="post" id="rotate-form-{{ filename|replace('.', '_') }}">
+                    <input type="hidden" name="original_filename" value="{{ file.filename }}">
+                    <input type="hidden" name="output_name" value="rotated_{{ file.filename }}">
+
+                    <!-- Поле для хранения информации о выбранных страницах и углах -->
+                    <input type="hidden" name="pages_and_angles" id="pages_and_angles_{{ filename|replace('.', '_') }}">
+
+                    <!-- Предпросмотр страниц -->
+                    {% from 'preview.html' import pdf_preview %}
+                    {{ pdf_preview(file.file_previews, file.filename) }}
+
+                    <button type="submit" class="btn">Применить повороты</button>
+                </form>
+            </div>
+        {% endfor %}
+    {% else %}
+        <a href="/pdf/" class="hover-effect"><h4>Загрузите Ваш PDF</h4></a>
+    {% endif %}
+</div>
+
+<!-- Скрипт для обновления полей -->
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+    // Обработка всех форм на странице
+    document.querySelectorAll('[id^="rotate-form-"]').forEach(form => {
+        const filename = form.id.replace('rotate-form-', '');
+        const pagesAndAnglesField = document.getElementById(`pages_and_angles_${filename}`);
+        let anglesData = {};
+
+        // Инициализация данных для всех страниц
+        form.querySelectorAll('.preview-item').forEach(item => {
+            const pageNumber = item.dataset.page;
+            anglesData[pageNumber] = 0; // По умолчанию угол поворота 0
+            item.dataset.angle = '0';
+            
+            // Добавляем индикатор угла поворота
+            const angleBadge = document.createElement('span');
+            angleBadge.className = 'angle-badge';
+            angleBadge.textContent = '0°';
+            item.querySelector('.image-container').appendChild(angleBadge);
+        });
+
+        // Обработка кликов по страницам
+        form.querySelectorAll('.preview-item').forEach(item => {
+            item.addEventListener('click', (e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                
+                const pageNumber = item.dataset.page;
+                const currentAngle = parseInt(item.dataset.angle) || 0;
+                const newAngle = (currentAngle + 90) % 360;
+                
+                item.dataset.angle = newAngle.toString();
+                item.querySelector('.angle-badge').textContent = `${newAngle}°`;
+                
+                // Обновляем данные для этой страницы
+                anglesData[pageNumber] = newAngle;
+                
+                // Обновляем скрытое поле формы
+                pagesAndAnglesField.value = JSON.stringify(anglesData);
+                
+                // Визуальный эффект поворота
+                const img = item.querySelector('.preview-image');
+                img.style.transform = `rotate(${newAngle}deg)`;
+            });
+        });
+
+        // Обработка отправки формы
+        form.addEventListener('submit', (e) => {
+            // Убедимся, что данные актуальны
+            pagesAndAnglesField.value = JSON.stringify(anglesData);
+            
+            if (Object.values(anglesData).every(angle => angle === 0)) {
+                e.preventDefault();
+                alert('Пожалуйста, выберите страницы и установите углы поворота перед отправкой.');
+                return;
+            }
+            
+            console.log('Отправляемые данные:', pagesAndAnglesField.value);
+        });
+    });
+});
+</script>
+
+<style>
+.file-container {
+    margin-bottom: 30px;
+    padding: 20px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    background-color: #f9f9f9;
+}
+
+.preview-item {
+    position: relative;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    border-radius: 5px;
+    height: 200px;
+    margin-bottom: 10px;
+    overflow: hidden;
+}
+
+.image-container {
+    position: relative;
+    width: 100%;
+    height: 100%;
+}
+
+.preview-image {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    transition: transform 0.3s ease;
+}
+
+.angle-badge {
+    position: absolute;
+    bottom: 5px;
+    right: 5px;
+    background: rgba(0,0,0,0.7);
+    color: white;
+    padding: 3px 8px;
+    border-radius: 10px;
+    font-size: 12px;
+    z-index: 10;
+}
+
+.btn-primary {
+    background-color: #4CAF50;
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 16px;
+    margin-top: 15px;
+}
+
+.btn-primary:hover {
+    background-color: #45a049;
+}
+
+.hover-effect:hover {
+    color: #4CAF50;
+    text-decoration: underline;
+}
+</style>
+{% endblock %}

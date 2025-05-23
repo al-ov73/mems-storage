@@ -1,4 +1,5 @@
 import io
+import json
 from urllib.parse import quote
 
 from fastapi import APIRouter, File, Form, HTTPException, Request, UploadFile
@@ -11,6 +12,7 @@ from ..utils.pdf_utils import (
     convert_pdf_to_images,
     get_files_from_session,
     merge_pdfs,
+    rotate_pages_in_pdf,
     split_pdf,
 )
 
@@ -57,6 +59,7 @@ async def upload_pdf(request: Request, file: UploadFile = File(...)):
         },
     )
 
+
 @router.get("/split", response_class=HTMLResponse)
 async def split_page(request: Request):
     return templates.TemplateResponse(
@@ -70,10 +73,10 @@ async def split_page(request: Request):
 
 @router.post("/split-pdf")
 async def split_pdf_page(
-        request: Request,
-        original_filename: str = Form(...),
-        pages: str = Form(...),
-        output_name: str = Form("output.pdf"),
+    request: Request,
+    original_filename: str = Form(...),
+    pages: str = Form(...),
+    output_name: str = Form("output.pdf"),
 ):
     """
     Обрабатывает запрос на разделение PDF
@@ -92,19 +95,13 @@ async def split_pdf_page(
 
     # Проверяем наличие файла
     if original_filename not in files:
-        raise HTTPException(
-            status_code=400,
-            detail="Запрошенный файл не найден в сессии"
-        )
+        raise HTTPException(status_code=400, detail="Запрошенный файл не найден в сессии")
 
     # Получаем содержимое файла
     file_data = files[original_filename]
     file_content = file_data.get("file_content")
     if not file_content:
-        raise HTTPException(
-            status_code=400,
-            detail="Отсутствует содержимое PDF файла"
-        )
+        raise HTTPException(status_code=400, detail="Отсутствует содержимое PDF файла")
 
     # Используем нашу функцию для разделения PDF
     try:
@@ -112,10 +109,7 @@ async def split_pdf_page(
     except HTTPException as he:
         raise he
     except Exception as e:
-        raise HTTPException(
-            status_code=500,
-            detail=f"Внутренняя ошибка сервера: {str(e)}"
-        )
+        raise HTTPException(status_code=500, detail=f"Внутренняя ошибка сервера: {str(e)}")
 
     # Возвращаем результат
     return StreamingResponse(
@@ -181,17 +175,59 @@ async def convert_pdf_to_jpg(
     )
 
 
-# {
-#     "files": [
-#         {
-#             "filename": "example.pdf",
-#             "file_content": bytes_object,
-#             "file_previews": [...],
-#         },
-#         {
-#             "filename": "another.pdf",
-#             "file_content": bytes_object,
-#             "file_previews": [...],
-#         }
-#     ]
-# }
+@router.get("/rotate", response_class=HTMLResponse)
+async def rotate_page(request: Request):
+    return templates.TemplateResponse(
+        "rotate.html",
+        {"request": request, "session": request.state.session},
+    )
+
+
+@router.post("/rotate-pdf")
+async def rotate_pdf_pages(
+    request: Request,
+    original_filename: str = Form(...),
+    pages_and_angles: str = Form(...),
+    output_name: str = Form("rotated.pdf"),
+):
+    """
+    Обрабатывает запрос на поворот страниц PDF
+    """
+    # Проверка наличия обязательных данных
+    if not pages_and_angles or pages_and_angles.strip() == "":
+        raise HTTPException(status_code=400, detail="Необходимо выбрать страницы и установить углы поворота.")
+
+    # Парсим JSON-данные
+    try:
+        pages_and_angles_dict = json.loads(pages_and_angles)
+    except json.JSONDecodeError:
+        raise HTTPException(status_code=400, detail="Неправильный формат JSON")
+
+    # Получаем файлы из сессии
+    files = request.state.session.get("files", {})
+
+    # Проверяем наличие файла
+    if original_filename not in files:
+        raise HTTPException(status_code=400, detail="Запрошенный файл не найден в сессии")
+
+    # Получаем содержимое файла
+    file_data = files[original_filename]
+    file_content = file_data.get("file_content")
+    if not file_content:
+        raise HTTPException(status_code=400, detail="Отсутствует содержимое PDF файла")
+
+    # Преобразуем данные в нужный формат
+    rotations = [(int(page), angle) for page, angle in pages_and_angles_dict.items() if angle != 0]
+
+    # Применяем поворот страниц
+    try:
+        rotated_pdf = rotate_pages_in_pdf(file_content, rotations)
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+
+    # Возвращаем результат
+    return StreamingResponse(
+        rotated_pdf,
+        headers={"Content-Disposition": f"attachment; filename={output_name}"},
+        media_type="application/pdf",
+    )
