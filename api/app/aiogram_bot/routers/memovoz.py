@@ -37,17 +37,13 @@ async def parse_callback(callback_query: types.CallbackQuery):
 @memovoz_router.callback_query(lambda c: c.data == "stat")
 async def stat_command(callback_query: types.CallbackQuery):
     day_stat = await meme_repo.get_published_stat(db=db)
-    folder_size = get_folder_size(f"{STATIC_DIR}/photos")
     days_remain = day_stat.not_published / 24
     day_stats = await meme_repo.get_memes_count_by_day(db=db)
     formated_day_stat = await format_memes_day_stat(day_stats)
     await callback_query.message.answer(
         f"Всего картинок: {day_stat.total} шт.\n"
-        f"Опубликовано картинок: {day_stat.published} шт.\n"
         f"Не опубликовано: {day_stat.not_published} шт. ({round(days_remain)} дн.)\n"
-        f"Отправляются каждые {SEND_PHOTO_INTERVAL / 60} ч.\n"
         f"Ожидают проверки: {day_stat.not_checked} шт.\n"
-        f"Общий объем мемов: {folder_size}МБ\n\n"
         f"{formated_day_stat}",
         reply_markup=notchecked_keyboard(day_stat.not_checked),
     )
