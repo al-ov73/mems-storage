@@ -45,6 +45,14 @@ class VisitRepository:
         return visits
 
     @staticmethod
+    async def get_last_visits(db: Session, limit: int = 10):
+        """
+        return list of visits from db
+        """
+        visits = db.query(Visit).order_by(Visit.visit_at.desc()).limit(limit).all()
+        return visits
+
+    @staticmethod
     async def get_old_users(
         db: Session,
     ) -> int:
