@@ -58,9 +58,11 @@ async def visits_callback(callback_query: types.CallbackQuery):
     old_visits = await visit_repo.get_old_users(db=db)
 
     await callback_query.message.answer(
-        f"Статистика визитов:\n" f"{formated_day_stat}\n" f"Всего старых пользователей: {old_visits}"
+        f"Статистика визитов:\n" f"{formated_day_stat}\n"
+        f"Всего старых пользователей: {old_visits}\n\n"
+        f"Последние визиты:\n"
+        f"{formated_last_visits}"
     )
-    await callback_query.message.answer(formated_last_visits)
     await callback_query.answer()
 
 
