@@ -60,6 +60,7 @@ async def visits_callback(callback_query: types.CallbackQuery):
     await callback_query.message.answer(
         f"Статистика визитов:\n" f"{formated_day_stat}\n" f"Всего старых пользователей: {old_visits}"
     )
+    await callback_query.message.answer(str(last_visits))
     await callback_query.answer()
 
 
