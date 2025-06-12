@@ -53,14 +53,14 @@ async def stat_command(callback_query: types.CallbackQuery):
 async def visits_callback(callback_query: types.CallbackQuery):
     visits_stat = await visit_repo.get_visit_count_by_day(db=db)
     last_visits = await visit_repo.get_last_visits(db=db)
-    print("last_visits", last_visits)
+    formated_last_visits = "\n".join(str(last_visits))
     formated_day_stat = format_visits_day_stat(visits_stat)
     old_visits = await visit_repo.get_old_users(db=db)
 
     await callback_query.message.answer(
         f"Статистика визитов:\n" f"{formated_day_stat}\n" f"Всего старых пользователей: {old_visits}"
     )
-    await callback_query.message.answer(str(last_visits))
+    await callback_query.message.answer(formated_last_visits)
     await callback_query.answer()
 
 
