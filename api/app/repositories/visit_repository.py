@@ -47,10 +47,34 @@ class VisitRepository:
     @staticmethod
     async def get_last_visits(db: Session, limit: int = 10):
         """
-        return list of visits from db
+        return list of visits from db with visit count per IP
         """
-        visits = db.query(Visit).order_by(Visit.visit_at.desc()).limit(limit).all()
-        return visits
+        subquery = (
+            db.query(
+                Visit.ip,
+                func.count(Visit.id).label('visit_count')
+            )
+            .group_by(Visit.ip)
+            .subquery()
+        )
+
+        visits = (
+            db.query(
+                Visit,
+                subquery.c.visit_count
+            )
+            .join(subquery, Visit.ip == subquery.c.ip)
+            .order_by(Visit.visit_at.desc())
+            .limit(limit)
+            .all()
+        )
+
+        result = []
+        for visit, count in visits:
+            visit.visit_count = count
+            result.append(visit)
+
+        return result
 
     @staticmethod
     async def get_old_users(

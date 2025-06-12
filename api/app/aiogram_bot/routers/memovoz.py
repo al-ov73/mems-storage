@@ -53,7 +53,10 @@ async def stat_command(callback_query: types.CallbackQuery):
 async def visits_callback(callback_query: types.CallbackQuery):
     visits_stat = await visit_repo.get_visit_count_by_day(db=db)
     last_visits = await visit_repo.get_last_visits(db=db)
-    formated_last_visits = "\n".join([f"{visit.ip} - {visit.city} - {visit.visit_at}" for visit in last_visits])
+    formated_last_visits = "\n".join(
+        [f"{visit.ip} ({visit.visit_count} visits) - {visit.city} - {visit.visit_at}"
+         for visit in last_visits]
+    )
     formated_day_stat = format_visits_day_stat(visits_stat)
     old_visits = await visit_repo.get_old_users(db=db)
 
