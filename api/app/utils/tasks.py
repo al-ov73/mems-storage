@@ -53,6 +53,7 @@ def get_info_by_ip(ip: str) -> VisitInputSchema | None:
             country=response.get("country"),
             region=response.get("regionName"),
             city=response.get("city"),
+            landing_page="memovoz.ru"
         )
 
     except requests.exceptions.ConnectionError:
