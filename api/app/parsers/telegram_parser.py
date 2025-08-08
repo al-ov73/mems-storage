@@ -2,7 +2,7 @@ import logging
 import os
 from urllib.parse import urljoin
 
-from telethon import TelegramClient
+from telethon import TelegramClient, errors
 
 from ..config import config as config
 from ..config.db_config import get_db
@@ -32,7 +32,9 @@ async def parse_telegram_channels() -> None:
                 messages = await client.get_messages(channel, limit=CHANNEL_FILES_LIMIT)
             except ValueError:
                 continue
-
+            except errors.rpcerrorlist.BotMethodInvalidError as e:
+                logger.error(f"BotMethodInvalidError during parsing tg channel '{channel}'")
+                continue
             for message in messages:
                 if message.photo:
                     filename = f"tg_{message._chat.username}_{message.photo.id}"
