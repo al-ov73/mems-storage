@@ -22,6 +22,7 @@ from .routers.labels import router as router_labels
 from .routers.likes import router as router_likes
 from .routers.memes import router as router_memes
 from .routers.pdf import router as router_pdf
+from .routers.visit import router as router_visit
 from .routers.support import router as router_support
 from .routers.users import router as router_users
 
@@ -108,3 +109,4 @@ app.include_router(router_users, prefix="/users", tags=["users"])
 app.include_router(router_aichat, prefix="/question", tags=["aichat"])
 app.include_router(router_support, prefix="/support", tags=["support"])
 app.include_router(router_pdf, prefix="/pdf", tags=["pdf"])
+app.include_router(router_visit, prefix="/visit", tags=["visit"])

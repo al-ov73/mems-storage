@@ -14,3 +14,4 @@ frontend/.env.production
 .env.production
 api/session_name.session
 logfile.txt
+session_name.session
