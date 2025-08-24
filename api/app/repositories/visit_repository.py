@@ -131,7 +131,7 @@ class VisitRepository:
         return f"{date_range}: {visits_count} {visits_word}, {users_count} {users_word}"
 
     @staticmethod
-    async def get_weekly_visits_stats(db: Session, weeks: int = 4) -> str:
+    async def get_weekly_visits_stats(db: Session, weeks: int = 8) -> str:
         """
         Получить статистику визитов по неделям в формате:
         '11.08 - 17.08: 15 визитов, 3 пользователя'
@@ -160,6 +160,62 @@ class VisitRepository:
 
             formatted_stat = VisitRepository._format_weekly_stat(
                 week_start, week_end, stat.total_visits, stat.unique_users
+            )
+            result.append(formatted_stat)
+
+        return "\n".join(result)
+
+    @staticmethod
+    def _format_month_name(date: datetime) -> str:
+        """
+        Возвращает название месяца на русском языке
+        """
+        month_names = {
+            1: "январь", 2: "февраль", 3: "март", 4: "апрель",
+            5: "май", 6: "июнь", 7: "июль", 8: "август",
+            9: "сентябрь", 10: "октябрь", 11: "ноябрь", 12: "декабрь"
+        }
+        return month_names[date.month]
+
+    @staticmethod
+    def _format_monthly_stat(month_date: datetime, visits_count: int, users_count: int) -> str:
+        """
+        Форматирует статистику за месяц в нужный формат
+        """
+        month_name = VisitRepository._format_month_name(month_date)
+        visits_word = VisitRepository._format_visits_word(visits_count)
+        users_word = VisitRepository._format_users_word(users_count)
+
+        return f"{month_name}: {visits_count} {visits_word}, {users_count} {users_word}"
+
+    @staticmethod
+    async def get_monthly_visits_stats(db: Session, months: int = 6) -> str:
+        """
+        Получить статистику визитов по месяцам в формате:
+        'май: 26 визитов, 14 пользователей'
+        'июнь: 20 визитов, 10 пользователей'
+        """
+        # Получаем начало периода
+        end_date = datetime.now()
+        start_date = end_date - timedelta(days=months * 30)  # Примерно months месяцев назад
+
+        # Запрос для группировки по месяцам
+        monthly_stats = (
+            db.query(
+                func.date_trunc('month', Visit.visit_at).label('month_start'),
+                func.count(Visit.id).label('total_visits'),
+                func.count(func.distinct(Visit.ip)).label('unique_users')
+            )
+            .filter(Visit.visit_at >= start_date)
+            .group_by(func.date_trunc('month', Visit.visit_at))
+            .order_by(func.date_trunc('month', Visit.visit_at).desc())
+            .all()
+        )
+
+        result = []
+        for stat in monthly_stats:
+            formatted_stat = VisitRepository._format_monthly_stat(
+                stat.month_start, stat.total_visits, stat.unique_users
             )
             result.append(formatted_stat)
 

@@ -285,6 +285,8 @@ async def send_daystat_every_day():
     days_remain = day_stat.not_published / 24
     visits_stat = await visit_repo.get_visit_count_by_day(db=db, limit=2)
     formatted_visits_stat = format_visits_day_stat(visits_stat)
+    weekly_visit_stat = await visit_repo.get_weekly_visits_stats(db=db)
+    monthly_visit_stat = await visit_repo.get_monthly_visits_stats(db=db)
     formatted_day_stat = (
         f"Статистика за {datetime.now().strftime('%d-%m-%Y')}\n"
         f"Всего картинок: {day_stat.total} шт.\n"
@@ -292,7 +294,7 @@ async def send_daystat_every_day():
         f"Не опубликовано: {day_stat.not_published} шт. ({round(days_remain)} дн.)\n"
         f"Ожидают проверки: {day_stat.not_checked} шт.\n\n"
         f"Статистика визитов:\n"
-        f"{formatted_visits_stat}"
+        f"{formatted_visits_stat}\n\n{weekly_visit_stat}\n\n{monthly_visit_stat}"
     )
 
     scheduler.add_job(
