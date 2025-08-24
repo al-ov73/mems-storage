@@ -1,5 +1,6 @@
 from sqlalchemy import case, func
 from sqlalchemy.orm import Session
+from datetime import datetime, timedelta
 
 from ..models.visit import Visit
 from ..schemas.stat import VisitsDayStatSchema
@@ -85,3 +86,81 @@ class VisitRepository:
         """
         old_visits = db.query(Visit).filter_by(is_new_user=False).count()
         return old_visits
+
+    @staticmethod
+    def _format_dates_range(start_date: datetime, end_date: datetime) -> str:
+        """
+        Форматирует диапазон дат в формате 'дд.мм - дд.мм'
+        """
+        return f"{start_date.strftime('%d.%m')} - {end_date.strftime('%d.%m')}"
+
+    @staticmethod
+    def _format_visits_word(count: int) -> str:
+        """
+        Правильно склоняет слово 'визит' в зависимости от числа
+        """
+        if count % 10 == 1 and count % 100 != 11:
+            return "визит"
+        elif count % 10 in [2, 3, 4] and count % 100 not in [12, 13, 14]:
+            return "визита"
+        else:
+            return "визитов"
+
+    @staticmethod
+    def _format_users_word(count: int) -> str:
+        """
+        Правильно склоняет слово 'пользователь' в зависимости от числа
+        """
+        if count % 10 == 1 and count % 100 != 11:
+            return "пользователь"
+        elif count % 10 in [2, 3, 4] and count % 100 not in [12, 13, 14]:
+            return "пользователя"
+        else:
+            return "пользователей"
+
+    @staticmethod
+    def _format_weekly_stat(start_date: datetime, end_date: datetime,
+                            visits_count: int, users_count: int) -> str:
+        """
+        Форматирует статистику за неделю в нужный формат
+        """
+        date_range = VisitRepository._format_dates_range(start_date, end_date)
+        visits_word = VisitRepository._format_visits_word(visits_count)
+        users_word = VisitRepository._format_users_word(users_count)
+
+        return f"{date_range}: {visits_count} {visits_word}, {users_count} {users_word}"
+
+    @staticmethod
+    async def get_weekly_visits_stats(db: Session, weeks: int = 4) -> str:
+        """
+        Получить статистику визитов по неделям в формате:
+        '11.08 - 17.08: 15 визитов, 3 пользователя'
+        """
+        # Получаем начало и конец каждой недели
+        end_date = datetime.now()
+        start_date = end_date - timedelta(weeks=weeks)
+
+        # Запрос для группировки по неделям
+        weekly_stats = (
+            db.query(
+                func.date_trunc('week', Visit.visit_at).label('week_start'),
+                func.count(Visit.id).label('total_visits'),
+                func.count(func.distinct(Visit.ip)).label('unique_users')
+            )
+            .filter(Visit.visit_at >= start_date)
+            .group_by(func.date_trunc('week', Visit.visit_at))
+            .order_by(func.date_trunc('week', Visit.visit_at).desc())
+            .all()
+        )
+
+        result = []
+        for stat in weekly_stats:
+            week_start = stat.week_start
+            week_end = week_start + timedelta(days=6)
+
+            formatted_stat = VisitRepository._format_weekly_stat(
+                week_start, week_end, stat.total_visits, stat.unique_users
+            )
+            result.append(formatted_stat)
+
+        return "\n".join(result)
