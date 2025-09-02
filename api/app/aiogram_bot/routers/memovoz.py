@@ -61,6 +61,8 @@ async def visits_callback(callback_query: types.CallbackQuery):
     old_visits = await visit_repo.get_old_users(db=db)
     weekly_visit_stat = await visit_repo.get_weekly_visits_stats(db=db)
     monthly_visit_stat = await visit_repo.get_monthly_visits_stats(db=db)
+    pdf_weekly_visit_stat = await visit_repo.get_weekly_visits_stats(db=db, weeks=4, landing_page="super-pdf.ru")
+    pdf_monthly_visit_stat = await visit_repo.get_monthly_visits_stats(db=db, months=4, landing_page="super-pdf.ru")
     await callback_query.message.answer(
         f"Статистика визитов:\n" f"{formated_day_stat}\n"
         f"Всего старых пользователей: {old_visits}\n\n"
@@ -69,6 +71,7 @@ async def visits_callback(callback_query: types.CallbackQuery):
     )
     await callback_query.message.answer(weekly_visit_stat)
     await callback_query.message.answer(monthly_visit_stat)
+    await callback_query.message.answer(f"super-pdf.ru:\n{pdf_weekly_visit_stat}\n\n{pdf_monthly_visit_stat}")
     await callback_query.answer()
 
 

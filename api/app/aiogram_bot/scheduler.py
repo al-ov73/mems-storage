@@ -287,6 +287,8 @@ async def send_daystat_every_day():
     formatted_visits_stat = format_visits_day_stat(visits_stat)
     weekly_visit_stat = await visit_repo.get_weekly_visits_stats(db=db)
     monthly_visit_stat = await visit_repo.get_monthly_visits_stats(db=db)
+    pdf_weekly_visit_stat = await visit_repo.get_weekly_visits_stats(db=db, weeks=4, landing_page="super-pdf.ru")
+    pdf_monthly_visit_stat = await visit_repo.get_monthly_visits_stats(db=db, months=4, landing_page="super-pdf.ru")
     formatted_day_stat = (
         f"Статистика за {datetime.now().strftime('%d-%m-%Y')}\n"
         f"Всего картинок: {day_stat.total} шт.\n"
@@ -295,6 +297,7 @@ async def send_daystat_every_day():
         f"Ожидают проверки: {day_stat.not_checked} шт.\n\n"
         f"Статистика визитов:\n"
         f"{formatted_visits_stat}\n\n{weekly_visit_stat}\n\n{monthly_visit_stat}"
+        f"super-pdf.ru:\n{pdf_weekly_visit_stat}\n\n{pdf_monthly_visit_stat}"
     )
 
     scheduler.add_job(
