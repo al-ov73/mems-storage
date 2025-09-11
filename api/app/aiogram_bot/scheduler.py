@@ -296,7 +296,7 @@ async def send_daystat_every_day():
         f"Не опубликовано: {day_stat.not_published} шт. ({round(days_remain)} дн.)\n"
         f"Ожидают проверки: {day_stat.not_checked} шт.\n\n"
         f"Статистика визитов:\n"
-        f"{formatted_visits_stat}\n\n{weekly_visit_stat}\n\n{monthly_visit_stat}"
+        f"{formatted_visits_stat}\n\n{weekly_visit_stat}\n\n{monthly_visit_stat}\n\n"
         f"super-pdf.ru:\n{pdf_weekly_visit_stat}\n\n{pdf_monthly_visit_stat}"
     )
 
