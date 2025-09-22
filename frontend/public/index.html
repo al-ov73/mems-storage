@@ -37,11 +37,22 @@ font-awesome/5.15.2/css/all.min.css" />
   <link rel="apple-touch-icon" href="%PUBLIC_URL%/logo192.png" />
   <link rel="manifest" href="%PUBLIC_URL%/manifest.json" />
   <title>Мемовоз - лучшие мемы из мира IT каждый час</title>
-
+  <!-- Yandex.RTB -->
+  <script>window.yaContextCb=window.yaContextCb||[]</script>
+  <script src="https://yandex.ru/ads/system/context.js" async></script>
 </head>
 
 <body>
   <noscript>You need to enable JavaScript to run this app.</noscript>
+  <div id="yandex_rtb_R-A-17326466-1"></div>
+  <script>
+  window.yaContextCb.push(() => {
+      Ya.Context.AdvManager.render({
+          "blockId": "R-A-17326466-1",
+          "renderTo": "yandex_rtb_R-A-17326466-1"
+      })
+  })
+  </script>
   <div id="root"></div>
 </body>
 
