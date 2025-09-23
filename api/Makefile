@@ -1,5 +1,5 @@
 start:
-		poetry run fastapi run app/main.py --reload
+		poetry run fastapi run app/main.py
 
 test:
 		pytest
