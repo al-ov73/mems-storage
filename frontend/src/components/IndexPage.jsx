@@ -11,6 +11,7 @@ import Footer from "../Footer.jsx";
 import Statistic from "./Statictic.jsx";
 import LetsStartMsg from "./LetsStartMsg.jsx";
 import TelegramChat from "./TelegramChat.jsx";
+import YandexAd from "./YandexAd";
 
 const paginationRangeLimit = 2;
 
@@ -135,6 +136,9 @@ const IndexPage = () => {
         </Pagination>
       </Container>
       {/* END PAGINATION */}
+
+      {/* Рекламный блок */}
+      <YandexAd blockId="R-A-17326466-1" />
 
       <Container className="d-flex">
         <Container>
